@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools for Educators: Detectors & Humanizers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the interactive webpage */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F8F8; /* Light grey background for subtle contrast */
+            color: #333333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #FFFFFF; /* White background for content area */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: #222222; /* Dark background for header */
+            color: #FFFFFF;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 5px solid #4CAF50; /* Green accent */
+            border-radius: 0 0 12px 12px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background-color: #333333; /* Darker background for nav */
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .dropdown-button:hover {
+            background-color: #45a049;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #222222;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .tool-category {
+            display: none; /* Hidden by default */
+        }
+
+        .tool-card {
+            background-color: #F0F0F0; /* Light grey for tool cards */
+            border: 1px solid #E0E0E0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-card h3 {
+            color: #4CAF50; /* Green for tool names */
+            font-size: 1.6rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            cursor: pointer; /* Indicate clickable */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .tool-card h3 .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card h3.expanded .arrow {
+            transform: rotate(90deg);
+        }
+
+        .tool-details {
+            display: none; /* Hidden by default */
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #CCCCCC;
+        }
+
+        .tool-details p {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .tool-details strong {
+            color: #222222;
+        }
+
+        footer {
+            background-color: #222222;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 5px solid #4CAF50;
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            header p {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .tool-card h3 {
+                font-size: 1.3rem;
+            }
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .dropdown-content {
+                min-width: unset;
+                width: 100%;
+                left: 0;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI Tools for Educators</h1>
+        <p>Understanding AI-Generated Content Detectors & Humanizers</p>
+        <nav>
+            <div class="dropdown">
+                <button class="dropdown-button">Navigate <span style="font-size: 0.8em;">&#9660;</span></button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showSection('introduction')">Introduction</a>
+                    <a href="#" onclick="showSection('ai-detectors')">AI Content Detectors</a>
+                    <a href="#" onclick="showSection('ai-humanizers')">AI Humanizers</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Introduction Section -->
+        <section id="introduction" class="tool-category" style="display: block;">
+            <h2 class="section-title">Introduction to AI Tools in Education</h2>
+            <p>The rapid advancement of Artificial Intelligence (AI) has introduced powerful tools that can generate human-like text, images, and more. While these tools offer immense potential for innovation and efficiency, they also present new challenges, particularly in educational settings regarding academic integrity and authentic authorship.</p>
+            <p>This page aims to provide educators with an overview of two key categories of AI tools:</p>
+            <ul>
+                <li><strong>AI Content Detectors:</strong> Tools designed to identify whether content was generated by AI or a human.</li>
+                <li><strong>AI Humanizers:</strong> Tools that attempt to modify AI-generated text to make it appear more human-like, often to bypass detectors.</li>
+            </ul>
+            <p>Understanding the features, capabilities, and limitations of these tools is crucial for educators to adapt their teaching strategies, assess student work fairly, and foster an environment of ethical AI use.</p>
+        </section>
+
+        <!-- AI Content Detectors Section -->
+        <section id="ai-detectors" class="tool-category">
+            <h2 class="section-title">AI Content Detectors</h2>
+            <p>AI content detectors analyze text for patterns, structures, and stylistic elements commonly found in AI-generated content. While no detector is 100% accurate, they can be valuable tools for identifying potentially AI-written submissions.</p>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">GPTZero <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Specializes in detecting content from models like ChatGPT and GPT-4. Offers a Chrome extension, plagiarism checking, and API access. Provides sentence-by-sentence highlighting of suspected AI text.</p>
+                    <p><strong>Capabilities:</strong> Known for its user-friendly interface and ability to analyze various forms of text. Aims to help educators identify AI-generated student work.</p>
+                    <p><strong>Cost:</strong> Basic free plan for scanning up to 10,000 words per month. Premium plans start around $10/month for more extensive use and features.</p>
+                    <p><strong>Popularity:</strong> Highly popular among educators and students due to its focus on academic integrity and a generous free tier.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Originality.ai <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Comprehensive tool for AI detection, plagiarism checking, and grammar. Provides a confidence score for AI detection. Also offers a fact-checker.</p>
+                    <p><strong>Capabilities:</strong> Renowned for its high accuracy in identifying AI-generated content across various platforms. Useful for content creators and academic institutions for ensuring originality.</p>
+                    <p><strong>Cost:</strong> Primarily a paid service, often on a credit-based system. Plans typically start around $20-$30 per month depending on word volume.</p>
+                    <p><strong>Popularity:</strong> Very popular in professional content creation and SEO communities, and increasingly recognized in academia for its robust detection capabilities.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Copyleaks <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> High-precision AI content detection model trained on vast datasets. Offers detection profile customization, document scanning, and shareable reports. Integrates with various learning management systems (LMS).</p>
+                    <p><strong>Capabilities:</strong> Excellent for detecting AI, paraphrasing, and plagiarism. Can handle large documents efficiently. Provides detailed insights into the detected content.</p>
+                    <p><strong>Cost:</strong> Offers a limited number of free scans for new users. Personal plans start around $10-$17/month for a certain number of credits (e.g., 250 credits for 250 words each). Enterprise and educational pricing available upon request.</p>
+                    <p><strong>Popularity:</strong> Widely used by educational institutions and businesses for its accuracy and comprehensive plagiarism/AI detection features.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Scribbr AI Detector <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Differentiates between human-written, AI-generated, and AI-refined content. Provides paragraph-level feedback. Supports multiple languages (English, German, French, Spanish).</p>
+                    <p><strong>Capabilities:</strong> Specifically designed for academic use, helping students and educators ensure authenticity. Integrates with their plagiarism checker for a holistic originality report.</p>
+                    <p><strong>Cost:</strong> A premium AI Detector check is often included with their plagiarism check service (costs typically range from $19.95 to $39.95, no word limit). They also offer a free AI detector for up to 500 words per check, with unlimited checks.</p>
+                    <p><strong>Popularity:</strong> Very popular within the academic community, especially among students for checking their papers and universities for maintaining academic standards.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Humanizers Section -->
+        <section id="ai-humanizers" class="tool-category">
+            <h2 class="section-title">AI Humanizers</h2>
+            <p>AI humanizers aim to transform AI-generated text into content that sounds more natural, authentic, and human-like. These tools often modify sentence structure, vocabulary, and tone to bypass AI detection systems.</p>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">QuillBot AI Humanizer <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Part of a larger suite of writing tools including a paraphraser, grammar checker, plagiarism checker, and citation generator. Offers various modes (Standard, Fluency, Formal, Creative, etc.) to adjust tone and style.</p>
+                    <p><strong>Capabilities:</strong> Excellent for rephrasing text to improve clarity, flow, and to make it sound more human. Can be used to simplify complex documents or make conversational emails. Aims to make AI-generated content less detectable.</p>
+                    <p><strong>Cost:</strong> Offers a free tier with a word limit (e.g., 125 words for paraphrasing). Premium plans unlock higher word limits and all modes, typically starting around $8-$10/month when billed annually.</p>
+                    <p><strong>Popularity:</strong> Extremely popular among students, writers, and professionals for its versatile paraphrasing and writing enhancement capabilities.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Undetectable AI <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Focuses specifically on rewriting AI text to bypass major AI detection tools (e.g., GPTZero, Copyleaks, Originality.ai). Offers various customization options for output style.</p>
+                    <p><strong>Capabilities:</strong> Aims to make AI-generated content indistinguishable from human writing. Provides instant checks against multiple detectors to show effectiveness. Can produce plagiarism-free rewrites.</p>
+                    <p><strong>Cost:</strong> Offers a free AI detection tool. Premium plans for humanizing start around $5-$15/month, with different word limits (e.g., 15,000 words/month for basic paid plan).</p>
+                    <p><strong>Popularity:</strong> Gaining popularity among users who need to ensure their AI-assisted content passes detection, particularly for online publishing and academic submissions.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Humanize AI (humanizeai.pro) <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Offers multiple humanization modes, including an "Ultra Run" feature designed for maximum undetectability. Highlights changes made to the text for transparency. Claims to be undetectable by all AI detectors.</p>
+                    <p><strong>Capabilities:</strong> Transforms robotic AI text into natural, human-like writing. Useful for making content more engaging and personal. Provides different pricing tiers based on word volume.</p>
+                    <p><strong>Cost:</strong> Free tier for a limited number of words (e.g., 1,500 words total, 300 words per process). Paid plans vary: Lite ($19/month for 20,000 words), Standard ($29/month for 50,000 words), Pro ($79/month for 150,000 words).</p>
+                    <p><strong>Popularity:</strong> Popular among users seeking to make their AI-generated content truly undetectable and more engaging, with a focus on ease of use.</p>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 onclick="toggleDetails(this)">Hix Bypass <span class="arrow">&#9654;</span></h3>
+                <div class="tool-details">
+                    <p><strong>Features:</strong> Utilizes a proprietary large language model (LLM) trained on extensive human-written content. Offers "fast," "balanced," and "aggressive" modes for humanization. Claims to bypass advanced AI detectors like Turnitin.</p>
+                    <p><strong>Capabilities:</strong> Highly effective at humanizing even highly robotic AI texts. Generates plagiarism-free content. Can remove ChatGPT watermarks. Part of a broader HIX AI suite of tools.</p>
+                    <p><strong>Cost:</strong> Free trial with a word limit (e.g., 125 words per request). Paid plans start around $14.99/month for 500 words per request and up to 5,000 words per month, with higher tiers available.</p>
+                    <p><strong>Popularity:</strong> Growing in popularity, especially among users concerned with bypassing sophisticated academic and professional AI detection systems.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 AI Tools for Educators. All rights reserved.</p>
+        <p>Disclaimer: The information provided is for educational purposes only. The effectiveness and accuracy of AI detection and humanization tools can vary and evolve rapidly.</p>
+    </footer>
+
+    <script>
+        // Function to show a specific section and hide others
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.tool-category');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Function to toggle the visibility of tool details
+        function toggleDetails(headerElement) {
+            const details = headerElement.nextElementSibling; // Get the next sibling element (tool-details div)
+            const arrow = headerElement.querySelector('.arrow'); // Get the arrow span
+
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                headerElement.classList.remove('expanded');
+            } else {
+                details.style.display = 'block';
+                headerElement.classList.add('expanded');
+            }
+        }
+
+        // Initial display: show the introduction section
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('introduction');
+        });
+    </script>
+</body>
+</html>
