@@ -301,7 +301,7 @@
                 </div>
             </div>
             <button class="overview-button" onclick="showOverview()">View All 10 AI Applications</button>
-            <button class="overview-button" onclick="showSection('personalized-learning')">Start Exploring</button>
+                                <button class="overview-button" onclick="showSection('enhanced-feedback')">Start Exploring</button>
         </div>
 
         <div class="navigation">
@@ -315,7 +315,7 @@
                     <a href="#" onclick="showSection('automated-grading')">3. Automated Grading & Assessment</a>
                     <a href="#" onclick="showSection('predictive-analytics')">4. Predictive Analytics & Early Warning</a>
                     <a href="#" onclick="showSection('content-generation')">5. AI-Powered Content Generation</a>
-                    <a href="#" onclick="showSection('natural-language')">6. Natural Language Processing Support</a>
+                    <a href="#" onclick="showSection('enhanced-feedback')">6. AI-Enhanced Student Feedback</a>
                     <a href="#" onclick="showSection('adaptive-assessment')">7. Adaptive Assessment Systems</a>
                     <a href="#" onclick="showSection('learning-analytics')">8. Learning Analytics & Insights</a>
                     <a href="#" onclick="showSection('virtual-assistants')">9. AI Virtual Teaching Assistants</a>
@@ -353,8 +353,8 @@
                     <p>AI assists educators in creating lesson plans, materials, and educational resources.</p>
                 </div>
                 <div class="example-box">
-                    <h3 style="color: #2c5530; margin-bottom: 10px;">6. Natural Language Processing Support</h3>
-                    <p>AI provides language assistance, translation, and communication enhancement tools.</p>
+                    <h3 style="color: #2c5530; margin-bottom: 10px;">6. AI-Enhanced Student Feedback</h3>
+                    <p>AI provides detailed, continuous feedback on writing assignments and lab exercises, improving learning outcomes through personalized guidance.</p>
                 </div>
                 <div class="example-box">
                     <h3 style="color: #2c5530; margin-bottom: 10px;">7. Adaptive Assessment Systems</h3>
@@ -515,30 +515,52 @@
             </div>
         </div>
 
-        <!-- Section 6: Natural Language Processing Support -->
-        <div id="natural-language" class="content-section">
-            <h2 class="section-title">6. Natural Language Processing Support</h2>
+        <!-- Section 6: AI-Enhanced Student Feedback -->
+        <div id="enhanced-feedback" class="content-section">
+            <h2 class="section-title">6. AI-Enhanced Student Feedback</h2>
             <div class="section-description">
-                Natural Language Processing (NLP) technologies provide crucial support for language learning, communication enhancement, and accessibility. These AI systems can analyze written text, provide language feedback, offer translation services, and assist with reading comprehension across multiple languages.
+                Research shows that effective feedback has a medium to large effect size (d = 0.48-0.70) on student learning outcomes. AI-enhanced feedback systems provide continuous, detailed, and personalized responses to student work, particularly excelling in writing assignments and laboratory exercises where immediate, specific guidance can significantly improve learning outcomes.
             </div>
             
             <div class="example-box">
-                <div class="example-title">Real-World Example: Duolingo's AI-Powered Language Learning</div>
+                <div class="example-title">Real-World Example: AI Writing Feedback with Brisk Teaching</div>
                 <div class="example-content">
-                    Duolingo uses advanced NLP to provide personalized language learning experiences. The AI analyzes learner responses, identifies pronunciation patterns, and adjusts lesson difficulty based on individual progress. The system provides real-time feedback on grammar, vocabulary usage, and conversational skills while adapting to each learner's native language background.
+                    Brisk Teaching is a Chrome extension that provides instant, detailed feedback on student writing assignments. A high school English teacher using Brisk can generate comprehensive feedback for an entire class of essays in about 30 minutes—a process that would traditionally take hours. The AI analyzes student work against custom rubrics and provides feedback in three categories: strengths, areas of growth, and wonderings.
                     <br><br>
-                    <strong>Implementation:</strong> A Spanish-speaking student learning English receives targeted pronunciation feedback on difficult sounds like "th" and "v", while grammar exercises focus on common transfer errors from Spanish sentence structure. The AI adjusts the pace and provides additional practice in areas where the student struggles most.
+                    <strong>Example Feedback on a 9th Grade Narrative:</strong> "Try to vary your sentence structure a bit more. Many sentences start with 'He' or 'His,' which can make the narrative feel repetitive. Mixing in some different sentence beginnings can make your writing more dynamic."
+                    <br><br>
+                    <strong>Example Feedback on a Senior Analysis Essay:</strong> "While you've done a great job with the Holloway article, I noticed that you didn't provide a similar analysis for the article by Jenkins. Consider strengthening your argument by providing more specific statistical evidence in your second body paragraph."
+                </div>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Real-World Example: AI Feedback for Laboratory Exercises with Virtual Labs</div>
+                <div class="example-content">
+                    AI-powered virtual laboratory platforms like Labster provide real-time feedback during science experiments. When students conduct virtual chemistry labs, the AI monitors their procedures, identifies errors in technique, and provides immediate corrective guidance. For example, during a titration experiment, if a student adds reagent too quickly, the AI immediately alerts them: "You're adding the sodium hydroxide too rapidly. Slow down and add it drop by drop near the endpoint to avoid overshooting your target pH."
+                    <br><br>
+                    <strong>Lab Report Enhancement:</strong> After the virtual experiment, AI reviews students' lab reports and provides feedback on methodology description, data analysis, and conclusion drawing. The system might comment: "Your data table is well-organized, but your error analysis section needs more detail. Consider discussing how the precision of your measurements affects your calculated results."
+                </div>
+            </div>
+
+            <div class="example-box">
+                <div class="example-title">Research Impact: ChatGPT vs. Human Feedback Study</div>
+                <div class="example-content">
+                    A 2024 study in the journal Learning and Instruction compared ChatGPT feedback with human teacher feedback on 200 history essays from grades 6-12. The research found that ChatGPT averaged 3.6 out of 5.0 on feedback quality compared to 4.0 from expert human evaluators with 15+ years of experience. Significantly, AI-generated feedback showed no difference in learning outcomes compared to human feedback, while providing feedback instantly rather than taking 20-25 minutes per essay.
+                    <br><br>
+                    <strong>Key Finding:</strong> Students who received AI feedback demonstrated increased text revision rates, higher motivation, and more positive emotions toward writing compared to students who received no feedback.
                 </div>
             </div>
 
             <div class="benefits-list">
-                <h3>Key Benefits:</h3>
+                <h3>Key Benefits of AI-Enhanced Feedback:</h3>
                 <ul>
-                    <li>Provides real-time language feedback and correction</li>
-                    <li>Offers multi-language support for diverse classrooms</li>
-                    <li>Enhances reading comprehension through text analysis</li>
-                    <li>Supports students with language processing difficulties</li>
-                    <li>Enables automated translation for global collaboration</li>
+                    <li>Provides immediate, detailed feedback improving learning outcomes (effect size 0.48-0.70)</li>
+                    <li>Scales personalized feedback to large numbers of students simultaneously</li>
+                    <li>Offers consistent, objective evaluation criteria across all submissions</li>
+                    <li>Identifies specific areas for improvement with actionable suggestions</li>
+                    <li>Increases student motivation and engagement with the revision process</li>
+                    <li>Enables 24/7 availability for students to receive guidance on their work</li>
+                    <li>Reduces teacher grading time while maintaining high-quality feedback standards</li>
                 </ul>
             </div>
         </div>
