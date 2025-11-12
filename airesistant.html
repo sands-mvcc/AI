@@ -3,660 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creating AI-Resistant Assignments</title>
+    <title>AI-Resistant Assignment Design Methods</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* CSS is embedded here for simplicity, adhering to the requested theme */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #FFFFFF; /* White Background */
+            color: #1a1a1a; /* Near Black Text */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
         .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Navigation Sidebar */
-        nav {
-            width: 280px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 20px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
         }
 
-        nav h1 {
-            font-size: 1.4em;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-        }
-
-        nav ul {
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-bottom: 5px;
-        }
-
-        nav ul li a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-size: 0.95em;
-        }
-
-        nav ul li a:hover {
-            background-color: rgba(255,255,255,0.2);
-            padding-left: 20px;
-        }
-
-        nav ul li a.active {
-            background-color: rgba(255,255,255,0.3);
-            font-weight: bold;
-        }
-
-        /* Main Content */
-        main {
-            margin-left: 280px;
-            flex: 1;
-            padding: 40px;
-        }
-
-        .content-section {
-            display: none;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            animation: fadeIn 0.5s;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: #1e3c72;
-            margin-bottom: 20px;
-            font-size: 2em;
-            border-bottom: 3px solid #2a5298;
-            padding-bottom: 10px;
-        }
-
-        h3 {
-            color: #2a5298;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-
-        p {
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-
-        /* Strategy Cards */
-        .strategy-card {
-            background: #f9f9f9;
-            border-left: 4px solid #2a5298;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .strategy-card:hover {
-            background: #e8f4f8;
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .strategy-card h4 {
-            color: #1e3c72;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .strategy-details {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-
-        .strategy-details.show {
-            display: block;
-            animation: slideDown 0.3s;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; max-height: 0; }
-            to { opacity: 1; max-height: 500px; }
-        }
-
-        .example-box {
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-style: italic;
-        }
-
-        .example-box strong {
-            color: #2a5298;
-            font-style: normal;
-        }
-
-        /* Interactive Elements */
-        .interactive-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .interactive-box h4 {
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .btn {
-            background: #2a5298;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s;
-            margin: 10px 5px;
-        }
-
-        .btn:hover {
-            background: #1e3c72;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #5568d3;
-        }
-
-        /* Assessment Styles */
-        .quiz-question {
-            background: #f9f9f9;
-            padding: 25px;
-            margin: 20px 0;
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .quiz-question h4 {
-            color: #1e3c72;
-            margin-bottom: 15px;
-        }
-
-        .quiz-options {
-            margin: 15px 0;
-        }
-
-        .quiz-option {
-            display: block;
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quiz-option:hover {
-            border-color: #2a5298;
-            background: #e8f4f8;
-        }
-
-        .quiz-option input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .quiz-feedback {
-            display: none;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .quiz-feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-            display: block;
-        }
-
-        .quiz-feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-            display: block;
-        }
-
-        .score-display {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
+        header {
             text-align: center;
-            font-size: 1.5em;
-            margin: 20px 0;
-            display: none;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #00AA00; /* Green Separator */
+            margin-bottom: 30px;
         }
 
-        .score-display.show {
-            display: block;
-            animation: fadeIn 0.5s;
+        header h1 {
+            color: #008000; /* Main Green for Heading */
+            font-size: 2.5em;
+            margin: 0;
         }
 
-        /* Checklist */
-        .checklist {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .checklist li {
-            padding: 12px;
-            margin: 8px 0;
-            background: #f9f9f9;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .checklist li:hover {
-            background: #e8f4f8;
-        }
-
-        .checklist li::before {
-            content: "☐ ";
-            font-size: 1.3em;
-            margin-right: 10px;
-            color: #2a5298;
-        }
-
-        .checklist li.checked::before {
-            content: "☑ ";
-            color: #28a745;
-        }
-
-        .checklist li.checked {
-            background: #d4edda;
-            text-decoration: line-through;
-            opacity: 0.7;
-        }
-
-        /* Tabs */
+        /* --- Tab Navigation Styling --- */
         .tabs {
             display: flex;
-            border-bottom: 2px solid #ddd;
             margin-bottom: 20px;
+            border-bottom: 2px solid #E6FFE6;
         }
 
-        .tab {
-            padding: 12px 25px;
+        .tab-button {
+            padding: 10px 20px;
             cursor: pointer;
-            background: #f0f0f0;
             border: none;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            font-size: 1em;
-        }
-
-        .tab:hover {
-            background: #e0e0e0;
-        }
-
-        .tab.active {
-            background: white;
-            border-bottom: 3px solid #2a5298;
-            color: #2a5298;
+            background-color: #FAFAFA;
+            color: #1a1a1a;
             font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            margin-right: 5px;
+            border: 1px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button.active {
+            background-color: #00AA00;
+            color: #FFFFFF;
+            border: 1px solid #008000;
+            border-bottom: 1px solid #00AA00;
         }
 
         .tab-content {
-            display: none;
-            padding: 20px 0;
+            padding: 20px;
+            border: 1px solid #CCCCCC;
+            border-top: none;
+            border-radius: 0 8px 8px 8px;
+            background-color: #FFFFFF;
         }
 
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            nav {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-
-            main {
-                margin-left: 0;
-                padding: 20px;
-            }
-
-            .container {
-                flex-direction: column;
-            }
-        }
-
-        /* Utility Classes */
-        .highlight {
-            background: #fff3cd;
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-20 {
+        /* --- Method List Styling (Accordion) --- */
+        .method-list {
+            list-style: none;
+            padding: 0;
             margin-top: 20px;
         }
 
-        .mb-20 {
-            margin-bottom: 20px;
-        }
-
-        ul.styled-list {
-            margin-left: 20px;
+        .method-item {
+            border: 1px solid #CCCCCC;
+            border-radius: 8px;
             margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        ul.styled-list li {
-            margin: 8px 0;
-            line-height: 1.6;
+        .method-item:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .method-header {
+            background-color: #E6FFE6; /* Light Green for Header */
+            color: #005500; /* Darker Green for Text */
+            padding: 15px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #00AA00;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            line-height: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .content-body {
+            padding: 0 20px;
+            max-height: 0; /* Key for collapse */
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            background-color: #FAFAFA;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .content-body.active {
+            max-height: 1000px; /* Adjust this value based on maximum possible content height */
+            padding: 20px;
+        }
+
+        .content-body h4 {
+            color: #008000; /* Green for sub-headings */
+            margin-top: 0;
+            border-bottom: 1px dashed #00AA00;
+            padding-bottom: 5px;
+        }
+
+        .content-body ul {
+            list-style-type: '➡️';
+            padding-left: 20px;
+        }
+
+        .content-body ul li {
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+
+        /* --- Assessment Tool Styling --- */
+        .assessment-question {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #EEE;
+            border-left: 4px solid #00AA00;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            background-color: #F8FFF8;
+        }
+
+        .assessment-question label {
+            flex-grow: 1;
+            cursor: pointer;
+            padding-left: 10px;
+        }
+
+        #assessmentResult {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.5s;
+        }
+
+        .result-low { background-color: #FFCCCC; color: #CC0000; }
+        .result-medium { background-color: #FFFFCC; color: #CC9900; }
+        .result-high { background-color: #CCFFCC; color: #008000; }
+
+        /* --- Best Practices/Footer --- */
+        .best-practices {
+            margin-top: 40px;
+            padding: 20px;
+            border: 2px solid #00AA00;
+            border-radius: 10px;
+            background-color: #F0FFF0;
+        }
+
+        .best-practices h2 {
+            color: #008000;
+            text-align: center;
+            margin-top: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Navigation Sidebar -->
-        <nav>
-            <h1>AI-Resistant Assignments</h1>
-            <ul>
-                <li><a href="#intro" class="nav-link active">Introduction</a></li>
-                <li><a href="#why" class="nav-link">Why AI-Resistant?</a></li>
-                <li><a href="#strategies" class="nav-link">Core Strategies</a></li>
-                <li><a href="#personalization" class="nav-link">Personalization</a></li>
-                <li><a href="#process" class="nav-link">Process-Based</a></li>
-                <li><a href="#metacognitive" class="nav-link">Metacognitive</a></li>
-                <li><a href="#authentic" class="nav-link">Authentic Assessment</a></li>
-                <li><a href="#multimodal" class="nav-link">Multimodal</a></li>
-                <li><a href="#synchronous" class="nav-link">Synchronous</a></li>
-                <li><a href="#collaborative" class="nav-link">Collaborative</a></li>
-                <li><a href="#blooms" class="nav-link">Higher-Order Tasks</a></li>
-                <li><a href="#ai-engagement" class="nav-link">AI Transparency</a></li>
-                <li><a href="#best-practices" class="nav-link">Best Practices</a></li>
-                <li><a href="#assessment" class="nav-link">Assessment</a></li>
-            </ul>
-        </nav>
+        <header>
+            <h1>💡 Core Methods for AI-Resistant Assignment Design</h1>
+            <p>A Resource for Educators in Cybersecurity and AI</p>
+        </header>
 
-        <!-- Main Content -->
-        <main>
-            <!-- Introduction Section -->
-            <section id="intro" class="content-section active">
-                <h2>Creating AI-Resistant Assignments</h2>
-                <p>Welcome to this professional development workshop on designing assignments that promote genuine learning while addressing the challenges posed by generative AI tools.</p>
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('methods')">Method Guide</button>
+            <button class="tab-button" onclick="openTab('specific')">Cybersecurity & AI Examples</button>
+            <button class="tab-button" onclick="openTab('assessment')">Assignment Quick-Assessment</button>
+        </div>
+
+        <div id="methods" class="tab-content">
+            <ul class="method-list" id="methodList">
+                </ul>
+        </div>
+
+        <div id="specific" class="tab-content" style="display:none;">
+            <h2>🛠️ High-Impact Examples for Technical Fields</h2>
+            <ul id="technicalExamplesList" style="list-style-type: '💻'; padding-left: 20px;">
+                </ul>
+        </div>
+
+        <div id="assessment" class="tab-content" style="display:none;">
+            <h2>📈 Quick-Assessment: How AI-Resistant is Your Assignment?</h2>
+            <p>Check all the statements that apply to your current assignment design:</p>
+            
+            <form id="assessmentForm">
+                <div class="assessment-question"><input type="checkbox" id="q1" name="q" value="1"><label for="q1">It requires analysis of a **local, campus-specific, or personal** situation (Personalization).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q2" name="q" value="1"><label for="q2">Students must submit a minimum of **three distinct drafts/components** over the semester (Process-Based).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q3" name="q" value="1"><label for="q3">The final submission requires a **reflection/justification** section explaining *why* choices were made (Metacognitive).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q4" name="q" value="1"><label for="q4">It mirrors a **real-world professional task** rather than a typical essay (Authentic Assessment).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q5" name="q" value="1"><label for="q5">The deliverable must be a **non-text** format (e.g., video, podcast, infographic) (Multimodal).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q6" name="q" value="1"><label for="q6">A mandatory **live component** (e.g., defense, presentation, live-coding) is required (Synchronous).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q7" name="q" value="1"><label for="q7">It requires **collaborative work** and documented individual contributions (Collaborative).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q8" name="q" value="1"><label for="q8">Students must **critically evaluate and correct** an AI-generated output (AI Transparency).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q9" name="q" value="1"><label for="q9">It focuses on **synthesis/creation of novel solutions** over simple analysis/application (Higher-Order Tasks).</label></div>
+                <div class="assessment-question"><input type="checkbox" id="q10" name="q" value="1"><label for="q10">The assignment is a **time-bound** assessment (e.g., 60-minute in-class writing) (Time-Bound).</label></div>
                 
-                <div class="interactive-box">
-                    <h4>Workshop Objectives</h4>
-                    <p>By the end of this workshop, you will be able to:</p>
-                    <ul class="styled-list">
-                        <li>Understand the principles behind AI-resistant assignment design</li>
-                        <li>Apply multiple strategies to modify existing assignments</li>
-                        <li>Create authentic assessments that promote deeper learning</li>
-                        <li>Develop a balanced approach to AI in your classroom</li>
-                    </ul>
-                </div>
+                <p style="text-align: center; margin-top: 25px;"><button type="button" onclick="calculateAssessment()" style="background-color: #00AA00; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Calculate Resistance Score</button></p>
+            </form>
 
-                <h3>What Makes an Assignment "AI-Resistant"?</h3>
-                <p>An AI-resistant assignment is not about creating barriers or "tricking" students. Instead, it's about designing assessments that:</p>
-                <ul class="styled-list">
-                    <li><strong>Promote genuine learning</strong> and critical thinking skills</li>
-                    <li><strong>Require personal insight</strong> that AI cannot replicate</li>
-                    <li><strong>Focus on the learning process</strong> rather than just the final product</li>
-                    <li><strong>Connect to real-world applications</strong> and authentic contexts</li>
-                    <li><strong>Make AI collaboration transparent</strong> when appropriate</li>
-                </ul>
+            <div id="assessmentResult"></div>
+        </div>
 
-                <p class="mt-20"><strong>Important Note:</strong> The goal is not to make assignments "AI-proof" (which may be impossible), but rather to design assessments where using AI provides limited benefit or where AI use must be transparent and critically evaluated.</p>
-            </section>
-
-            <!-- Why AI-Resistant Section -->
-            <section id="why" class="content-section">
-                <h2>Why Create AI-Resistant Assignments?</h2>
-                
-                <h3>The Challenge</h3>
-                <p>Current generative AI tools like ChatGPT, Claude, and others can:</p>
-                <ul class="styled-list">
-                    <li>Generate sophisticated-sounding academic writing</li>
-                    <li>Complete traditional essays, problem sets, and assignments</li>
-                    <li>Produce code, create presentations, and solve complex problems</li>
-                    <li>Operate quickly and accessibly for students</li>
-                </ul>
-
-                <h3>The Opportunity</h3>
-                <p>Rather than viewing AI solely as a threat, this is an opportunity to:</p>
-                <ul class="styled-list">
-                    <li><strong>Rethink assessment practices</strong> that may have become rote or formulaic</li>
-                    <li><strong>Focus on higher-order thinking skills</strong> that are essential in an AI-driven world</li>
-                    <li><strong>Create more authentic</strong> and engaging learning experiences</li>
-                    <li><strong>Prepare students</strong> to work effectively alongside AI tools</li>
-                    <li><strong>Emphasize uniquely human skills</strong> like creativity, emotional intelligence, and ethical reasoning</li>
-                </ul>
-
-                <div class="interactive-box">
-                    <h4>Reflection Exercise</h4>
-                    <p>Think about one assignment you currently use in your courses. Ask yourself:</p>
-                    <ul class="styled-list">
-                        <li>Could ChatGPT complete this assignment and receive a passing grade?</li>
-                        <li>What makes this assignment meaningful for student learning?</li>
-                        <li>How could I modify it to emphasize uniquely human elements?</li>
-                    </ul>
-                    <button class="btn" onclick="alert('Great reflection! Keep these questions in mind as we explore strategies.')">Complete Reflection</button>
-                </div>
-
-                <h3>Understanding Student Motivation</h3>
-                <p>Students may use AI for various reasons:</p>
-                <ul class="styled-list">
-                    <li>Assignments perceived as busywork or lacking relevance</li>
-                    <li>Time management difficulties and stress</li>
-                    <li>Fear of failure</li>
-                    <li>Lack of understanding about academic integrity</li>
-                    <li>Legitimate uses like proofreading or generating ideas (AI-as-tutor)</li>
-                </ul>
-                <p>Understanding these motivations helps us design better assignments that address the root causes of academic dishonesty while supporting authentic learning.</p>
-            </section>
-
-            <!-- Due to length constraints, I'll provide a shortened version with key sections.
-                 The full file with all sections is too long for a single response. -->
-
-            <!-- Assessment Section -->
-            <section id="assessment" class="content-section">
-                <h2>Workshop Assessment</h2>
-                <p>Test your understanding of AI-resistant assignment design strategies. Select the best answer for each question.</p>
-
-                <div class="quiz-question">
-                    <h4>Question 1: Which of the following assignments is MOST AI-resistant?</h4>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="a">
-                            A) "Write a 5-page essay explaining the concept of network security."
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="b">
-                            B) "List and describe five common types of cyber attacks."
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="c">
-                            C) "Conduct a security audit of your home network, document specific vulnerabilities you find, and create a remediation plan based on your budget constraints. Include screenshots and a reflection on what surprised you."
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="d">
-                            D) "Summarize the main points from Chapter 5 about firewall configurations."
-                        </label>
-                    </div>
-                    <div class="quiz-feedback" id="feedback-q1"></div>
-                </div>
-
-                <div class="quiz-question">
-                    <h4>Question 2: Which strategy involves breaking assignments into smaller, interconnected components?</h4>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="a">
-                            A) Multimodal Assessment
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="b">
-                            B) Process-Based Assessment (Scaffolding)
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="c">
-                            C) Synchronous Assessment
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="d">
-                            D) AI Transparency
-                        </label>
-                    </div>
-                    <div class="quiz-feedback" id="feedback-q2"></div>
-                </div>
-
-                <button class="btn btn-secondary" onclick="checkAnswers()" style="font-size: 1.2em; padding: 15px 40px;">Submit Assessment</button>
-                
-                <div class="score-display" id="final-score"></div>
-
-                <div style="margin-top: 30px; padding: 20px; background: #e8f4f8; border-radius: 10px;">
-                    <h3>What's Next?</h3>
-                    <ul class="styled-list">
-                        <li><strong>Apply what you learned:</strong> Choose one assignment to revise using these strategies</li>
-                        <li><strong>Share with colleagues:</strong> Discuss these approaches in your department</li>
-                        <li><strong>Experiment and iterate:</strong> Try new strategies and refine based on results</li>
-                        <li><strong>Stay informed:</strong> AI technology evolves rapidly—continue learning</li>
-                        <li><strong>Focus on learning:</strong> Remember that the goal is student growth, not perfect detection</li>
-                    </ul>
-                </div>
-            </section>
-
-        </main>
+        <div class="best-practices">
+            <h2>✅ Implementation Best Practices</h2>
+            <p><strong>Clear Communication:</strong> Establish transparent AI use policies and develop detailed rubrics that emphasize criteria AI cannot meet well.</p>
+            <p><strong>Assessment Literacy:</strong> Test your own assignments with AI tools to understand their vulnerabilities and teach students about AI limitations.</p>
+        </div>
     </div>
 
     <script>
-        // Navigation functionality
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                
-                // Update active nav link
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show target section
-                document.querySelectorAll('.content-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                document.getElementById(targetId).classList.add('active');
-                
-                // Scroll to top
-                window.scrollTo(0, 0);
-            });
-        });
+        /* JavaScript is embedded here for simplicity */
+        const methodsData = [
+            {
+                title: "1. Personalization and Specificity",
+                definition: "Designing assignments that require students to draw on unique personal experiences, specific contexts, or localized information that AI cannot access or replicate authentically.",
+                examples: [
+                    "Ask students to connect theoretical concepts to their own life experiences or community observations.",
+                    "Require analysis of local issues, campus-specific situations, or regional events.",
+                    "In **cybersecurity**: Ask students to assess their own home network security and document specific vulnerabilities found."
+                ],
+                technicalExamples: [
+                    "In **Cybersecurity**: Ask students to assess their own home network security and document specific vulnerabilities found.",
+                    "In **AI**: Have students refer back to a personal 'fictional scenario' (like a personal country) created at the start of the course, ensuring context-rich, non-generic responses."
+                ]
+            },
+            {
+                title: "2. Process-Based Assessment (Scaffolding)",
+                definition: "Breaking large assignments into smaller, interconnected components that track student thinking and development over time, making it difficult to use AI for the entire process.",
+                examples: [
+                    "For research papers: Submit topic proposals, annotated bibliographies, thesis drafts, and final papers separately.",
+                    "Require students to submit their research process documentation, including dead ends and pivots.",
+                    "In **programming**: Require commit history, code evolution documentation, and explanation of debugging processes."
+                ],
+                technicalExamples: [
+                    "In **Programming/AI**: Require commit history, code evolution documentation, and explanation of debugging processes (e.g., for a machine learning model's training script).",
+                    "Require evidence selection with reasoning for technical reports or policy briefs."
+                ]
+            },
+            {
+                title: "3. Metacognitive and Reflective Components",
+                definition: "Requiring students to explain their thinking process, justify their choices, and reflect on their learning journey—tasks that AI cannot authentically complete.",
+                examples: [
+                    "Ask students to explain why they selected specific sources and how they plan to use them.",
+                    "Require reflection on obstacles encountered and how they were overcome.",
+                    "In **technical fields**: Explain why certain approaches were chosen over alternatives (e.g., why Python was chosen over R for a data task)."
+                ],
+                technicalExamples: [
+                    "In **Technical Fields**: Explain why certain security approaches or AI model architectures were chosen over alternatives.",
+                    "Request process journals documenting decision-making at each stage of a networking configuration or a large data analysis project."
+                ]
+            },
+            {
+                title: "4. Authentic Assessment",
+                definition: "Creating assignments that mirror real-world professional tasks and require application of knowledge in complex, context-rich situations rather than simple knowledge recall.",
+                examples: [
+                    "Develop a marketing campaign for a real product, then critique AI-generated ideas.",
+                    "Moot court exercises where students argue real legal cases.",
+                    "In **cybersecurity**: Conduct actual penetration testing on authorized systems with detailed reporting."
+                ],
+                technicalExamples: [
+                    "In **Cybersecurity**: Conduct actual penetration testing on authorized systems with detailed reporting and remediation plans.",
+                    "In **AI**: Design and deploy a small-scale prototype (e.g., a simple chatbot) for a specific, real-world organizational need."
+                ]
+            },
+            {
+                title: "5. Multimodal Assessment",
+                definition: "Using non-traditional formats that require integration of multiple skills and media types that AI struggles to produce cohesively.",
+                examples: [
+                    "Podcasts or audio presentations (especially interviews).",
+                    "Video presentations with voice-over explanations of slides.",
+                    "Infographics that synthesize complex information.",
+                    "In **networking**: Create video demonstrations of configuration processes with verbal explanations."
+                ],
+                technicalExamples: [
+                    "In **Networking**: Create video demonstrations of configuration processes (e.g., firewall setup) with verbal explanations and visual proof of functionality.",
+                    "Create an interactive infographic (using tools like Tableau or Power BI) to synthesize a complex security incident timeline."
+                ]
+            },
+            {
+                title: "6. Synchronous and In-Person Components",
+                definition: "Incorporating real-time, face-to-face elements that cannot be outsourced to AI.",
+                examples: [
+                    "Oral defenses or thesis presentations.",
+                    "In-class debates and structured discussions.",
+                    "Live problem-solving demonstrations.",
+                    "One-on-one check-ins to discuss work progress."
+                ],
+                technicalExamples: [
+                    "Live problem-solving demonstrations or 'live-coding' challenges.",
+                    "Oral defenses where students must answer 'why' and 'how' questions about their code or design choices."
+                ]
+            },
+            {
+                title: "9. AI Transparency and Critical Engagement",
+                definition: "Explicitly incorporating AI into the assignment but requiring students to document, critique, and improve upon AI outputs.",
+                examples: [
+                    "Have students input assignment prompts into multiple AI tools, then evaluate and compare responses.",
+                    "Require documentation of all AI usage: prompts used, outputs received, and how they were modified.",
+                    "Ask students to identify errors, biases, or limitations in AI-generated content."
+                ],
+                technicalExamples: [
+                    "In **AI/Security**: Use AI to generate five potential phishing emails, then have students critique, fact-check, and improve them.",
+                    "Require documentation of AI usage: prompts used, outputs received, and a detailed explanation of why AI suggestions were accepted or rejected for a technical report."
+                ]
+            }
+            // Other methods are still included in the main list but may not have a specific technical example listed here for brevity/focus
+            ,{title: "7. Collaborative and Social Learning Tasks", definition: "Assignments requiring genuine human interaction, negotiation, and group dynamics that AI cannot replicate.", examples: ["Project-based learning with real-world deliverables.", "Peer review with substantive feedback requirements.", "Group problem-solving with documented individual contributions."], technicalExamples: ["Group problem-solving on a network troubleshooting scenario with documented individual contributions to the solution."]},
+            {title: "8. Higher-Order Cognitive Tasks (Bloom's Taxonomy)", definition: "Designing assignments that target upper levels of Bloom's Taxonomy (Analysis, Evaluation, Synthesis, Creation) rather than lower levels (Remember, Understand, Apply).", examples: ["Critical evaluation of AI-generated responses for accuracy and gaps.", "Creation of novel solutions to complex, multi-variable problems.", "In security: Evaluate the effectiveness of different security frameworks for a specific organizational context."], technicalExamples: ["In **Security**: Evaluate the effectiveness of different security frameworks (e.g., NIST vs. ISO 27001) for a specific organizational context.", "Design a novel neural network architecture to solve a custom classification problem."]},
+            {title: "10. Context-Specific Case Studies", definition: "Using detailed, specific scenarios with multiple variables that require deep analysis rather than generic responses.", examples: ["Analyze specific companies' responses to real cybersecurity incidents.", "Examine integration experiences of international students at your specific institution.", "In networking: Troubleshoot specific network diagrams with unique configurations and symptoms."], technicalExamples: ["In **Networking**: Troubleshoot specific network diagrams with unique configurations and symptoms.", "Analyze specific companies' responses to real cybersecurity incidents using local news sources and organizational data."]},
+            {title: "11. Iterative Revision with Instructor Feedback", definition: "Building assignments around multiple drafts with personalized instructor feedback that students must incorporate.", examples: ["Require students to address specific feedback in subsequent drafts.", "Have students explain how they incorporated feedback and why.", "Use tracked changes to show revision process."], technicalExamples: ["Require students to submit an 'Explanation of Changes' document alongside their revised code or technical report."]},
+            {title: "12. Time-Bound Assessment", definition: "Assessments completed within limited timeframes that make extensive AI consultation impractical.", examples: ["In-class essays or short-answer responses.", "Timed online assessments with varied question pools.", "Live coding challenges.", "Rapid response discussions or 'exit tickets'."], technicalExamples: ["Live coding challenges where students must solve a problem in 15 minutes.", "Timed online assessments with varied question pools focusing on application, not recall."]},
+            {title: "13. Experiential and Field-Based Learning", definition: "Assignments grounded in direct experience outside the classroom that AI cannot access.", examples: ["Lab work with data collection and analysis.", "Internship reflections connecting theory to practice.", "Field observations with photographic or video documentation.", "In IT: Site visits to data centers with security assessment reports."], technicalExamples: ["In **IT**: Site visits to data centers with security assessment reports based on on-site observations.", "Lab work requiring physical setup and data collection for a networking or IoT project."]}
+        ];
 
-        // Assessment checking
-        function checkAnswers() {
-            const answers = {
-                q1: { correct: 'c', feedback: 'Correct! This assignment combines personalization (home network), authenticity (real vulnerabilities), higher-order thinking (creating remediation plan), and metacognition (reflection). AI cannot access your actual home network or know your specific budget constraints.' },
-                q2: { correct: 'b', feedback: 'Correct! Process-based assessment (scaffolding) breaks large assignments into stages, making it difficult to use AI for the entire process and allowing instructors to track student development.' }
-            };
-            
-            let score = 0;
-            let totalQuestions = Object.keys(answers).length;
-            
-            // Check each question
-            for (let q in answers) {
-                const selected = document.querySelector(`input[name="${q}"]:checked`);
-                const feedback = document.getElementById(`feedback-${q}`);
-                
-                if (selected) {
-                    if (selected.value === answers[q].correct) {
-                        score++;
-                        feedback.className = 'quiz-feedback correct';
-                        feedback.innerHTML = '✓ ' + answers[q].feedback;
-                    } else {
-                        feedback.className = 'quiz-feedback incorrect';
-                        feedback.innerHTML = '✗ Incorrect. ' + answers[q].feedback;
-                    }
-                } else {
-                    feedback.className = 'quiz-feedback incorrect';
-                    feedback.innerHTML = '✗ Please select an answer.';
+        const methodList = document.getElementById('methodList');
+        const technicalExamplesList = document.getElementById('technicalExamplesList');
+
+        // Function to render the method data into the HTML
+        function renderMethods() {
+            methodList.innerHTML = '';
+            technicalExamplesList.innerHTML = '';
+
+            methodsData.forEach((method, index) => {
+                // 1. Render Main Method Guide (Accordion)
+                const li = document.createElement('li');
+                li.className = 'method-item';
+
+                const header = document.createElement('div');
+                header.className = 'method-header';
+                header.innerHTML = `
+                    <span>${method.title}</span>
+                    <span class="toggle-icon">+</span>
+                `;
+                header.onclick = () => toggleContent(li, index);
+
+                const contentBody = document.createElement('div');
+                contentBody.className = 'content-body';
+                contentBody.id = `content-${index}`;
+
+                const defHeading = document.createElement('h4');
+                defHeading.textContent = 'Definition:';
+                contentBody.appendChild(defHeading);
+                const defParagraph = document.createElement('p');
+                defParagraph.innerHTML = method.definition;
+                contentBody.appendChild(defParagraph);
+
+                const examplesHeading = document.createElement('h4');
+                examplesHeading.textContent = 'Examples:';
+                contentBody.appendChild(examplesHeading);
+                const examplesList = document.createElement('ul');
+                method.examples.forEach(example => {
+                    const liExample = document.createElement('li');
+                    liExample.innerHTML = example;
+                    examplesList.appendChild(liExample);
+                });
+                contentBody.appendChild(examplesList);
+
+                li.appendChild(header);
+                li.appendChild(contentBody);
+                methodList.appendChild(li);
+
+                // 2. Render Technical Examples Tab
+                if (method.technicalExamples && method.technicalExamples.length > 0) {
+                    const techHeader = document.createElement('h3');
+                    techHeader.innerHTML = `&bull; ${method.title}`;
+                    techHeader.style.color = '#008000';
+                    technicalExamplesList.appendChild(techHeader);
+                    
+                    const techUl = document.createElement('ul');
+                    techUl.style.listStyleType = 'disc';
+                    techUl.style.marginBottom = '20px';
+                    method.technicalExamples.forEach(example => {
+                        const techLi = document.createElement('li');
+                        techLi.innerHTML = example;
+                        techUl.appendChild(techLi);
+                    });
+                    technicalExamplesList.appendChild(techUl);
                 }
-            }
-            
-            // Display score
-            const percentage = Math.round((score / totalQuestions) * 100);
-            const scoreDisplay = document.getElementById('final-score');
-            let message = '';
-            
-            if (percentage >= 90) {
-                message = `🌟 Excellent! You scored ${score}/${totalQuestions} (${percentage}%). You have a strong understanding of AI-resistant assignment design!`;
-            } else if (percentage >= 70) {
-                message = `👍 Good work! You scored ${score}/${totalQuestions} (${percentage}%). Review the feedback to strengthen your understanding.`;
-            } else {
-                message = `📚 You scored ${score}/${totalQuestions} (${percentage}%). Consider reviewing the workshop content.`;
-            }
-            
-            scoreDisplay.innerHTML = message;
-            scoreDisplay.classList.add('show');
-            
-            // Scroll to score
-            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
         }
 
-        // Initialize - scroll to top on load
-        window.addEventListener('load', function() {
-            window.scrollTo(0, 0);
-        });
+        // Function to handle the accordion toggle
+        function toggleContent(item, index) {
+            const content = item.querySelector('.content-body');
+            const icon = item.querySelector('.toggle-icon');
+            const isActive = content.classList.contains('active');
+
+            // Close all open sections
+            document.querySelectorAll('.content-body.active').forEach(openContent => {
+                openContent.classList.remove('active');
+                openContent.style.maxHeight = 0;
+            });
+            document.querySelectorAll('.method-item .toggle-icon').forEach(openIcon => {
+                openIcon.textContent = '+';
+            });
+
+            // Open the clicked section if it was not already open
+            if (!isActive) {
+                content.classList.add('active');
+                // The scrollHeight trick ensures the transition works smoothly
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.textContent = '–';
+            } else {
+                content.style.maxHeight = 0;
+                icon.textContent = '+';
+            }
+        }
+
+        // Function to handle tab switching
+        function openTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected tab content
+            document.getElementById(tabId).style.display = 'block';
+
+            // Activate the clicked button
+            document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Function to calculate the assessment score
+        function calculateAssessment() {
+            const form = document.getElementById('assessmentForm');
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+            const score = checkboxes.length;
+            const resultDiv = document.getElementById('assessmentResult');
+            const maxScore = 10;
+            
+            let message = '';
+            let className = '';
+
+            if (score >= 7) {
+                message = `Excellent! Score: ${score}/${maxScore}. Your assignment is highly AI-resistant, combining multiple robust strategies.`;
+                className = 'result-high';
+            } else if (score >= 4) {
+                message = `Good start! Score: ${score}/${maxScore}. Your assignment uses several strategies, but consider layering on more methods for greater resistance.`;
+                className = 'result-medium';
+            } else {
+                message = `Review needed! Score: ${score}/${maxScore}. Your assignment is highly vulnerable to AI generation. Consider using more of the methods from the Guide tab.`;
+                className = 'result-low';
+            }
+
+            resultDiv.textContent = message;
+            resultDiv.className = className;
+        }
+
+        // Initialize the page content and default tab
+        window.onload = () => {
+            renderMethods();
+            openTab('methods'); // Default to the Method Guide tab
+        };
     </script>
 </body>
 </html>
