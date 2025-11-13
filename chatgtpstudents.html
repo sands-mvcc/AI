@@ -295,6 +295,8 @@
       border-radius: 999px;
       background: var(--mvcc-green-light);
       color: var(--mvcc-green-dark);
+      border: 1px solid rgba(0,0,0,0.1);
+      cursor: pointer;
     }
 
     .btn {
@@ -390,6 +392,7 @@
       background: var(--mvcc-green-light);
       font-size: 0.8rem;
       color: #333;
+      white-space: pre-wrap;
     }
 
     /* Ethics Checklist */
@@ -522,15 +525,6 @@
         margin-left: 0;
         padding-top: 3.2rem;
       }
-      .mobile-toggle {
-        position: fixed;
-        top: 0.5rem;
-        left: 0.5rem;
-        z-index: 20;
-      }
-      header {
-        margin-top: 0.3rem;
-      }
       .playground-layout {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -552,6 +546,7 @@
   <button class="btn small secondary mobile-toggle" id="menuToggle">
     ☰ Menu
   </button>
+
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">ChatGPT for Students</div>
@@ -560,17 +555,17 @@
 
     <div class="nav-section-label">Sections</div>
     <ul class="nav-links">
-      <li><a class="nav-link active" data-target="overview">Overview</a></li>
-      <li><a class="nav-link" data-target="tools">Core Tools</a></li>
-      <li><a class="nav-link" data-target="workflows">Study Workflows</a></li>
-      <li><a class="nav-link" data-target="playground">Prompt Playground</a></li>
-      <li><a class="nav-link" data-target="ethics">Ethical Use</a></li>
-      <li><a class="nav-link" data-target="quiz">Quick Quiz</a></li>
-      <li><a class="nav-link" data-target="links">Official Links</a></li>
+      <li><a class="nav-link active" href="#overview" data-target="overview">Overview</a></li>
+      <li><a class="nav-link" href="#tools" data-target="tools">Core Tools</a></li>
+      <li><a class="nav-link" href="#workflows" data-target="workflows">Study Workflows</a></li>
+      <li><a class="nav-link" href="#playground" data-target="playground">Prompt Playground</a></li>
+      <li><a class="nav-link" href="#ethics" data-target="ethics">Ethical Use</a></li>
+      <li><a class="nav-link" href="#quiz" data-target="quiz">Quick Quiz</a></li>
+      <li><a class="nav-link" href="#links" data-target="links">Official Links</a></li>
     </ul>
 
     <div class="nav-footer">
-      <strong>Tip:</strong> Use this page as a “home base” while you experiment with ChatGPT in class.  
+      <strong>Tip:</strong> Use this page as a “home base” while you experiment with ChatGPT in class.
       Practice writing your own prompts in the Prompt Playground section.
     </div>
   </nav>
@@ -622,12 +617,18 @@
             🔗 <a href="https://openai.com/chatgpt" target="_blank">Open ChatGPT Overview</a>
           </div>
           <div class="tool-meta">
-            Models: GPT-5 / GPT-4o and others, depending on your plan.:contentReference[oaicite:0]{index=0}
+            Use this as your “home base” for most tasks.
           </div>
           <div class="tool-actions">
             <div class="chip-row">
-              <span class="chip">Concept explanations</span>
-              <span class="chip">Homework planning</span>
+              <button class="chip chip-prompt"
+                      data-prompt="Explain [topic] step by step at a beginner level. Then give me 3 practice questions with answers hidden until I ask for them.">
+                Concept explanations
+              </button>
+              <button class="chip chip-prompt"
+                      data-prompt="Help me plan my homework for [course]. Ask what assignments I have, estimate how long they will take, and create a weekly schedule. Do NOT do the work for me.">
+                Homework planning
+              </button>
             </div>
             <button class="btn small sample-btn"
               data-prompt="I am a college student in your [course name] course. I am struggling with the topic [topic]. Explain it to me step by step at a beginner level and then give me 3 practice questions with answers hidden until I ask for them.">
@@ -642,7 +643,7 @@
           <h3>Study Mode</h3>
           <p>
             A special mode that guides you through problems step-by-step instead of just giving the
-            answer. Great for exam prep and deep understanding.:contentReference[oaicite:1]{index=1}
+            answer. Great for exam prep and deep understanding.
           </p>
           <div class="tool-link">
             🔗 <a href="https://openai.com/index/chatgpt-study-mode/" target="_blank">
@@ -650,7 +651,7 @@
             </a>
           </div>
           <div class="tool-meta">
-            Available to logged-in users on Free, Plus, Pro, Team, and (soon) Edu.:contentReference[oaicite:2]{index=2}
+            Helps you practice rather than memorize answers.
           </div>
           <div class="tool-actions">
             <div class="chip-row">
@@ -670,7 +671,7 @@
           <h3>Canvas (Co-Writing & Coding Space)</h3>
           <p>
             An editing space where you and ChatGPT work together on drafts or code. You can make changes
-            directly, highlight text, and ask for revisions.:contentReference[oaicite:3]{index=3}
+            directly, highlight text, and ask for revisions.
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/articles/9930697-what-is-the-canvas-feature-in-chatgpt-and-how-do-i-use-it"
@@ -697,14 +698,14 @@
           <h3>Projects in ChatGPT</h3>
           <p>
             Projects let you keep related chats, files, and tools together—for example, a single project
-            for this course or for your capstone.:contentReference[oaicite:4]{index=4}
+            for this course or for your capstone.
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/articles/10169521-using-projects-in-chatgpt"
                   target="_blank">Using Projects – Help Article</a>
           </div>
           <div class="tool-meta">
-            Includes all major tools: Canvas, image generation, study mode, voice, and web search.:contentReference[oaicite:5]{index=5}
+            Useful for long-term assignments and research projects.
           </div>
           <div class="tool-actions">
             <div class="chip-row">
@@ -724,7 +725,7 @@
           <h3>Data Analysis (Code Interpreter)</h3>
           <p>
             Upload spreadsheets or CSV files and have ChatGPT analyze, visualize, and explain patterns in
-            your data—like survey results or lab measurements.:contentReference[oaicite:6]{index=6}
+            your data—like survey results or lab measurements.
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
@@ -751,14 +752,14 @@
           <h3>Image Input & Generation</h3>
           <p>
             You can upload diagrams, screenshots, and photos for ChatGPT to explain, or ask it to generate
-            new images (concept maps, study visuals, mock-ups).:contentReference[oaicite:7]{index=7}
+            new images (concept maps, study visuals, mock-ups).
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
                   target="_blank">Capabilities – Image Input & Generation</a>
           </div>
           <div class="tool-meta">
-            Great for making your own study diagrams or interpreting complex figures.
+            Great for making study diagrams or interpreting complex figures.
           </div>
           <div class="tool-actions">
             <div class="chip-row">
@@ -778,7 +779,7 @@
           <h3>Voice Mode (See / Hear / Speak)</h3>
           <p>
             Talk with ChatGPT using your voice on supported platforms—helpful if you like to think out
-            loud or want hands-free study sessions.:contentReference[oaicite:8]{index=8}
+            loud or want hands-free study sessions.
           </p>
           <div class="tool-link">
             🔗 <a href="https://openai.com/index/chatgpt-can-now-see-hear-and-speak/"
@@ -805,7 +806,7 @@
           <h3>Web Search & Deep Research</h3>
           <p>
             ChatGPT can search the web and perform multi-step research, providing answers with citations
-            to sources. Use this to explore topics—but still verify with scholarly sources.:contentReference[oaicite:9]{index=9}
+            to sources. Use this to explore topics—but still verify with scholarly sources.
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
@@ -832,7 +833,7 @@
           <h3>ChatGPT Help Center</h3>
           <p>
             Official documentation explaining features like custom instructions, study mode, data
-            analysis, and more. This is the “instruction manual” for ChatGPT.:contentReference[oaicite:10]{index=10}
+            analysis, and more. This is the “instruction manual” for ChatGPT.
           </p>
           <div class="tool-link">
             🔗 <a href="https://help.openai.com/en/collections/3742473-chatgpt" target="_blank">
@@ -1077,175 +1078,222 @@
         </a></li>
       </ul>
       <small>
-        You can extend this section with your own college-specific AI policies, library guides, or course
+        You can extend this section with college-specific AI policies, library guides, or course
         handouts.
       </small>
     </section>
   </main>
 
   <script>
-    // Smooth scroll and active nav highlighting
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        const targetId = link.getAttribute('data-target');
-        const targetEl = document.getElementById(targetId);
-        if (targetEl) {
-          window.scrollTo({
-            top: targetEl.offsetTop - 12,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    window.addEventListener('scroll', () => {
-      const sections = ['overview','tools','workflows','playground','ethics','quiz','links'];
-      let current = 'overview';
-      const scrollPos = window.scrollY + 70;
-
-      sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && scrollPos >= el.offsetTop) {
-          current = id;
-        }
-      });
+    document.addEventListener('DOMContentLoaded', function () {
+      // ===== NAVIGATION =====
+      const sidebar = document.getElementById('sidebar');
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.querySelectorAll('.nav-link');
 
       navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('data-target') === current);
-      });
-    });
-
-    // Mobile menu toggle
-    const sidebar = document.getElementById('sidebar');
-    const menuToggle = document.getElementById('menuToggle');
-    if (menuToggle) {
-      menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-      });
-    }
-
-    // Tool filtering
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const toolCards = document.querySelectorAll('.tool-card');
-
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const filter = btn.getAttribute('data-filter');
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        toolCards.forEach(card => {
-          const goals = (card.getAttribute('data-goals') || '').toLowerCase();
-          if (!goals && filter !== 'all') {
-            // Non-goal cards stay visible when "all", hidden otherwise
-            card.classList.toggle('hidden', filter !== 'all');
-          } else if (filter === 'all' || goals.includes(filter)) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
+        link.addEventListener('click', (e) => {
+          // Keep href as fallback, but use smooth scroll + active state
+          e.preventDefault();
+          const targetId = link.getAttribute('data-target');
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          navLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+          if (sidebar) {
+            sidebar.classList.remove('open');
           }
         });
       });
-    });
 
-    // Sample prompt loader
-    const promptBox = document.getElementById('promptBox');
-    document.querySelectorAll('.sample-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const text = btn.getAttribute('data-prompt') || '';
-        promptBox.value = text;
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('open');
+        });
+      }
+
+      // Active nav on scroll
+      window.addEventListener('scroll', () => {
+        const sections = ['overview','tools','workflows','playground','ethics','quiz','links'];
+        let current = 'overview';
+        const scrollPos = window.scrollY + 80;
+
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && scrollPos >= el.offsetTop) {
+            current = id;
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('data-target') === current);
+        });
+      });
+
+      // ===== TOOL FILTERING =====
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const filterableToolCards = document.querySelectorAll('.tool-card[data-goals]');
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          filterableToolCards.forEach(card => {
+            const goals = (card.getAttribute('data-goals') || '').toLowerCase();
+            if (filter === 'all' || goals.includes(filter)) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+
+      // ===== PROMPT PLAYGROUND & SAMPLE PROMPTS =====
+      const promptBox = document.getElementById('promptBox');
+      const charCount = document.getElementById('charCount');
+      const copyPromptBtn = document.getElementById('copyPrompt');
+
+      function updateCharCount() {
+        if (!promptBox || !charCount) return;
+        charCount.textContent = (promptBox.value || '').length + ' characters';
+      }
+
+      if (promptBox) {
+        promptBox.addEventListener('input', updateCharCount);
         updateCharCount();
-        promptBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
-    });
-
-    // Character count
-    const charCount = document.getElementById('charCount');
-    function updateCharCount() {
-      charCount.textContent = (promptBox.value || '').length + ' characters';
-    }
-    promptBox.addEventListener('input', updateCharCount);
-    updateCharCount();
-
-    // Copy to clipboard
-    document.getElementById('copyPrompt').addEventListener('click', () => {
-      if (!promptBox.value.trim()) {
-        alert('Write or load a prompt first.');
-        return;
       }
-      navigator.clipboard.writeText(promptBox.value).then(() => {
-        const original = document.getElementById('copyPrompt').textContent;
-        document.getElementById('copyPrompt').textContent = 'Copied!';
-        setTimeout(() => {
-          document.getElementById('copyPrompt').textContent = original;
-        }, 800);
-      }).catch(() => {
-        alert('Could not copy. You may copy manually with Ctrl+C / Cmd+C.');
+
+      // Sample prompt buttons
+      const sampleButtons = document.querySelectorAll('.sample-btn');
+      sampleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!promptBox) return;
+          const text = btn.getAttribute('data-prompt') || '';
+          promptBox.value = text;
+          updateCharCount();
+          const playgroundSection = document.getElementById('playground');
+          if (playgroundSection) {
+            playgroundSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
       });
-    });
 
-    // Prompt hint suggestions based on goal + role
-    const goalSelect = document.getElementById('goalSelect');
-    const roleSelect = document.getElementById('roleSelect');
-    const promptHint = document.getElementById('promptHint');
+      // Chip prompts
+      const chipPromptButtons = document.querySelectorAll('.chip-prompt');
+      chipPromptButtons.forEach(chip => {
+        chip.addEventListener('click', () => {
+          if (!promptBox) return;
+          const text = chip.getAttribute('data-prompt') || '';
+          promptBox.value = text;
+          updateCharCount();
+          const playgroundSection = document.getElementById('playground');
+          if (playgroundSection) {
+            playgroundSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
 
-    function updatePromptHint() {
-      const goal = goalSelect.value;
-      const role = roleSelect.value;
-      if (!goal && !role) {
-        promptHint.textContent = 'Choose a goal and a role to see a suggestion here.';
-        return;
+      // Copy prompt
+      if (copyPromptBtn && promptBox) {
+        copyPromptBtn.addEventListener('click', () => {
+          if (!promptBox.value.trim()) {
+            alert('Write or load a prompt first.');
+            return;
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(promptBox.value).then(() => {
+              const original = copyPromptBtn.textContent;
+              copyPromptBtn.textContent = 'Copied!';
+              setTimeout(() => {
+                copyPromptBtn.textContent = original;
+              }, 800);
+            }).catch(() => {
+              alert('Could not copy. You may copy manually with Ctrl+C / Cmd+C.');
+            });
+          } else {
+            promptBox.select();
+            document.execCommand('copy');
+            const original = copyPromptBtn.textContent;
+            copyPromptBtn.textContent = 'Copied!';
+            setTimeout(() => {
+              copyPromptBtn.textContent = original;
+            }, 800);
+          }
+        });
       }
-      let text = 'Suggestion: Start your prompt like this —\n\n';
-      text += `"You are a ${role || '[role]'} helping me to ${goal || '[goal]'}. ` +
-              'Ask me a few questions about what I already know, then guide me step-by-step. ' +
-              'Avoid doing all the work for me; focus on explanations and practice."`;
-      promptHint.textContent = text;
-    }
 
-    goalSelect.addEventListener('change', updatePromptHint);
-    roleSelect.addEventListener('change', updatePromptHint);
+      // ===== PROMPT HINTS (Goal + Role) =====
+      const goalSelect = document.getElementById('goalSelect');
+      const roleSelect = document.getElementById('roleSelect');
+      const promptHint = document.getElementById('promptHint');
 
-    // Ethics checklist progress
-    const checklist = document.getElementById('ethicChecklist');
-    const progressBarInner = document.getElementById('progressBarInner');
-    const progressText = document.getElementById('progressText');
-
-    function updateChecklistProgress() {
-      const boxes = checklist.querySelectorAll('input[type="checkbox"]');
-      const total = boxes.length;
-      let checked = 0;
-      boxes.forEach(b => { if (b.checked) checked++; });
-      const percent = total ? Math.round((checked / total) * 100) : 0;
-      progressBarInner.style.width = percent + '%';
-      progressText.textContent = `${checked} of ${total} completed`;
-    }
-
-    checklist.querySelectorAll('input[type="checkbox"]').forEach(box => {
-      box.addEventListener('change', updateChecklistProgress);
-    });
-    updateChecklistProgress();
-
-    // Quiz logic
-    const quizOptions = document.querySelectorAll('#quizOptions .quiz-option');
-    const quizFeedback = document.getElementById('quizFeedback');
-
-    quizOptions.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const correct = btn.getAttribute('data-correct') === 'true';
-        // Reset styles
-        quizOptions.forEach(o => o.classList.remove('correct','incorrect'));
-        btn.classList.add(correct ? 'correct' : 'incorrect');
-        if (correct) {
-          quizFeedback.textContent =
-            'Correct! ChatGPT should be used as a support tool—to understand the assignment, develop ideas, and improve your own writing.';
-          quizFeedback.className = 'quiz-feedback correct';
-        } else {
-          quizFeedback.textContent =
-            'Not quite. The best use is to keep yourself as the author while ChatGPT supports planning, feedback, and understanding.';
-          quizFeedback.className = 'quiz-feedback incorrect';
+      function updatePromptHint() {
+        if (!promptHint) return;
+        const goal = goalSelect ? goalSelect.value : '';
+        const role = roleSelect ? roleSelect.value : '';
+        if (!goal && !role) {
+          promptHint.textContent = 'Choose a goal and a role to see a suggestion here.';
+          return;
         }
+        let text = 'Suggestion: Start your prompt like this —\n\n';
+        text += `"You are a ${role || '[role]'} helping me to ${goal || '[goal]'}. ` +
+                'Ask me a few questions about what I already know, then guide me step-by-step. ' +
+                'Avoid doing all the work for me; focus on explanations and practice."`;
+        promptHint.textContent = text;
+      }
+
+      if (goalSelect) goalSelect.addEventListener('change', updatePromptHint);
+      if (roleSelect) roleSelect.addEventListener('change', updatePromptHint);
+      updatePromptHint();
+
+      // ===== ETHICS CHECKLIST =====
+      const checklist = document.getElementById('ethicChecklist');
+      const progressBarInner = document.getElementById('progressBarInner');
+      const progressText = document.getElementById('progressText');
+
+      function updateChecklistProgress() {
+        if (!checklist || !progressBarInner || !progressText) return;
+        const boxes = checklist.querySelectorAll('input[type="checkbox"]');
+        const total = boxes.length;
+        let checked = 0;
+        boxes.forEach(b => { if (b.checked) checked++; });
+        const percent = total ? Math.round((checked / total) * 100) : 0;
+        progressBarInner.style.width = percent + '%';
+        progressText.textContent = `${checked} of ${total} completed`;
+      }
+
+      if (checklist) {
+        checklist.querySelectorAll('input[type="checkbox"]').forEach(box => {
+          box.addEventListener('change', updateChecklistProgress);
+        });
+        updateChecklistProgress();
+      }
+
+      // ===== QUIZ =====
+      const quizOptions = document.querySelectorAll('#quizOptions .quiz-option');
+      const quizFeedback = document.getElementById('quizFeedback');
+
+      quizOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const correct = option.getAttribute('data-correct') === 'true';
+          quizOptions.forEach(o => o.classList.remove('correct', 'incorrect'));
+          option.classList.add(correct ? 'correct' : 'incorrect');
+          if (!quizFeedback) return;
+          if (correct) {
+            quizFeedback.textContent =
+              'Correct! ChatGPT should be used as a support tool—to understand the assignment, develop ideas, and improve your own writing.';
+            quizFeedback.className = 'quiz-feedback correct';
+          } else {
+            quizFeedback.textContent =
+              'Not quite. The best use is to keep yourself as the author while ChatGPT supports planning, feedback, and understanding.';
+            quizFeedback.className = 'quiz-feedback incorrect';
+          }
+        });
       });
     });
   </script>
