@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatGPT for Students – Interactive Tutorial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --mvcc-green: #007a3d;
+      --mvcc-green-dark: #00552b;
+      --mvcc-green-light: #e5f6ef;
+      --mvcc-black: #111111;
+      --gray-light: #f5f5f5;
+      --accent: #00a86b;
+      --danger: #b00020;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #ffffff;
+      color: var(--mvcc-black);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Left Navigation */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 260px;
+      background: var(--mvcc-green);
+      color: white;
+      padding: 1.25rem 1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-top: 0.35rem;
+    }
+
+    .nav-section-label {
+      font-size: 0.8rem;
+      margin: 0.75rem 0 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.85;
+    }
+
+    .nav-links {
+      list-style: none;
+      margin-top: 0.25rem;
+      flex: 1;
+    }
+
+    .nav-links li {
+      margin: 0.1rem 0;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.4rem;
+      font-size: 0.9rem;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .nav-link:hover {
+      background: rgba(0,0,0,0.12);
+      transform: translateX(2px);
+    }
+
+    .nav-link.active {
+      background: rgba(0,0,0,0.25);
+    }
+
+    .nav-footer {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      margin-top: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      padding-top: 0.5rem;
+    }
+
+    .nav-footer strong {
+      font-weight: 700;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 260px;
+      flex: 1;
+      padding: 1.5rem 1.75rem 2.5rem;
+      max-width: 1200px;
+      margin-right: auto;
+    }
+
+    header {
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid var(--mvcc-green);
+      padding-bottom: 0.75rem;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: var(--mvcc-green-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      color: #444;
+      max-width: 700px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.7rem;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: var(--mvcc-green-light);
+      color: var(--mvcc-green-dark);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .section {
+      margin: 1.25rem 0;
+      padding: 1rem 1.1rem 1.1rem;
+      border-radius: 0.7rem;
+      background: var(--gray-light);
+      border: 1px solid #e0e0e0;
+    }
+
+    .section h2 {
+      font-size: 1.25rem;
+      color: var(--mvcc-green-dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .section p {
+      font-size: 0.9rem;
+      color: #444;
+      margin-bottom: 0.4rem;
+    }
+
+    .section small {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    /* Tool Filters & Cards */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 0.3rem;
+    }
+
+    .filter-btn {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: white;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.08s;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .filter-btn.active {
+      background: var(--mvcc-green);
+      color: white;
+      border-color: var(--mvcc-green-dark);
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .tool-card {
+      background: white;
+      border-radius: 0.7rem;
+      padding: 0.75rem 0.8rem;
+      border: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .tool-tag {
+      font-size: 0.7rem;
+      color: white;
+      background: var(--mvcc-green-dark);
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.35rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .tool-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.1rem;
+      color: var(--mvcc-black);
+    }
+
+    .tool-card p {
+      font-size: 0.85rem;
+      color: #444;
+    }
+
+    .tool-link {
+      font-size: 0.8rem;
+      margin-top: 0.15rem;
+    }
+
+    .tool-link a {
+      color: var(--mvcc-green-dark);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+
+    .tool-meta {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 0.15rem;
+    }
+
+    .tool-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.35rem;
+      gap: 0.3rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 999px;
+      background: var(--mvcc-green-light);
+      color: var(--mvcc-green-dark);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: var(--mvcc-green);
+      color: white;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn.secondary {
+      background: white;
+      color: var(--mvcc-green-dark);
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+
+    .btn.small {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      background: var(--mvcc-green-dark);
+    }
+
+    .btn.secondary:hover {
+      background: var(--mvcc-green-light);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Prompt Playground */
+    .playground-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .playground-column h3 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      border-radius: 0.6rem;
+      border: 1px solid #ccc;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--mvcc-green);
+      border-color: var(--mvcc-green-dark);
+    }
+
+    .textarea-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .meta-select {
+      width: 100%;
+      margin-top: 0.35rem;
+      padding: 0.35rem 0.4rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 0.85rem;
+    }
+
+    .note-box {
+      margin-top: 0.4rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: 0.5rem;
+      background: var(--mvcc-green-light);
+      font-size: 0.8rem;
+      color: #333;
+    }
+
+    /* Ethics Checklist */
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .check-item {
+      background: white;
+      border-radius: 0.6rem;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid #e0e0e0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .check-item input[type="checkbox"] {
+      margin-top: 0.15rem;
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    .progress-bar-wrapper {
+      margin-top: 0.5rem;
+    }
+
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #ddd;
+      overflow: hidden;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--mvcc-green), var(--accent));
+      transition: width 0.2s ease-out;
+    }
+
+    /* Quiz */
+    .quiz-question {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .quiz-options {
+      margin-top: 0.3rem;
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .quiz-option {
+      font-size: 0.85rem;
+      padding: 0.35rem 0.45rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .quiz-option.correct {
+      border-color: var(--mvcc-green-dark);
+      background: var(--mvcc-green-light);
+    }
+
+    .quiz-option.incorrect {
+      border-color: var(--danger);
+      background: #ffecec;
+    }
+
+    .quiz-feedback {
+      margin-top: 0.35rem;
+      font-size: 0.83rem;
+    }
+
+    .quiz-feedback.correct {
+      color: var(--mvcc-green-dark);
+    }
+
+    .quiz-feedback.incorrect {
+      color: var(--danger);
+    }
+
+    /* Quick Links List */
+    .quick-links {
+      list-style: none;
+      margin-top: 0.5rem;
+      font-size: 0.87rem;
+    }
+
+    .quick-links li {
+      margin: 0.15rem 0;
+    }
+
+    .quick-links a {
+      color: var(--mvcc-green-dark);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+    }
+
+    /* Small Screen */
+    @media (max-width: 800px) {
+      .sidebar {
+        position: fixed;
+        width: 220px;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease-out;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+        padding-top: 3.2rem;
+      }
+      .mobile-toggle {
+        position: fixed;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 20;
+      }
+      header {
+        margin-top: 0.3rem;
+      }
+      .playground-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .mobile-toggle {
+      display: none;
+    }
+
+    @media (max-width: 800px) {
+      .mobile-toggle {
+        display: inline-flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Left Nav -->
+  <button class="btn small secondary mobile-toggle" id="menuToggle">
+    ☰ Menu
+  </button>
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">ChatGPT for Students</div>
+      <div class="sidebar-subtitle">Interactive tutorial for our class</div>
+    </div>
+
+    <div class="nav-section-label">Sections</div>
+    <ul class="nav-links">
+      <li><a class="nav-link active" data-target="overview">Overview</a></li>
+      <li><a class="nav-link" data-target="tools">Core Tools</a></li>
+      <li><a class="nav-link" data-target="workflows">Study Workflows</a></li>
+      <li><a class="nav-link" data-target="playground">Prompt Playground</a></li>
+      <li><a class="nav-link" data-target="ethics">Ethical Use</a></li>
+      <li><a class="nav-link" data-target="quiz">Quick Quiz</a></li>
+      <li><a class="nav-link" data-target="links">Official Links</a></li>
+    </ul>
+
+    <div class="nav-footer">
+      <strong>Tip:</strong> Use this page as a “home base” while you experiment with ChatGPT in class.  
+      Practice writing your own prompts in the Prompt Playground section.
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <header id="overview">
+      <h1>ChatGPT for Students – Getting Started</h1>
+      <p>
+        This tutorial will help you use ChatGPT as a study partner, writing coach, and research assistant—
+        while still doing your own thinking. Explore the tools, try sample prompts, and complete the
+        ethical use checklist at the bottom.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Study support</span>
+        <span class="pill">Writing help (not writing replacement)</span>
+        <span class="pill">Research & brainstorming</span>
+        <span class="pill">Coding & problem solving</span>
+      </div>
+    </header>
+
+    <!-- Core Tools -->
+    <section class="section" id="tools">
+      <h2>1. Core ChatGPT Tools for Students</h2>
+      <p>
+        These are the built-in tools you’ll see inside ChatGPT. Click filters to focus on your goals, then
+        load a sample prompt into the Prompt Playground.
+      </p>
+
+      <div class="filter-bar">
+        <span class="filter-label">Filter by goal:</span>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="study">Study / Exams</button>
+        <button class="filter-btn" data-filter="writing">Writing</button>
+        <button class="filter-btn" data-filter="research">Research</button>
+        <button class="filter-btn" data-filter="coding">Coding / Tech</button>
+      </div>
+
+      <div class="tool-grid" id="toolGrid">
+        <!-- Chat Interface -->
+        <article class="tool-card" data-goals="study,writing,research,coding">
+          <span class="tool-tag">ChatGPT Workspace</span>
+          <h3>Chat Interface (Main ChatGPT Page)</h3>
+          <p>
+            The main chat area where you talk with the AI, ask questions, and upload files. Use it for
+            everyday study questions, explanations, and brainstorming.
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://openai.com/chatgpt" target="_blank">Open ChatGPT Overview</a>
+          </div>
+          <div class="tool-meta">
+            Models: GPT-5 / GPT-4o and others, depending on your plan.:contentReference[oaicite:0]{index=0}
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Concept explanations</span>
+              <span class="chip">Homework planning</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="I am a college student in your [course name] course. I am struggling with the topic [topic]. Explain it to me step by step at a beginner level and then give me 3 practice questions with answers hidden until I ask for them.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Study Mode -->
+        <article class="tool-card" data-goals="study">
+          <span class="tool-tag">Learning Tool</span>
+          <h3>Study Mode</h3>
+          <p>
+            A special mode that guides you through problems step-by-step instead of just giving the
+            answer. Great for exam prep and deep understanding.:contentReference[oaicite:1]{index=1}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://openai.com/index/chatgpt-study-mode/" target="_blank">
+              Learn about Study Mode
+            </a>
+          </div>
+          <div class="tool-meta">
+            Available to logged-in users on Free, Plus, Pro, Team, and (soon) Edu.:contentReference[oaicite:2]{index=2}
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Step-by-step guidance</span>
+              <span class="chip">Practice questions</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="Turn on study mode and help me prepare for my upcoming exam in [course]. First, ask me 5 diagnostic questions to see what I understand. Then build a step-by-step study path with practice problems and explanations.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Canvas -->
+        <article class="tool-card" data-goals="writing,coding,study">
+          <span class="tool-tag">Canvas</span>
+          <h3>Canvas (Co-Writing & Coding Space)</h3>
+          <p>
+            An editing space where you and ChatGPT work together on drafts or code. You can make changes
+            directly, highlight text, and ask for revisions.:contentReference[oaicite:3]{index=3}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/articles/9930697-what-is-the-canvas-feature-in-chatgpt-and-how-do-i-use-it"
+                  target="_blank">Canvas – Help Article</a>
+          </div>
+          <div class="tool-meta">
+            Great for essays, lab reports, and coding assignments.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Draft → Revise → Polish</span>
+              <span class="chip">Inline feedback</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="I am pasting a rough draft of my assignment below. Please help me use Canvas effectively: 1) highlight unclear sections, 2) suggest improvements for organization and clarity, and 3) make sure my own voice and ideas remain central. Do NOT write the assignment for me.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Projects -->
+        <article class="tool-card" data-goals="study,research,coding">
+          <span class="tool-tag">Organization</span>
+          <h3>Projects in ChatGPT</h3>
+          <p>
+            Projects let you keep related chats, files, and tools together—for example, a single project
+            for this course or for your capstone.:contentReference[oaicite:4]{index=4}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/articles/10169521-using-projects-in-chatgpt"
+                  target="_blank">Using Projects – Help Article</a>
+          </div>
+          <div class="tool-meta">
+            Includes all major tools: Canvas, image generation, study mode, voice, and web search.:contentReference[oaicite:5]{index=5}
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Long-term assignments</span>
+              <span class="chip">Group work</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="Help me set up a ChatGPT project for this course. I want sections for lecture notes, assignment drafts, exam prep, and a to-do list. Suggest a clear structure and create initial prompts I can reuse in each section.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Data Analysis -->
+        <article class="tool-card" data-goals="study,research,coding">
+          <span class="tool-tag">Data Analysis</span>
+          <h3>Data Analysis (Code Interpreter)</h3>
+          <p>
+            Upload spreadsheets or CSV files and have ChatGPT analyze, visualize, and explain patterns in
+            your data—like survey results or lab measurements.:contentReference[oaicite:6]{index=6}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
+                  target="_blank">Capabilities Overview – Data Analysis</a>
+          </div>
+          <div class="tool-meta">
+            Works with CSVs, spreadsheets, and other structured data files.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Stats assignments</span>
+              <span class="chip">Graphs & charts</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="I will upload a CSV file with [description of data]. Please: 1) describe the variables in plain language, 2) create 2–3 simple visualizations, and 3) explain what patterns you see as if you were tutoring me for an exam.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Image Tools -->
+        <article class="tool-card" data-goals="study,writing,research">
+          <span class="tool-tag">Images</span>
+          <h3>Image Input & Generation</h3>
+          <p>
+            You can upload diagrams, screenshots, and photos for ChatGPT to explain, or ask it to generate
+            new images (concept maps, study visuals, mock-ups).:contentReference[oaicite:7]{index=7}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
+                  target="_blank">Capabilities – Image Input & Generation</a>
+          </div>
+          <div class="tool-meta">
+            Great for making your own study diagrams or interpreting complex figures.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Diagrams</span>
+              <span class="chip">Concept maps</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="I will upload a screenshot of a diagram from my textbook. Please: 1) describe what the diagram shows in plain language, 2) connect each part to key vocabulary terms, and 3) quiz me with 3 short questions about it.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Voice Mode -->
+        <article class="tool-card" data-goals="study">
+          <span class="tool-tag">Voice & Audio</span>
+          <h3>Voice Mode (See / Hear / Speak)</h3>
+          <p>
+            Talk with ChatGPT using your voice on supported platforms—helpful if you like to think out
+            loud or want hands-free study sessions.:contentReference[oaicite:8]{index=8}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://openai.com/index/chatgpt-can-now-see-hear-and-speak/"
+                  target="_blank">ChatGPT Can See, Hear & Speak</a>
+          </div>
+          <div class="tool-meta">
+            Available on mobile apps and supported desktop/web platforms.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Audio tutoring</span>
+              <span class="chip">Language practice</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="Act as a patient tutor in voice mode. Ask me one question at a time about [topic]. If I get something wrong, give me hints instead of the full solution right away.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Web Search / Deep Research -->
+        <article class="tool-card" data-goals="research,study">
+          <span class="tool-tag">Web & Research</span>
+          <h3>Web Search & Deep Research</h3>
+          <p>
+            ChatGPT can search the web and perform multi-step research, providing answers with citations
+            to sources. Use this to explore topics—but still verify with scholarly sources.:contentReference[oaicite:9]{index=9}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
+                  target="_blank">Capabilities – Web Search & Deep Research</a>
+          </div>
+          <div class="tool-meta">
+            Helpful for starting research questions, not for final scholarly citations.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Background reading</span>
+              <span class="chip">Source discovery</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="Use web search and deep research to give me an overview of [research topic] suitable for a 5–7 page paper. Provide 3–5 key subtopics and suggest types of scholarly sources I should look for. Include citations so I can verify them myself.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+
+        <!-- Help Center -->
+        <article class="tool-card" data-goals="study,writing,research,coding">
+          <span class="tool-tag">Help Center</span>
+          <h3>ChatGPT Help Center</h3>
+          <p>
+            Official documentation explaining features like custom instructions, study mode, data
+            analysis, and more. This is the “instruction manual” for ChatGPT.:contentReference[oaicite:10]{index=10}
+          </p>
+          <div class="tool-link">
+            🔗 <a href="https://help.openai.com/en/collections/3742473-chatgpt" target="_blank">
+              ChatGPT Help Center Collection
+            </a>
+          </div>
+          <div class="tool-meta">
+            Use this when you want to understand “how it works” or troubleshoot.
+          </div>
+          <div class="tool-actions">
+            <div class="chip-row">
+              <span class="chip">Official docs</span>
+              <span class="chip">Feature explanations</span>
+            </div>
+            <button class="btn small sample-btn"
+              data-prompt="I am a student and new to ChatGPT. Based on the help center articles, outline 5–7 important features I should learn first and suggest a short practice task for each feature.">
+              Load sample prompt
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Study Workflows -->
+    <section class="section" id="workflows">
+      <h2>2. Suggested Study Workflows</h2>
+      <p>
+        Here are a few simple “recipes” for using ChatGPT responsibly in this course. You can adapt them
+        to any subject.
+      </p>
+      <small>Click a button to push the workflow into the Prompt Playground.</small>
+
+      <div class="tool-grid" style="margin-top:0.5rem;">
+        <article class="tool-card">
+          <span class="tool-tag">Workflow</span>
+          <h3>Lecture → Notes → Quiz Me</h3>
+          <p>
+            After class, summarize your notes, fill gaps, and then let ChatGPT quiz you.
+          </p>
+          <ul style="font-size:0.85rem;margin-left:1rem;margin-top:0.2rem;">
+            <li>Paste your lecture notes.</li>
+            <li>Ask for a concise summary and concept map.</li>
+            <li>Generate practice questions with answers hidden.</li>
+          </ul>
+          <div class="tool-actions" style="margin-top:0.4rem;">
+            <button class="btn small sample-btn"
+              data-prompt="I will paste my raw lecture notes below. 1) Clean them up and organize them into headings and bullet points. 2) Create a short concept map in text form. 3) Generate 8 practice questions (mix of multiple-choice and short answer) with answers hidden until I ask for them.">
+              Load into Playground
+            </button>
+          </div>
+        </article>
+
+        <article class="tool-card">
+          <span class="tool-tag">Workflow</span>
+          <h3>Assignment Planning (Not Writing)</h3>
+          <p>
+            Use ChatGPT to understand the prompt, break it into tasks, and check your outline.
+          </p>
+          <ul style="font-size:0.85rem;margin-left:1rem;margin-top:0.2rem;">
+            <li>Paste the assignment instructions.</li>
+            <li>Ask for a checklist and timeline.</li>
+            <li>Get feedback on your own outline or thesis.</li>
+          </ul>
+          <div class="tool-actions" style="margin-top:0.4rem;">
+            <button class="btn small sample-btn"
+              data-prompt="Here is my assignment prompt (pasted below). Please: 1) restate it in plain language, 2) create a checklist of what I must do, 3) suggest a realistic timeline, and 4) review my own outline (which I will paste after the prompt) for gaps or weak points. Do NOT write the paper for me.">
+              Load into Playground
+            </button>
+          </div>
+        </article>
+
+        <article class="tool-card">
+          <span class="tool-tag">Workflow</span>
+          <h3>Problem-Solving Coach</h3>
+          <p>
+            Turn ChatGPT into a step-by-step tutor for math, programming, or technical problems.
+          </p>
+          <ul style="font-size:0.85rem;margin-left:1rem;margin-top:0.2rem;">
+            <li>Paste or describe the problem.</li>
+            <li>Ask it to ask <em>you</em> questions first.</li>
+            <li>Reveal hints gradually.</li>
+          </ul>
+          <div class="tool-actions" style="margin-top:0.4rem;">
+            <button class="btn small sample-btn"
+              data-prompt="Act as a problem-solving coach, not just an answer machine. I will paste a problem below. First, ask me what I already know and how I would start. Then guide me with hints and questions. Only show the full solution at the end, and only after I ask for it.">
+              Load into Playground
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Prompt Playground -->
+    <section class="section" id="playground">
+      <h2>3. Prompt Playground</h2>
+      <p>
+        Use this space to practice writing clear, specific prompts. Many cards above can “load” suggested
+        prompts into this box.
+      </p>
+
+      <div class="playground-layout">
+        <div class="playground-column">
+          <h3>Your Prompt</h3>
+          <textarea id="promptBox"
+            placeholder="Type or edit your prompt here. You can start with: “You are my study partner for [course]. I need help with…”"></textarea>
+          <div class="textarea-footer">
+            <span id="charCount">0 characters</span>
+            <button class="btn small" id="copyPrompt">Copy to clipboard</button>
+          </div>
+        </div>
+
+        <div class="playground-column">
+          <h3>Prompt Settings (for you to think about)</h3>
+          <label style="font-size:0.85rem;">1. What are you trying to do?</label>
+          <select class="meta-select" id="goalSelect">
+            <option value="">Choose a goal…</option>
+            <option>Understand a concept</option>
+            <option>Prepare for an exam</option>
+            <option>Plan an assignment</option>
+            <option>Improve my writing</option>
+            <option>Debug code</option>
+            <option>Analyze data</option>
+          </select>
+
+          <label style="font-size:0.85rem;margin-top:0.4rem;display:block;">2. How should ChatGPT behave?</label>
+          <select class="meta-select" id="roleSelect">
+            <option value="">Choose a role…</option>
+            <option>Patient tutor</option>
+            <option>Study partner asking questions</option>
+            <option>Writing coach</option>
+            <option>Research assistant</option>
+            <option>Code reviewer</option>
+          </select>
+
+          <div class="note-box" id="promptHint">
+            Choose a goal and a role to see a suggestion here.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ethics & Limits -->
+    <section class="section" id="ethics">
+      <h2>4. Ethical & Effective Use Checklist</h2>
+      <p>
+        In this class, ChatGPT is a tool to support your learning—not to replace your own thinking or
+        violate academic integrity. Check each box when you feel confident about that statement.
+      </p>
+
+      <div class="checklist" id="ethicChecklist">
+        <label class="check-item">
+          <input type="checkbox">
+          <span>I will always follow our course syllabus and instructor rules about when and how I can
+            use AI tools.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox">
+          <span>I will never submit AI-generated work as if it were entirely my own when that violates
+            class or college policy.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox">
+          <span>If I use ChatGPT to get ideas or feedback, I will still do my own thinking, drafting,
+            and problem solving.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox">
+          <span>I understand that ChatGPT can make mistakes or “hallucinate,” so I will verify important
+            information with reliable sources.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox">
+          <span>I will not paste sensitive personal data, passwords, or confidential information into
+            ChatGPT.</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox">
+          <span>When appropriate, I will acknowledge or cite how AI tools were used in my work.</span>
+        </label>
+      </div>
+
+      <div class="progress-bar-wrapper">
+        <div class="progress-label-row">
+          <span style="font-size:0.8rem;">Checklist progress</span>
+          <span id="progressText" style="font-size:0.78rem;">0 of 6 completed</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar-inner" id="progressBarInner"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="section" id="quiz">
+      <h2>5. Quick Knowledge Check</h2>
+      <p>
+        Try this one-question quiz about using ChatGPT well. You can add more questions later if you like.
+      </p>
+
+      <div class="quiz-question">
+        Which of the following is the <em>best</em> way to use ChatGPT for a writing assignment in this class?
+      </div>
+      <div class="quiz-options" id="quizOptions">
+        <button class="quiz-option" data-correct="false">
+          A. Paste the assignment prompt and ask ChatGPT to write the entire paper, then submit it without
+          any changes.
+        </button>
+        <button class="quiz-option" data-correct="true">
+          B. Ask ChatGPT to help you understand the prompt, brainstorm ideas, and give feedback on your own
+          draft while you still write and revise it yourself.
+        </button>
+        <button class="quiz-option" data-correct="false">
+          C. Ignore the assignment instructions and ask ChatGPT for any essay that sounds impressive.
+        </button>
+        <button class="quiz-option" data-correct="false">
+          D. Ask ChatGPT to rewrite other students’ work so it looks like yours.
+        </button>
+      </div>
+      <div id="quizFeedback" class="quiz-feedback"></div>
+    </section>
+
+    <!-- Official Links -->
+    <section class="section" id="links">
+      <h2>6. Official ChatGPT Links for Students</h2>
+      <p>Here are direct links to official OpenAI pages mentioned in this tutorial.</p>
+      <ul class="quick-links">
+        <li>🔗 <a href="https://openai.com/chatgpt" target="_blank">ChatGPT Overview & Sign-In</a></li>
+        <li>🔗 <a href="https://openai.com/index/chatgpt-study-mode/" target="_blank">Study Mode – Official Announcement</a></li>
+        <li>🔗 <a href="https://help.openai.com/en/articles/9930697-what-is-the-canvas-feature-in-chatgpt-and-how-do-i-use-it"
+               target="_blank">Canvas – Co-Writing & Coding Space</a></li>
+        <li>🔗 <a href="https://help.openai.com/en/articles/10169521-using-projects-in-chatgpt" target="_blank">
+          Using Projects in ChatGPT
+        </a></li>
+        <li>🔗 <a href="https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview" target="_blank">
+          ChatGPT Capabilities Overview (images, data, voice, search)
+        </a></li>
+        <li>🔗 <a href="https://openai.com/index/chatgpt-can-now-see-hear-and-speak/" target="_blank">
+          ChatGPT Can Now See, Hear & Speak
+        </a></li>
+        <li>🔗 <a href="https://help.openai.com/en/collections/3742473-chatgpt" target="_blank">
+          ChatGPT Help Center – Feature Guides
+        </a></li>
+      </ul>
+      <small>
+        You can extend this section with your own college-specific AI policies, library guides, or course
+        handouts.
+      </small>
+    </section>
+  </main>
+
+  <script>
+    // Smooth scroll and active nav highlighting
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const targetId = link.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          window.scrollTo({
+            top: targetEl.offsetTop - 12,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      const sections = ['overview','tools','workflows','playground','ethics','quiz','links'];
+      let current = 'overview';
+      const scrollPos = window.scrollY + 70;
+
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && scrollPos >= el.offsetTop) {
+          current = id;
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-target') === current);
+      });
+    });
+
+    // Mobile menu toggle
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // Tool filtering
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        toolCards.forEach(card => {
+          const goals = (card.getAttribute('data-goals') || '').toLowerCase();
+          if (!goals && filter !== 'all') {
+            // Non-goal cards stay visible when "all", hidden otherwise
+            card.classList.toggle('hidden', filter !== 'all');
+          } else if (filter === 'all' || goals.includes(filter)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Sample prompt loader
+    const promptBox = document.getElementById('promptBox');
+    document.querySelectorAll('.sample-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-prompt') || '';
+        promptBox.value = text;
+        updateCharCount();
+        promptBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // Character count
+    const charCount = document.getElementById('charCount');
+    function updateCharCount() {
+      charCount.textContent = (promptBox.value || '').length + ' characters';
+    }
+    promptBox.addEventListener('input', updateCharCount);
+    updateCharCount();
+
+    // Copy to clipboard
+    document.getElementById('copyPrompt').addEventListener('click', () => {
+      if (!promptBox.value.trim()) {
+        alert('Write or load a prompt first.');
+        return;
+      }
+      navigator.clipboard.writeText(promptBox.value).then(() => {
+        const original = document.getElementById('copyPrompt').textContent;
+        document.getElementById('copyPrompt').textContent = 'Copied!';
+        setTimeout(() => {
+          document.getElementById('copyPrompt').textContent = original;
+        }, 800);
+      }).catch(() => {
+        alert('Could not copy. You may copy manually with Ctrl+C / Cmd+C.');
+      });
+    });
+
+    // Prompt hint suggestions based on goal + role
+    const goalSelect = document.getElementById('goalSelect');
+    const roleSelect = document.getElementById('roleSelect');
+    const promptHint = document.getElementById('promptHint');
+
+    function updatePromptHint() {
+      const goal = goalSelect.value;
+      const role = roleSelect.value;
+      if (!goal && !role) {
+        promptHint.textContent = 'Choose a goal and a role to see a suggestion here.';
+        return;
+      }
+      let text = 'Suggestion: Start your prompt like this —\n\n';
+      text += `"You are a ${role || '[role]'} helping me to ${goal || '[goal]'}. ` +
+              'Ask me a few questions about what I already know, then guide me step-by-step. ' +
+              'Avoid doing all the work for me; focus on explanations and practice."`;
+      promptHint.textContent = text;
+    }
+
+    goalSelect.addEventListener('change', updatePromptHint);
+    roleSelect.addEventListener('change', updatePromptHint);
+
+    // Ethics checklist progress
+    const checklist = document.getElementById('ethicChecklist');
+    const progressBarInner = document.getElementById('progressBarInner');
+    const progressText = document.getElementById('progressText');
+
+    function updateChecklistProgress() {
+      const boxes = checklist.querySelectorAll('input[type="checkbox"]');
+      const total = boxes.length;
+      let checked = 0;
+      boxes.forEach(b => { if (b.checked) checked++; });
+      const percent = total ? Math.round((checked / total) * 100) : 0;
+      progressBarInner.style.width = percent + '%';
+      progressText.textContent = `${checked} of ${total} completed`;
+    }
+
+    checklist.querySelectorAll('input[type="checkbox"]').forEach(box => {
+      box.addEventListener('change', updateChecklistProgress);
+    });
+    updateChecklistProgress();
+
+    // Quiz logic
+    const quizOptions = document.querySelectorAll('#quizOptions .quiz-option');
+    const quizFeedback = document.getElementById('quizFeedback');
+
+    quizOptions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const correct = btn.getAttribute('data-correct') === 'true';
+        // Reset styles
+        quizOptions.forEach(o => o.classList.remove('correct','incorrect'));
+        btn.classList.add(correct ? 'correct' : 'incorrect');
+        if (correct) {
+          quizFeedback.textContent =
+            'Correct! ChatGPT should be used as a support tool—to understand the assignment, develop ideas, and improve your own writing.';
+          quizFeedback.className = 'quiz-feedback correct';
+        } else {
+          quizFeedback.textContent =
+            'Not quite. The best use is to keep yourself as the author while ChatGPT supports planning, feedback, and understanding.';
+          quizFeedback.className = 'quiz-feedback incorrect';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
