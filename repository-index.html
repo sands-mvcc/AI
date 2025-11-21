@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Repository Index - Moraine Valley Community College</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #007a3d 0%, #005a2d 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .category {
+            margin-bottom: 40px;
+            border-left: 5px solid #007a3d;
+            padding-left: 20px;
+        }
+        .category h2 {
+            color: #007a3d;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .category h2::before {
+            content: "📁";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .category p {
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .file-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+        }
+        .file-list li {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid #007a3d;
+        }
+        .file-list li:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .file-list a {
+            color: #007a3d;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+        }
+        .file-list a:hover {
+            color: #005a2d;
+        }
+        .file-list a::before {
+            content: "📄 ";
+            margin-right: 5px;
+        }
+        footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            color: #007a3d;
+            font-weight: bold;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .file-list {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Repository Index</h1>
+            <p>Moraine Valley Community College - Artificial Intelligence Resources</p>
+        </header>
+
+        <div class="content">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Resources</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">AI-Focused</div>
+                </div>
+            </div>
+
+            <!-- AI Teaching & Pedagogy -->
+            <div class="category">
+                <h2>AI Teaching & Pedagogy</h2>
+                <p>Resources for educators teaching with and about artificial intelligence</p>
+                <ul class="file-list">
+                    <li><a href="activity.html">College Learning Activity Types</a></li>
+                    <li><a href="airesistant.html">Creating AI Resistant Assignments</a></li>
+                    <li><a href="better.html">Better AI Teaching Practices</a></li>
+                    <li><a href="crutch.html">AI as Crutch vs Tool - Literacy Discussion</a></li>
+                    <li><a href="ethics.html">Academic Integrity in the Age of AI - Faculty Workshop</a></li>
+                    <li><a href="humanizer.html">AI Humanizer Tools Discussion</a></li>
+                    <li><a href="policy.html">AI Policy Development</a></li>
+                    <li><a href="prompts.html">Prompt Engineering for Education</a></li>
+                    <li><a href="rationale.html">Rationale for AI Integration</a></li>
+                </ul>
+            </div>
+
+            <!-- AI Tools & Concepts -->
+            <div class="category">
+                <h2>AI Tools & Concepts</h2>
+                <p>Understanding AI technologies, tools, and their applications</p>
+                <ul class="file-list">
+                    <li><a href="disciplines.html">AI Tools Landscape for Academic Disciplines</a></li>
+                    <li><a href="graphic.html">AI Graphic Design Tools</a></li>
+                    <li><a href="llm.html">Large Language Models (LLM) Basics</a></li>
+                    <li><a href="llms.html">LLM Comparison and Analysis</a></li>
+                    <li><a href="types.html">Types of AI Systems</a></li>
+                    <li><a href="wheel.html">AI Technology Wheel</a></li>
+                    <li><a href="transform.html">AI Transformation in Education</a></li>
+                    <li><a href="burst.html">AI Burst Innovation</a></li>
+                    <li><a href="leaders.html">AI Industry Leaders</a></li>
+                    <li><a href="philosophers.html">AI Ethics and Philosophy</a></li>
+                </ul>
+            </div>
+
+            <!-- Student Resources -->
+            <div class="category">
+                <h2>Student Resources</h2>
+                <p>Guides and tutorials for students using AI tools effectively</p>
+                <ul class="file-list">
+                    <li><a href="chatgtpstudents.html">ChatGPT Tips for Students - Interactive Tutorial</a></li>
+                    <li><a href="bio.html">Creating AI-Enhanced Biographies</a></li>
+                    <li><a href="passwordtester.html">Password Security Tester</a></li>
+                    <li><a href="short.html">Short Guide to AI Usage</a></li>
+                    <li><a href="studyguide.html">AI Study Guide Generator</a></li>
+                </ul>
+            </div>
+
+            <!-- Interactive Activities & Exercises -->
+            <div class="category">
+                <h2>Interactive Activities & Exercises</h2>
+                <p>Hands-on learning activities and interactive demonstrations</p>
+                <ul class="file-list">
+                    <li><a href="earth_flashcard.html">Earth Science Flashcard Activity</a></li>
+                    <li><a href="plotting.html">Interactive X-Y Coordinate Plotting</a></li>
+                    <li><a href="pyramid.html">Learning Pyramid Visualization</a></li>
+                    <li><a href="state.html">State Management Exercise</a></li>
+                    <li><a href="15.jpeg">Visual Reference Image</a></li>
+                </ul>
+            </div>
+
+            <!-- LAN-153 IT Security Course Materials -->
+            <div class="category">
+                <h2>LAN-153 IT Security Course (Security+)</h2>
+                <p>Course syllabus, schedule, and study guides for IT Security Essentials</p>
+                <ul class="file-list">
+                    <li><a href="lan153-300fsyl.html">LAN-153 Fall 2025 Syllabus</a></li>
+                    <li><a href="lan153schedule.html">Course Schedule</a></li>
+                    <li><a href="lan153d1sg.html">Domain 1 Study Guide</a></li>
+                    <li><a href="lan153d3sg.html">Domain 3 Study Guide</a></li>
+                    <li><a href="lan153d31sg.html">Domain 3.1 Study Guide</a></li>
+                    <li><a href="engerysec.html">Energy Security Topics</a></li>
+                    <li><a href="tariff_history_lesson.html">Tariff History Lesson</a></li>
+                </ul>
+            </div>
+
+            <!-- Specialized Topics -->
+            <div class="category">
+                <h2>Specialized Topics</h2>
+                <p>Specific applications and advanced concepts in AI and education</p>
+                <ul class="file-list">
+                    <li><a href="itenerary.html">AI-Assisted Itinerary Planning</a></li>
+                    <li><a href="ms700.html">Microsoft 700 Certification</a></li>
+                    <li><a href="outline.html">Course Outline Generator</a></li>
+                    <li><a href="outlinesample.html">Sample Course Outline</a></li>
+                    <li><a href="secd1outline.html">Security+ Domain 1 Outline</a></li>
+                    <li><a href="secplusd2sg.html">Security+ Domain 2 Study Guide</a></li>
+                    <li><a href="syllabus.html">Syllabus Template</a></li>
+                    <li><a href="syllabus2.html">Alternative Syllabus Format</a></li>
+                    <li><a href="syllabus_down.html">Downloadable Syllabus</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Repository Files -->
+            <div class="category">
+                <h2>Repository Information</h2>
+                <p>Main index and navigation files</p>
+                <ul class="file-list">
+                    <li><a href="index.html">Main Repository Index</a></li>
+                    <li><a href="repository-index.html">This Repository Index (Current File)</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Moraine Valley Community College</strong></p>
+            <p>AI Repository - Updated November 2025</p>
+            <p>This repository contains educational resources for teaching and learning with AI</p>
+        </footer>
+    </div>
+</body>
+</html>
