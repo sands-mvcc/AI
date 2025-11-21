@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy: Tool vs. Crutch</title>
+    
+    <style>
+        /* Base Styling & Theme Colors (Green/Black/White) */
+        :root {
+            --color-primary: #ffffff; /* White Background */
+            --color-secondary: #000000; /* Black Text */
+            --color-accent: #38761d; /* Academic Green */
+            --color-light-bg: #f9f9f9; /* Off-white for section contrast */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--color-accent);
+            color: var(--color-primary);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--color-secondary);
+        }
+
+        h1 {
+            color: var(--color-primary);
+        }
+        h2 {
+            color: var(--color-accent);
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: var(--color-secondary);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Interactive Accordion Styles */
+        .accordion-item {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: var(--color-light-bg);
+        }
+
+        .accordion-header {
+            background-color: #e6e6e6; /* Light grey */
+            color: var(--color-secondary);
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-header:hover {
+            background-color: #dddddd;
+        }
+
+        .accordion-header.active {
+            background-color: var(--color-accent);
+            color: var(--color-primary);
+        }
+        
+        .accordion-header.active .icon {
+            transform: rotate(180deg);
+            color: var(--color-primary);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: var(--color-secondary);
+        }
+
+        .accordion-content {
+            padding: 15px;
+            border-top: 1px solid #ccc;
+            display: none; /* Hidden by default */
+        }
+
+        .analogy {
+            border-left: 4px solid var(--color-accent);
+            padding: 10px 15px;
+            margin: 15px 0;
+            background-color: #e5ffe5; /* Very light green */
+        }
+
+        /* Technical content styling */
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🤖 AI Literacy: The Tool vs. The Crutch</h1>
+        <p>Guiding students to use Generative AI for **amplification**, not **avoidance**, of foundational learning.</p>
+    </header>
+
+    <div class="container">
+        
+        <section id="introduction">
+            <h2>The Dual Imperative</h2>
+            <p>Generative AI presents a dual challenge: we must prepare students for a world where AI is a standard professional tool, while ensuring they do not use it to bypass the necessary struggle required to build **foundational competency**. The goal is **critical engagement**.</p>
+        </section>
+
+        <section id="leverage">
+            <h2>Maximizing AI for Deep Learning (The Tool)</h2>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>1. Accelerated Research and Synthesis</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>AI can quickly summarize vast amounts of foundational knowledge, allowing students to **jump straight to analysis, evaluation, and creation**. This frees up time for higher-order cognitive tasks.</p>
+                    <div class="analogy">
+                        **Analogy: The Power Drill**<br>
+                        AI is like a power drill. It does the rote work (driving the screw) quickly, so the student can focus on the **structural integrity** and the **architectural design** (the deep learning). A carpenter still needs to know how to use a screwdriver if the battery dies.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>2. Enhanced Problem-Solving and Complexity</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>AI can assist in tasks like **debugging code** or generating **boilerplate** structure. This allows students (especially in AI/Cybersecurity) to tackle projects of greater scale and complexity than they could manage alone, pushing the boundaries of their learning.</p>
+                    <p><strong>Example (AI/Programming):</strong> Students use an LLM to generate the basic structure for a machine learning model, then focus their efforts on **optimizing the hyperparameters** and **interpreting edge case failures**—the true critical thinking.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>3. Critical Evaluation of AI Output</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Learning to use AI means learning to **critique AI output**—identifying its limitations, biases, and factual errors (hallucinations). This is a core twenty-first-century skill that requires subject mastery.</p>
+                    <p><strong>Strategy:</strong> Assign tasks where students must fact-check and validate an AI response against primary sources, turning the AI into a source to be verified.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="avoidance">
+            <h2>Mitigating AI Avoidance (The Crutch)</h2>
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>1. Preventing the "Deskilling" Effect</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>If students rely on AI to write every sentence or generate every piece of secure code, they fail to develop the **muscle memory** and **intrinsic knowledge** necessary for rapid, independent work when AI is unavailable or produces flawed results.</p>
+                    <div class="analogy">
+                        **Analogy: The GPS**<br>
+                        AI is like a GPS. It can get you to the destination, but if you rely on it exclusively, you never learn the **mental map** of the city. As a result, if the signal drops (AI fails), you are lost and cannot navigate on your own.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>2. Ensuring Foundational Skill Acquisition</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>The hard work of **synthesizing information** and **debugging complex logic** is what builds deep understanding. Using AI to bypass these processes prevents the development of professional judgment needed for high-stakes fields like cybersecurity.</p>
+                    <p><strong>Risk:</strong> Students graduate knowing how to prompt AI, but not how to fix the AI's mistakes or reason through novel security threats.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategies">
+            <h2>🛠️ Pedagogical Strategies for Implementation</h2>
+            <p>These strategies ensure AI use reinforces, rather than undermines, learning:</p>
+            
+            <ul>
+                <li>**AI Transparency and Citation:** Require students to **document the exact prompt, the full output, and the specific modifications** they made. This forces them to justify their edits, proving human judgment.</li>
+                <li>**Process-Based Scaffolding:** Demand a **Process Journal** (Method #2) where students explain *why* certain AI suggestions were accepted or rejected, linking the decision back to core course theory.</li>
+                <li>**"Show Your Work" Assessments (The Inversion):** Use timed, in-class assessments that require students to manually perform a small part of a task the AI did. <br>
+                    *Example (Cybersecurity):* A take-home assignment uses AI to find 10 vulnerabilities. The exam asks students to **manually calculate the CVSS score** for one of those vulnerabilities, proving foundational understanding.</li>
+                <li>**Higher-Order Cognitive Tasks:** Design assignments that target **Evaluation** (Method #8). Ask students to **evaluate an AI-generated white paper** on a specific organizational context, judging its accuracy, tone, and ethical blind spots.</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('.icon');
+                    
+                    // Toggle active class on header
+                    this.classList.toggle('active');
+
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                        icon.textContent = "▼";
+                    } else {
+                        // Close all other open content sections
+                        document.querySelectorAll('.accordion-content').forEach(otherContent => {
+                            if (otherContent !== content) {
+                                otherContent.style.display = "none";
+                                otherContent.previousElementSibling.classList.remove('active');
+                                otherContent.previousElementSibling.querySelector('.icon').textContent = "▼";
+                            }
+                        });
+
+                        // Open current content
+                        content.style.display = "block";
+                        icon.textContent = "▲";
+                    }
+                });
+            });
+
+            // Auto-open the first item on load for a better start
+            if (accordionHeaders.length > 0) {
+                accordionHeaders[0].click();
+            }
+        });
+    </script>
+</body>
+</html>
