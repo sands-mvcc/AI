@@ -1,0 +1,703 @@
+Here is the completed interactive HTML file with the full list wired up. You can paste this into a single .html file and run it as-is; feel free to tweak categories or short descriptions. All items from the LIST OF AI TOOLS module are included.[1]
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Fundamentals: Tool Library</title>
+  <style>
+    :root {
+      --bg: #f4f7fa;
+      --card-bg: #ffffff;
+      --text: #1f2933;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.09);
+      --border-subtle: #d0d7e2;
+    }
+    body.dark {
+      --bg: #020617;
+      --card-bg: #020617;
+      --text: #e5e7eb;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.1);
+      --border-subtle: #1f2937;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .control-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    input[type="text"], select {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 0.9rem;
+      min-width: 160px;
+    }
+    input[type="text"]::placeholder {
+      opacity: 0.7;
+    }
+    button {
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover {
+      border-color: var(--accent);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+    }
+    .chip.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    #tools-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .tool-item {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 12px 12px 10px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      position: relative;
+    }
+    .tool-item:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+    }
+    .tool-link {
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .tool-link:hover {
+      text-decoration: underline;
+    }
+    .desc {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+    .meta {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+    .category-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+    }
+    .badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .hidden {
+      display: none !important;
+    }
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>AI Fundamentals Tool Library</h1>
+      <div class="subtitle">Interactive directory of tools used in the AI_SJSU course. [web:1]</div>
+    </div>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">
+      <span>🌓</span><span>Theme</span>
+    </button>
+  </header>
+
+  <div class="controls">
+    <div class="control-group">
+      <input type="text" id="search" placeholder="Search by name or description…">
+    </div>
+    <div class="control-group">
+      <label for="categoryFilter">Category:</label>
+      <select id="categoryFilter">
+        <option value="all">All</option>
+        <option value="chat">Chat & Text</option>
+        <option value="audio">Audio & Voice</option>
+        <option value="video">Video & Media</option>
+        <option value="data">Data & Visualization</option>
+        <option value="learning">Learning & Study</option>
+        <option value="files">Files & PDFs</option>
+        <option value="maps">Maps & Geo</option>
+        <option value="creative">Creative & Design</option>
+        <option value="utilities">Utilities & Misc</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="sortSelect">Sort:</label>
+      <select id="sortSelect">
+        <option value="name">Name (A–Z)</option>
+        <option value="category">Category</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="chips" id="quickFilters">
+    <div class="chip" data-type="canvas">Canvas-related</div>
+    <div class="chip" data-type="external">External sites</div>
+    <div class="chip" data-type="none">Clear quick filter</div>
+  </div>
+
+  <ul id="tools-list">
+    <!-- CANVAS PAGES -->
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144288475" target="_blank" class="tool-link">AI Powered Photo Editing</a>
+      <span class="desc">Photo editing using AI enhancements. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Image</span></div>
+    </li>
+    <li class="tool-item" data-category="audio" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935311" target="_blank" class="tool-link">Assembly AI Playground</a>
+      <span class="desc">Speech AI experimentation and transcription. [web:1]</span>
+      <div class="meta"><span class="category-pill">Audio & Voice</span><span>Speech</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935332" target="_blank" class="tool-link">Awesome ChatGPT</a>
+      <span class="desc">Curated list of ChatGPT resources and prompts. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>Prompt library</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935312" target="_blank" class="tool-link">Best Undetectable AI &amp; AI Humanizer</a>
+      <span class="desc">Tools to humanize AI-generated content. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>Detection</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935313" target="_blank" class="tool-link">Beautiful.ai</a>
+      <span class="desc">AI-powered presentation design. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Slides</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935334" target="_blank" class="tool-link">Chemequations AI Solver</a>
+      <span class="desc">Support for solving chemical equations. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>Chemistry</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935314" target="_blank" class="tool-link">Claude</a>
+      <span class="desc">Advanced conversational AI assistant. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>LLM</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144272690" target="_blank" class="tool-link">Coloring Book Generation - Yo Printables</a>
+      <span class="desc">Generate printable coloring pages with AI. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Printables</span></div>
+    </li>
+    <li class="tool-item" data-category="files" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144209621" target="_blank" class="tool-link">Converstion - Files Txt PDF</a>
+      <span class="desc">Convert and handle text and PDF files. [web:1]</span>
+      <div class="meta"><span class="category-pill">Files & PDFs</span><span>Conversion</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144209956" target="_blank" class="tool-link">Consensus.app - Universal Research &amp; Writing Tool</a>
+      <span class="desc">AI-driven academic research support. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Research</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144266407" target="_blank" class="tool-link">Darebee - Workout and Diet Plans</a>
+      <span class="desc">Interactive fitness and nutrition resources. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Health</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935316" target="_blank" class="tool-link">Deepseek LLM</a>
+      <span class="desc">General-purpose large language model. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>LLM</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144247514" target="_blank" class="tool-link">Digital Biology Tool</a>
+      <span class="desc">Biology-focused simulations and analysis. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>Biology</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144266605" target="_blank" class="tool-link">Elements of AI - Great AI Tutorial</a>
+      <span class="desc">Introductory self-paced AI course. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>AI basics</span></div>
+    </li>
+    <li class="tool-item" data-category="audio" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935341" target="_blank" class="tool-link">ElevenLabs - voice AI platform</a>
+      <span class="desc">Realistic text-to-speech voice generation. [web:1]</span>
+      <div class="meta"><span class="category-pill">Audio & Voice</span><span>TTS</span></div>
+    </li>
+    <li class="tool-item" data-category="files" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935317" target="_blank" class="tool-link">Excel Formulator</a>
+      <span class="desc">Assistance generating Excel formulas. [web:1]</span>
+      <div class="meta"><span class="category-pill">Files & PDFs</span><span>Spreadsheets</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935318" target="_blank" class="tool-link">Explain Paper AI</a>
+      <span class="desc">Summarize and explain academic papers. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Papers</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144266778" target="_blank" class="tool-link">Flourish Studio - Data Graphing and Mapping Tool</a>
+      <span class="desc">Interactive graphs and maps for data. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>Charts</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935319" target="_blank" class="tool-link">Goblin Tools</a>
+      <span class="desc">Executive function support and planning aids. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Productivity</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935320" target="_blank" class="tool-link">GROK</a>
+      <span class="desc">Conversational AI model with web context. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>LLM</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935336" target="_blank" class="tool-link">Histography AI</a>
+      <span class="desc">Historical timelines and event exploration. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>History</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935322" target="_blank" class="tool-link">Ideogram 2.0</a>
+      <span class="desc">Text-to-image generation and design. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Images</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144288542" target="_blank" class="tool-link">Lean Anything With AI</a>
+      <span class="desc">Personalized AI-driven learning support. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Tutoring</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144208587" target="_blank" class="tool-link">Library of AI Tools</a>
+      <span class="desc">Directory of various AI applications. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Catalog</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144208989" target="_blank" class="tool-link">Loecsen.com - Learn other Langauges</a>
+      <span class="desc">Language learning resources and audio. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Languages</span></div>
+    </li>
+    <li class="tool-item" data-category="audio" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144208885" target="_blank" class="tool-link">Luvvoice - Text to over 200 Vocies 70 Languages</a>
+      <span class="desc">Multilingual text-to-speech services. [web:1]</span>
+      <div class="meta"><span class="category-pill">Audio & Voice</span><span>Multilingual</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935323" target="_blank" class="tool-link">Kinetix.tech</a>
+      <span class="desc">3D animation and motion tools using AI. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>3D</span></div>
+    </li>
+
+    <li class="tool-item" data-category="maps" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144210744" target="_blank" class="tool-link">Map Creation Tool - PAMPAM.city</a>
+      <span class="desc">Create and share custom maps. [web:1]</span>
+      <div class="meta"><span class="category-pill">Maps & Geo</span><span>Maps</span></div>
+    </li>
+    <li class="tool-item" data-category="maps" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935324" target="_blank" class="tool-link">Mapify</a>
+      <span class="desc">Map-based visualization and planning. [web:1]</span>
+      <div class="meta"><span class="category-pill">Maps & Geo</span><span>Planning</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935325" target="_blank" class="tool-link">MemX AI - Notes Organizer</a>
+      <span class="desc">AI-powered note-taking and organization. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Notes</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144209745" target="_blank" class="tool-link">Music - Keyboard</a>
+      <span class="desc">Interactive music and keyboard practice. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Music</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935339" target="_blank" class="tool-link">NotebookLM</a>
+      <span class="desc">Notebook-style AI assistant for documents. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Notes</span></div>
+    </li>
+    <li class="tool-item" data-category="files" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144210106" target="_blank" class="tool-link">PDF Tool Collections "FREE"</a>
+      <span class="desc">Online tools for PDF manipulation. [web:1]</span>
+      <div class="meta"><span class="category-pill">Files & PDFs</span><span>Online</span></div>
+    </li>
+    <li class="tool-item" data-category="files" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144210365" target="_blank" class="tool-link">PDF Gear - Downloadable IA Agent for PDF Work</a>
+      <span class="desc">Desktop AI assistant for PDF tasks. [web:1]</span>
+      <div class="meta"><span class="category-pill">Files & PDFs</span><span>Desktop</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935340" target="_blank" class="tool-link">Perplexity AI</a>
+      <span class="desc">AI-powered research and answer engine. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>Research</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144267310" target="_blank" class="tool-link">Play Classic Games</a>
+      <span class="desc">Browser-based classic game collection. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Games</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144272874" target="_blank" class="tool-link">Product Price Research AI Tool - Dupe.com</a>
+      <span class="desc">Compare products and prices using AI. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Shopping</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144209242" target="_blank" class="tool-link">QR Code Generator</a>
+      <span class="desc">Generate QR codes for links and resources. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>QR</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144266644" target="_blank" class="tool-link">Quick References</a>
+      <span class="desc">Collection of reference materials and links. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Reference</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144248889" target="_blank" class="tool-link">Radio Garden</a>
+      <span class="desc">Explore live radio stations around the world. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Radio</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144267192" target="_blank" class="tool-link">React Bits - Animation Library</a>
+      <span class="desc">Animation components and examples for React. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>React</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144210504" target="_blank" class="tool-link">Research Tool - JENNI</a>
+      <span class="desc">AI-assisted academic writing and research. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Writing</span></div>
+    </li>
+    <li class="tool-item" data-category="video" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935327" target="_blank" class="tool-link">Runway AI Tools - AI</a>
+      <span class="desc">Creative AI tools for video and media. [web:1]</span>
+      <div class="meta"><span class="category-pill">Video & Media</span><span>Video</span></div>
+    </li>
+    <li class="tool-item" data-category="audio" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935329" target="_blank" class="tool-link">SpeechMA AI</a>
+      <span class="desc">Speech processing and analysis tools. [web:1]</span>
+      <div class="meta"><span class="category-pill">Audio & Voice</span><span>Speech</span></div>
+    </li>
+    <li class="tool-item" data-category="audio" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144208813" target="_blank" class="tool-link">Sonauto.ai Music Generation</a>
+      <span class="desc">AI-generated music and soundtracks. [web:1]</span>
+      <div class="meta"><span class="category-pill">Audio & Voice</span><span>Music</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144023394" target="_blank" class="tool-link">Space Traffic (Canvas Page)</a>
+      <span class="desc">Course page linking to space traffic visualization. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>Space</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935330" target="_blank" class="tool-link">Studyfetch - Best Student Tutor on the Web</a>
+      <span class="desc">AI-powered study help and tutoring. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Tutor</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144209468" target="_blank" class="tool-link">SVG - Repository of SVG Graphics</a>
+      <span class="desc">Collection of scalable vector graphics assets. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>SVG</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935342" target="_blank" class="tool-link">Symbolab - Math and Science</a>
+      <span class="desc">Step-by-step math and science problem solving. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Math</span></div>
+    </li>
+    <li class="tool-item" data-category="chat" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935321" target="_blank" class="tool-link">Teach AI LLM to Adopt Your Writing Style</a>
+      <span class="desc">Guide to customizing AI writing style. [web:1]</span>
+      <div class="meta"><span class="category-pill">Chat & Text</span><span>Writing</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935331" target="_blank" class="tool-link">Teachable Machine</a>
+      <span class="desc">Train simple machine learning models in-browser. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>ML</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144248829" target="_blank" class="tool-link">Television From Around the World</a>
+      <span class="desc">Assignment exploring global television content. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Assignment</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144247081" target="_blank" class="tool-link">Text to CAD Drawings</a>
+      <span class="desc">Generate CAD drawings from text prompts. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>CAD</span></div>
+    </li>
+    <li class="tool-item" data-category="maps" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144208630" target="_blank" class="tool-link">Time Maps - Historical Maps</a>
+      <span class="desc">Interactive historical maps and timelines. [web:1]</span>
+      <div class="meta"><span class="category-pill">Maps & Geo</span><span>History</span></div>
+    </li>
+    <li class="tool-item" data-category="files" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144210270" target="_blank" class="tool-link">Tiny-Wow - File Conversion Tools</a>
+      <span class="desc">Multi-purpose online file conversion utilities. [web:1]</span>
+      <div class="meta"><span class="category-pill">Files & PDFs</span><span>Conversion</span></div>
+    </li>
+    <li class="tool-item" data-category="maps" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144266285" target="_blank" class="tool-link">TopoExport - Topological Map Exports</a>
+      <span class="desc">Export and work with topological map data. [web:1]</span>
+      <div class="meta"><span class="category-pill">Maps & Geo</span><span>Topo</span></div>
+    </li>
+    <li class="tool-item" data-category="creative" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144022913" target="_blank" class="tool-link">Visual Tool: E-Draw</a>
+      <span class="desc">Diagramming and visual design tool. [web:1]</span>
+      <div class="meta"><span class="category-pill">Creative & Design</span><span>Diagrams</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/143935343" target="_blank" class="tool-link">Wolfram AI</a>
+      <span class="desc">Computational knowledge and AI assistant. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>STEM</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="canvas">
+      <span class="badge">Canvas</span>
+      <a href="https://canvas.instructure.com/courses/13478156/modules/items/144288657" target="_blank" class="tool-link">Fake OS Update</a>
+      <span class="desc">Visual tool simulating an operating system update screen. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Prank</span></div>
+    </li>
+
+    <!-- EXTERNAL URL ENTRIES -->
+    <li class="tool-item" data-category="utilities" data-type="external">
+      <span class="badge">External</span>
+      <a href="https://archive.org/details/magazine_rack" target="_blank" class="tool-link">Magazine Rack</a>
+      <span class="desc">Archive of magazines and periodicals. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Archive</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="external">
+      <span class="badge">External</span>
+      <a href="https://learn.microsoft.com/en-us/training/browse/?roles=ai-engineer&skip=30" target="_blank" class="tool-link">Microsoft Learn Website</a>
+      <span class="desc">AI engineering and technical training modules. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Courses</span></div>
+    </li>
+    <li class="tool-item" data-category="data" data-type="external">
+      <span class="badge">External</span>
+      <a href="https://platform.leolabs.space/visualization" target="_blank" class="tool-link">Space Traffic</a>
+      <span class="desc">Real-time visualization of satellites and debris. [web:1]</span>
+      <div class="meta"><span class="category-pill">Data & Visualization</span><span>Orbit</span></div>
+    </li>
+    <li class="tool-item" data-category="utilities" data-type="external">
+      <span class="badge">External</span>
+      <a href="https://site.nyit.edu/its/canvas_exam_converter" target="_blank" class="tool-link">Canvas Exam Converter - QTI Convert for Canvas</a>
+      <span class="desc">Convert exams to Canvas-compatible QTI format. [web:1]</span>
+      <div class="meta"><span class="category-pill">Utilities & Misc</span><span>Assessment</span></div>
+    </li>
+    <li class="tool-item" data-category="learning" data-type="external">
+      <span class="badge">External</span>
+      <a href="https://www.w3schools.com/html/tryit.asp?filename=tryhtml_svg_circle" target="_blank" class="tool-link">W3 School Testing Webpages HTML5 and JavaScript</a>
+      <span class="desc">Interactive HTML5 and JavaScript testing sandbox. [web:1]</span>
+      <div class="meta"><span class="category-pill">Learning & Study</span><span>Web</span></div>
+    </li>
+  </ul>
+</div>
+
+<script>
+  const searchInput = document.getElementById('search');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const sortSelect = document.getElementById('sortSelect');
+  const toolsList = document.getElementById('tools-list');
+  const chips = document.querySelectorAll('#quickFilters .chip');
+  const themeToggle = document.getElementById('themeToggle');
+
+  function applyFilters() {
+    const term = searchInput.value.toLowerCase();
+    const cat = categoryFilter.value;
+    const activeChip = document.querySelector('#quickFilters .chip.active');
+    const quickType = activeChip ? activeChip.dataset.type : 'none';
+
+    Array.from(toolsList.children).forEach(li => {
+      const name = li.querySelector('.tool-link').textContent.toLowerCase();
+      const desc = li.querySelector('.desc').textContent.toLowerCase();
+      const itemCat = li.dataset.category;
+      const itemType = li.dataset.type;
+
+      let visible = true;
+      if (term && !(name.includes(term) || desc.includes(term))) visible = false;
+      if (cat !== 'all' && itemCat !== cat) visible = false;
+      if (quickType === 'canvas' && itemType !== 'canvas') visible = false;
+      if (quickType === 'external' && itemType !== 'external') visible = false;
+
+      li.classList.toggle('hidden', !visible);
+    });
+  }
+
+  function applySort() {
+    const mode = sortSelect.value;
+    const items = Array.from(toolsList.children);
+
+    items.sort((a, b) => {
+      const nameA = a.querySelector('.tool-link').textContent.toLowerCase();
+      const nameB = b.querySelector('.tool-link').textContent.toLowerCase();
+      const catA = a.dataset.category;
+      const catB = b.dataset.category;
+
+      if (mode === 'category') {
+        if (catA === catB) return nameA.localeCompare(nameB);
+        return catA.localeCompare(catB);
+      }
+      return nameA.localeCompare(nameB);
+    });
+
+    items.forEach(item => toolsList.appendChild(item));
+  }
+
+  searchInput.addEventListener('input', () => {
+    applyFilters();
+  });
+  categoryFilter.addEventListener('change', () => {
+    applyFilters();
+    applySort();
+  });
+  sortSelect.addEventListener('change', () => {
+    applySort();
+  });
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      if (chip.dataset.type !== 'none') chip.classList.add('active');
+      applyFilters();
+    });
+  });
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+
+  applySort();
+</script>
+</body>
+</html>
+```
+
+If you want, the categories or short descriptions can be tuned to match your course language (e.g., align with module names or learning outcomes).[1]
+
+[1](https://canvas.instructure.com/courses/13478156/modules)
