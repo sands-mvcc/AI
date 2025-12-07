@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary & Hexadecimal Challenge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #00b894;
+            --secondary-light: #55efc4;
+            --danger: #d63031;
+            --danger-light: #ff7675;
+            --warning: #fdcb6e;
+            --dark: #2d3436;
+            --light: #dfe6e9;
+            --background: #f7f9fc;
+            --card: #ffffff;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.07);
+            --hover-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--background);
+            background-image: linear-gradient(135deg, rgba(108, 92, 231, 0.05) 0%, rgba(0, 184, 148, 0.05) 100%);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary);
+            background-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .game-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .setup-panel {
+            width: 100%;
+            background-color: var(--card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--primary);
+        }
+        
+        .setup-panel h2 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--primary);
+            margin-top: 0;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .setup-panel h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-light);
+            border-radius: 3px;
+        }
+        
+        .game-board {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .player-area {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background-color: var(--card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--secondary);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .player-area:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px dashed rgba(108, 92, 231, 0.2);
+        }
+        
+        .player-header h3 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--secondary);
+        }
+        
+        .player-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .player-score, .player-timer, .countdown {
+            padding: 0.6rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .player-score {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .player-timer {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .countdown {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown::before {
+            content: '⏱️';
+            margin-right: 0.5rem;
+        }
+        
+        .problem-area {
+            margin: 1.5rem 0;
+            padding: 2rem;
+            background-color: rgba(108, 92, 231, 0.05);
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .problem-area h3 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+        
+        .answer-area {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        .btn-primary {
+            background-image: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-image: linear-gradient(to right, var(--secondary), var(--secondary-light));
+            color: white;
+        }
+        
+        .btn-danger {
+            background-image: linear-gradient(to right, var(--danger), var(--danger-light));
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        input[type="text"], input[type="number"], select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #e1e5ea;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            width: 100%;
+            background-color: #ffffff;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .form-row > div {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .scoreboard {
+            width: 100%;
+            background-color: var(--card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            border-top: 5px solid var(--secondary);
+        }
+        
+        .scoreboard h2 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--secondary);
+            margin-top: 0;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .scoreboard h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary-light);
+            border-radius: 3px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        th {
+            background-image: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        td {
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover td {
+            background-color: rgba(108, 92, 231, 0.03);
+        }
+        
+        tbody tr:nth-child(1) td {
+            background-color: rgba(253, 203, 110, 0.1);
+            font-weight: 700;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: 600;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: feedbackPopIn 0.4s forwards;
+        }
+        
+        @keyframes feedbackPopIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .feedback.correct {
+            background-color: rgba(0, 184, 148, 0.1);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(214, 48, 49, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .help-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-image: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            z-index: 10;
+            transform: scale(1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .help-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: var(--card);
+            margin: 5% auto;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            max-width: 700px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--hover-shadow);
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-content h2 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid rgba(108, 92, 231, 0.1);
+            padding-bottom: 0.75rem;
+        }
+        
+        .modal-content h3 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        .modal-content h4 {
+            color: var(--primary);
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: rgba(108, 92, 231, 0.1);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .close-modal:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .challenge-complete {
+            text-align: center;
+            padding: 2.5rem;
+            background-color: rgba(0, 184, 148, 0.08);
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0, 184, 148, 0.2);
+        }
+        
+        .challenge-complete h2 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--secondary);
+            margin-top: 0;
+        }
+        
+        .challenge-complete h3 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin: 1rem 0;
+            animation: winner-pulse 2s infinite;
+        }
+        
+        @keyframes winner-pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .challenge-complete::before, .challenge-complete::after {
+            content: '🏆';
+            font-size: 4rem;
+            position: absolute;
+            opacity: 0.07;
+            z-index: -1;
+        }
+        
+        .challenge-complete::before {
+            top: 10px;
+            left: 10px;
+            transform: rotate(-15deg);
+        }
+        
+        .challenge-complete::after {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(15deg);
+        }
+        
+        /* Form elements styling */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 8px;
+            position: relative;
+            vertical-align: middle;
+            transition: all 0.2s;
+        }
+        
+        input[type="checkbox"]:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        input[type="checkbox"] + label {
+            display: inline-block;
+            vertical-align: middle;
+            margin-bottom: 0;
+        }
+
+        @media (min-width: 768px) {
+            .game-board {
+                flex-direction: row;
+            }
+            
+            header h1 {
+                font-size: 3rem;
+            }
+            
+            header p {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .player-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .player-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .answer-area {
+                flex-direction: column;
+            }
+            
+            .setup-panel, .player-area, .scoreboard {
+                padding: 1.5rem;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Binary & Hexadecimal Challenge</h1>
+        <p>Test your knowledge of number systems and compete with classmates!</p>
+        <div style="margin-top: 1rem; font-size: 1.1rem;">
+            <span style="display: inline-block; background: rgba(0,0,0,0.2); padding: 0.3rem 0.7rem; border-radius: 20px; margin: 0.3rem;">💯 Score Points</span>
+            <span style="display: inline-block; background: rgba(0,0,0,0.2); padding: 0.3rem 0.7rem; border-radius: 20px; margin: 0.3rem;">⏱️ Beat the Clock</span>
+            <span style="display: inline-block; background: rgba(0,0,0,0.2); padding: 0.3rem 0.7rem; border-radius: 20px; margin: 0.3rem;">🏆 Win the Game</span>
+        </div>
+    </header>
+    
+    <main>
+        <div class="game-container">
+            <div class="setup-panel" id="setupPanel">
+                <h2>Game Setup</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="playerCount">Number of Players:</label>
+                        <select id="playerCount">
+                            <option value="1">1 Player</option>
+                            <option value="2" selected>2 Players</option>
+                            <option value="3">3 Players</option>
+                            <option value="4">4 Players</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="difficultyLevel">Difficulty Level:</label>
+                        <select id="difficultyLevel">
+                            <option value="easy">Easy (4-bit numbers)</option>
+                            <option value="medium" selected>Medium (8-bit numbers)</option>
+                            <option value="hard">Hard (16-bit numbers)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="challengeCount">Number of Challenges:</label>
+                        <select id="challengeCount">
+                            <option value="5">5 Challenges</option>
+                            <option value="10" selected>10 Challenges</option>
+                            <option value="15">15 Challenges</option>
+                            <option value="20">20 Challenges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeLimit">Time Limit per Question:</label>
+                        <select id="timeLimit">
+                            <option value="5">Fast (5 seconds)</option>
+                            <option value="10" selected>Normal (10 seconds)</option>
+                            <option value="15">Slow (15 seconds)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Challenge Types:</label>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div>
+                            <input type="checkbox" id="decToBin" checked>
+                            <label for="decToBin">Decimal to Binary</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="binToDec" checked>
+                            <label for="binToDec">Binary to Decimal</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="hexToBin" checked>
+                            <label for="hexToBin">Hexadecimal to Binary</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="binToHex" checked>
+                            <label for="binToHex">Binary to Hexadecimal</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="decToHex" checked>
+                            <label for="decToHex">Decimal to Hexadecimal</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="hexToDec" checked>
+                            <label for="hexToDec">Hexadecimal to Decimal</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="binAdd">
+                            <label for="binAdd">Binary Addition</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="binSub">
+                            <label for="binSub">Binary Subtraction</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="playerSetup"></div>
+                
+                <button id="startGame" class="btn btn-primary">Start Game</button>
+            </div>
+            
+            <div id="gameBoard" class="game-board hidden">
+                <!-- Player areas will be generated here -->
+            </div>
+            
+            <div id="scoreboard" class="scoreboard hidden">
+                <h2>Scoreboard</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Time (seconds)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scoreboardBody">
+                        <!-- Scores will be populated here -->
+                    </tbody>
+                </table>
+                <div style="margin-top: 1rem; text-align: center;">
+                    <button id="playAgain" class="btn btn-primary">Play Again</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="help-btn" id="helpBtn">?</div>
+        
+        <div class="modal" id="helpModal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeModal">&times;</span>
+                <h2>Number Systems Guide</h2>
+                
+                <h3>Binary System (Base-2)</h3>
+                <p>The binary number system uses only two digits: 0 and 1. Each digit represents a power of 2.</p>
+                <p><strong>Example:</strong> Binary 1011 = (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰) = 8 + 0 + 2 + 1 = 11 in decimal</p>
+                
+                <h3>Hexadecimal System (Base-16)</h3>
+                <p>The hexadecimal system uses 16 symbols: 0-9 and A-F (where A=10, B=11, ..., F=15).</p>
+                <p><strong>Example:</strong> Hex 2A3 = (2 × 16²) + (10 × 16¹) + (3 × 16⁰) = 512 + 160 + 3 = 675 in decimal</p>
+                
+                <h3>Conversion Techniques</h3>
+                
+                <h4>Decimal to Binary</h4>
+                <p>Divide the decimal number by 2 repeatedly and note the remainders from bottom to top.</p>
+                <p><strong>Example:</strong> 22 ÷ 2 = 11 remainder 0<br>
+                11 ÷ 2 = 5 remainder 1<br>
+                5 ÷ 2 = 2 remainder 1<br>
+                2 ÷ 2 = 1 remainder 0<br>
+                1 ÷ 2 = 0 remainder 1<br>
+                Reading bottom to top: 10110</p>
+                
+                <h4>Binary to Decimal</h4>
+                <p>Multiply each digit by its corresponding power of 2 and sum the results.</p>
+                <p><strong>Example:</strong> 10110 = (1 × 2⁴) + (0 × 2³) + (1 × 2²) + (1 × 2¹) + (0 × 2⁰) = 16 + 0 + 4 + 2 + 0 = 22</p>
+                
+                <h4>Hexadecimal to Binary</h4>
+                <p>Convert each hexadecimal digit to its 4-bit binary equivalent:</p>
+                <p>0 = 0000, 1 = 0001, 2 = 0010, ..., A = 1010, ..., F = 1111</p>
+                <p><strong>Example:</strong> Hex 2A3 = 0010 1010 0011 = 001010100011 binary</p>
+                
+                <h4>Binary to Hexadecimal</h4>
+                <p>Group the binary digits into sets of 4 (starting from the right) and convert each group to its hexadecimal equivalent.</p>
+                <p><strong>Example:</strong> Binary 001010100011 = 0010 1010 0011 = 2A3 hex</p>
+                
+                <h4>Binary Addition</h4>
+                <p>0 + 0 = 0<br>
+                0 + 1 = 1<br>
+                1 + 0 = 1<br>
+                1 + 1 = 10 (carry the 1)</p>
+                
+                <h4>Binary Subtraction</h4>
+                <p>0 - 0 = 0<br>
+                1 - 0 = 1<br>
+                1 - 1 = 0<br>
+                0 - 1 = 1 (borrow 1 from the next column)</p>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Game state
+        let gameState = {
+            players: [],
+            currentPlayer: 0,
+            challengeCount: 10,
+            currentChallenge: 0,
+            challengeTypes: [],
+            difficulty: 'medium',
+            timeLimit: 10, // Time limit in seconds
+            timeLeft: 0,   // Time left for current question
+            timerId: null, // Timer ID for clearing interval
+            gameStarted: false,
+            gameEnded: false
+        };
+        
+        // DOM elements
+        const setupPanel = document.getElementById('setupPanel');
+        const playerSetup = document.getElementById('playerSetup');
+        const gameBoard = document.getElementById('gameBoard');
+        const scoreboard = document.getElementById('scoreboard');
+        const scoreboardBody = document.getElementById('scoreboardBody');
+        const startGameBtn = document.getElementById('startGame');
+        const playAgainBtn = document.getElementById('playAgain');
+        const playerCountSelect = document.getElementById('playerCount');
+        const difficultyLevelSelect = document.getElementById('difficultyLevel');
+        const challengeCountSelect = document.getElementById('challengeCount');
+        const timeLimitSelect = document.getElementById('timeLimit');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Challenge types checkboxes
+        const challengeTypeCheckboxes = [
+            document.getElementById('decToBin'),
+            document.getElementById('binToDec'),
+            document.getElementById('hexToBin'),
+            document.getElementById('binToHex'),
+            document.getElementById('decToHex'),
+            document.getElementById('hexToDec'),
+            document.getElementById('binAdd'),
+            document.getElementById('binSub')
+        ];
+        
+        // Event listeners
+        playerCountSelect.addEventListener('change', updatePlayerSetup);
+        startGameBtn.addEventListener('click', startGame);
+        playAgainBtn.addEventListener('click', resetGame);
+        helpBtn.addEventListener('click', () => helpModal.style.display = 'block');
+        closeModal.addEventListener('click', () => helpModal.style.display = 'none');
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
+        
+        // Initialize player setup
+        updatePlayerSetup();
+        
+        // Function to update player setup based on player count
+        function updatePlayerSetup() {
+            const playerCount = parseInt(playerCountSelect.value);
+            playerSetup.innerHTML = '';
+            
+            for (let i = 0; i < playerCount; i++) {
+                const playerDiv = document.createElement('div');
+                playerDiv.classList.add('form-group');
+                playerDiv.innerHTML = `
+                    <label for="player${i+1}Name">Player ${i+1} Name:</label>
+                    <input type="text" id="player${i+1}Name" value="Player ${i+1}" required>
+                `;
+                playerSetup.appendChild(playerDiv);
+            }
+        }
+        
+        // Start the game
+        function startGame() {
+            // Get game settings
+            const playerCount = parseInt(playerCountSelect.value);
+            gameState.difficulty = difficultyLevelSelect.value;
+            gameState.challengeCount = parseInt(challengeCountSelect.value);
+            
+            // Get selected challenge types
+            gameState.challengeTypes = [];
+            challengeTypeCheckboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    gameState.challengeTypes.push(index);
+                }
+            });
+            
+            // Validate at least one challenge type is selected
+            if (gameState.challengeTypes.length === 0) {
+                alert('Please select at least one challenge type.');
+                return;
+            }
+            
+            // Initialize players
+            gameState.players = [];
+            for (let i = 0; i < playerCount; i++) {
+                const nameInput = document.getElementById(`player${i+1}Name`);
+                const name = nameInput.value.trim() || `Player ${i+1}`;
+                
+                gameState.players.push({
+                    name: name,
+                    score: 0,
+                    time: 0,
+                    startTime: 0,
+                    totalTime: 0,
+                    currentAnswer: ''
+                });
+            }
+            
+            // Setup game board
+            setupGameBoard();
+            
+            // Hide setup panel and show game board
+            setupPanel.classList.add('hidden');
+            gameBoard.classList.remove('hidden');
+            
+            // Set time limit from selection
+            gameState.timeLimit = parseInt(timeLimitSelect.value);
+            
+            // Start first challenge
+            gameState.gameStarted = true;
+            gameState.currentPlayer = 0;
+            gameState.currentChallenge = 1;
+            startChallenge();
+        }
+        
+        // Setup the game board with player areas
+        function setupGameBoard() {
+            gameBoard.innerHTML = '';
+            
+            for (let i = 0; i < gameState.players.length; i++) {
+                const player = gameState.players[i];
+                
+                const playerArea = document.createElement('div');
+                playerArea.classList.add('player-area');
+                playerArea.id = `player${i}Area`;
+                
+                playerArea.innerHTML = `
+                    <div class="player-header">
+                        <h3>${player.name}</h3>
+                        <div class="player-stats">
+                            <div class="player-score">Score: <span id="player${i}Score">0</span></div>
+                            <div class="player-timer">Time: <span id="player${i}Timer">0</span>s</div>
+                            <div class="countdown" id="player${i}Countdown" style="padding: 0.5rem 1rem; border-radius: 4px; background-color: #3498db; color: white; font-weight: bold;">Time left: <span id="player${i}TimeLeft">0</span>s</div>
+                        </div>
+                    </div>
+                    <div class="problem-area" id="player${i}Problem"></div>
+                    <div class="answer-area">
+                        <input type="text" id="player${i}Answer" placeholder="Your answer">
+                        <button class="btn btn-secondary" id="player${i}Submit">Submit</button>
+                    </div>
+                    <div class="feedback" id="player${i}Feedback"></div>
+                `;
+                
+                gameBoard.appendChild(playerArea);
+                
+                // Add event listener to submit button
+                document.getElementById(`player${i}Submit`).addEventListener('click', () => {
+                    checkAnswer(i);
+                });
+                
+                // Add event listener to answer input for Enter key
+                document.getElementById(`player${i}Answer`).addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        checkAnswer(i);
+                    }
+                });
+            }
+        }
+        
+        // Start a challenge for the current player
+        function startChallenge() {
+            if (gameState.gameEnded) return;
+            
+            // Clear any existing timer
+            if (gameState.timerId) {
+                clearInterval(gameState.timerId);
+                gameState.timerId = null;
+            }
+            
+            // Hide all player areas
+            for (let i = 0; i < gameState.players.length; i++) {
+                const playerArea = document.getElementById(`player${i}Area`);
+                playerArea.style.display = 'none';
+                
+                // Reset feedback
+                const feedback = document.getElementById(`player${i}Feedback`);
+                feedback.textContent = '';
+                feedback.classList.remove('correct', 'incorrect');
+                
+                // Reset answer field
+                document.getElementById(`player${i}Answer`).value = '';
+            }
+            
+            // Show current player's area
+            const currentPlayerArea = document.getElementById(`player${gameState.currentPlayer}Area`);
+            currentPlayerArea.style.display = 'block';
+            
+            // Generate challenge
+            const challenge = generateChallenge();
+            const problemArea = document.getElementById(`player${gameState.currentPlayer}Problem`);
+            problemArea.innerHTML = `
+                <h3>Challenge ${gameState.currentChallenge} of ${gameState.challengeCount}</h3>
+                <div style="font-size: 1.2rem; margin: 1rem 0;">${challenge.question}</div>
+            `;
+            
+            // Store correct answer in game state
+            gameState.players[gameState.currentPlayer].currentAnswer = challenge.answer;
+            
+            // Start timer
+            gameState.players[gameState.currentPlayer].startTime = Date.now();
+            
+            // Start countdown timer
+            gameState.timeLeft = gameState.timeLimit;
+            updateCountdown();
+            gameState.timerId = setInterval(() => {
+                gameState.timeLeft--;
+                updateCountdown();
+                
+                // Time's up
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timerId);
+                    gameState.timerId = null;
+                    timeUp();
+                }
+            }, 1000);
+            
+            // Focus on answer input
+            setTimeout(() => {
+                document.getElementById(`player${gameState.currentPlayer}Answer`).focus();
+            }, 100);
+        }
+        
+timeLeft;
+            
+            // Change color based on time left
+            const countdownContainer = document.getElementById(`player${gameState.currentPlayer}Countdown`);
+            if (gameState.timeLeft <= 3) {
+                countdownContainer.style.backgroundColor = '#e74c3c'; // Red for urgent
+            } else if (gameState.timeLeft <= 5) {
+                countdownContainer.style.backgroundColor = '#f39c12'; // Orange for warning
+            } else {
+                countdownContainer.style.backgroundColor = '#3498db'; // Blue for normal
+            }
+        }
+        
+        // Handle time's up
+        function timeUp() {
+            const player = gameState.players[gameState.currentPlayer];
+            const feedback = document.getElementById(`player${gameState.currentPlayer}Feedback`);
+            
+            // Show feedback
+            feedback.textContent = `Time's up! The correct answer was ${player.currentAnswer}.`;
+            feedback.classList.add('incorrect');
+            
+            // Calculate time taken (full duration)
+            player.totalTime += gameState.timeLimit;
+            
+            // Update timer display
+            document.getElementById(`player${gameState.currentPlayer}Timer`).textContent = player.totalTime.toFixed(1);
+            
+            // Move to next player or challenge after a short delay
+            setTimeout(() => {
+                moveToNext();
+            }, 2000);
+        }
+        
+        // Generate a random challenge based on selected types
+        function generateChallenge() {
+            // Randomly select a challenge type from the enabled ones
+            const typeIndex = gameState.challengeTypes[Math.floor(Math.random() * gameState.challengeTypes.length)];
+            
+            let max, num1, num2, question, answer;
+            
+            // Set maximum number based on difficulty
+            switch (gameState.difficulty) {
+                case 'easy':
+                    max = 15; // 4-bit (0-15)
+                    break;
+                case 'medium':
+                    max = 255; // 8-bit (0-255)
+                    break;
+                case 'hard':
+                    max = 65535; // 16-bit (0-65535)
+                    break;
+                default:
+                    max = 255;
+            }
+            
+            // Generate challenge based on type
+            switch (typeIndex) {
+                case 0: // Decimal to Binary
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the decimal number <strong>${num1}</strong> to binary.`;
+                    answer = num1.toString(2);
+                    break;
+                case 1: // Binary to Decimal
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the binary number <strong>${num1.toString(2)}</strong> to decimal.`;
+                    answer = num1.toString(10);
+                    break;
+                case 2: // Hexadecimal to Binary
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the hexadecimal number <strong>${num1.toString(16).toUpperCase()}</strong> to binary.`;
+                    answer = num1.toString(2);
+                    break;
+                case 3: // Binary to Hexadecimal
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the binary number <strong>${num1.toString(2)}</strong> to hexadecimal.`;
+                    answer = num1.toString(16).toUpperCase();
+                    break;
+                case 4: // Decimal to Hexadecimal
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the decimal number <strong>${num1}</strong> to hexadecimal.`;
+                    answer = num1.toString(16).toUpperCase();
+                    break;
+                case 5: // Hexadecimal to Decimal
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the hexadecimal number <strong>${num1.toString(16).toUpperCase()}</strong> to decimal.`;
+                    answer = num1.toString(10);
+                    break;
+                case 6: // Binary Addition
+                    // Ensure numbers don't exceed max when added
+                    num1 = Math.floor(Math.random() * (max / 2));
+                    num2 = Math.floor(Math.random() * (max / 2));
+                    question = `Add the binary numbers <strong>${num1.toString(2)}</strong> and <strong>${num2.toString(2)}</strong>. Give your answer in binary.`;
+                    answer = (num1 + num2).toString(2);
+                    break;
+                case 7: // Binary Subtraction
+                    // Ensure result is positive
+                    num1 = Math.floor(Math.random() * max) + 1;
+                    num2 = Math.floor(Math.random() * num1);
+                    question = `Subtract the binary number <strong>${num2.toString(2)}</strong> from <strong>${num1.toString(2)}</strong>. Give your answer in binary.`;
+                    answer = (num1 - num2).toString(2);
+                    break;
+                default:
+                    num1 = Math.floor(Math.random() * (max + 1));
+                    question = `Convert the decimal number <strong>${num1}</strong> to binary.`;
+                    answer = num1.toString(2);
+            }
+            
+            return { question, answer };
+        }
+        
+        // Check player's answer
+        function checkAnswer(playerIndex) {
+            if (gameState.gameEnded) return;
+            
+            // Clear the timer
+            if (gameState.timerId) {
+                clearInterval(gameState.timerId);
+                gameState.timerId = null;
+            }
+            
+            const player = gameState.players[playerIndex];
+            const answerInput = document.getElementById(`player${playerIndex}Answer`);
+            const feedback = document.getElementById(`player${playerIndex}Feedback`);
+            
+            // Get player's answer
+            let playerAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = player.currentAnswer.toLowerCase();
+            
+            // Calculate time taken
+            const endTime = Date.now();
+            const timeTaken = Math.min((endTime - player.startTime) / 1000, gameState.timeLimit);
+            player.totalTime += timeTaken;
+            
+            // Update timer display
+            document.getElementById(`player${playerIndex}Timer`).textContent = player.totalTime.toFixed(1);
+            
+            // Check if answer is correct
+            if (playerAnswer === correctAnswer) {
+                // Add points based on time left (more time left = more points)
+                const timeBonus = Math.max(0, gameState.timeLeft);
+                const points = 5 + timeBonus; // Base 5 points + bonus for time left
+                player.score += points;
+                
+                // Update score display
+                document.getElementById(`player${playerIndex}Score`).textContent = player.score;
+                
+                // Show feedback
+                feedback.textContent = `Correct! +${points} points (${timeBonus} time bonus)`;
+                feedback.classList.add('correct');
+                feedback.classList.remove('incorrect');
+            } else {
+                // Show feedback
+                feedback.textContent = `Incorrect. The correct answer is ${correctAnswer}.`;
+                feedback.classList.add('incorrect');
+                feedback.classList.remove('correct');
+            }
+            
+            // Move to next player or challenge
+            setTimeout(() => {
+                moveToNext();
+            }, 2000);
+        }
+        
+        // Move to next player or challenge
+        function moveToNext() {
+            // Move to next player
+            gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+            
+            // If we've cycled through all players, move to next challenge
+            if (gameState.currentPlayer === 0) {
+                gameState.currentChallenge++;
+            }
+            
+            // Check if game is over
+            if (gameState.currentChallenge > gameState.challengeCount) {
+                endGame();
+            } else {
+                startChallenge();
+            }
+        }
+        
+        // End the game and show scoreboard
+        function endGame() {
+            gameState.gameEnded = true;
+            
+            // Hide game board and show scoreboard
+            gameBoard.classList.add('hidden');
+            scoreboard.classList.remove('hidden');
+            
+            // Sort players by score (highest first)
+            const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
+            
+            // Populate scoreboard
+            scoreboardBody.innerHTML = '';
+            sortedPlayers.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.score}</td>
+                    <td>${player.totalTime.toFixed(1)}</td>
+                `;
+                scoreboardBody.appendChild(row);
+            });
+            
+            // Highlight winner
+            if (sortedPlayers.length > 0) {
+                const winner = sortedPlayers[0];
+                const winnerMessage = document.createElement('div');
+                winnerMessage.classList.add('challenge-complete');
+                winnerMessage.innerHTML = `
+                    <h2>Game Complete!</h2>
+                    <h3>🏆 ${winner.name} wins with ${winner.score} points! 🏆</h3>
+                    <p>Great job everyone! You've improved your binary and hexadecimal skills.</p>
+                `;
+                scoreboard.insertBefore(winnerMessage, scoreboard.querySelector('table').parentNode);
+            }
+        }
+        
+        // Reset the game to play again
+        function resetGame() {
+            // Clear any existing timer
+            if (gameState.timerId) {
+                clearInterval(gameState.timerId);
+                gameState.timerId = null;
+            }
+            
+            // Reset game state
+            gameState.players = [];
+            gameState.currentPlayer = 0;
+            gameState.currentChallenge = 0;
+            gameState.timeLeft = 0;
+            gameState.gameStarted = false;
+            gameState.gameEnded = false;
+            
+            // Hide scoreboard and show setup panel
+            scoreboard.classList.add('hidden');
+            setupPanel.classList.remove('hidden');
+            
+            // Clear player setup
+            updatePlayerSetup();
+        }
+    </script>
+</body>
+</html>
