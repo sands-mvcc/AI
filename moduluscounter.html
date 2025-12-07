@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulus Math Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            margin: 0 5px;
+        }
+        button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="modulus">Modulus Value:</label>
+        <input type="number" id="modulus" min="1" value="12">
+        <label for="number">Number:</label>
+        <input type="number" id="number" min="0" value="0">
+        <button onclick="startAnimation()">Start Animation</button>
+    </div>
+    <canvas id="clockCanvas" width="300" height="300"></canvas>
+    <div id="result"></div>
+
+    <script>
+        const canvas = document.getElementById('clockCanvas');
+        const ctx = canvas.getContext('2d');
+        const radius = canvas.width / 2;
+        ctx.translate(radius, radius);
+
+        function drawClock(modulus) {
+            ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
+
+            // Draw the clock background
+            ctx.beginPath();
+            ctx.arc(0, 0, radius - 10, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffeb3b'; // Yellow clock background
+            ctx.fill();
+
+            // Draw the clock outline
+            ctx.beginPath();
+            ctx.arc(0, 0, radius - 10, 0, 2 * Math.PI);
+            ctx.lineWidth = 4; // Double the line width
+            ctx.strokeStyle = 'black'; // Clock outline color
+            ctx.stroke();
+
+            // Draw clock numbers
+            for (let num = 0; num < modulus; num++) {
+                let angle = num * (2 * Math.PI / modulus) - Math.PI / 2; // Adjust angle to start at the top
+                let x = (radius - 30) * Math.cos(angle);
+                let y = (radius - 30) * Math.sin(angle);
+                ctx.fillStyle = '#333';
+                ctx.fillText(num, x - 5, y + 5);
+            }
+        }
+
+        function startAnimation() {
+            const modulus = parseInt(document.getElementById('modulus').value);
+            const number = parseInt(document.getElementById('number').value);
+            const remainder = number % modulus;
+
+            drawClock(modulus);
+
+            let angle = -Math.PI / 2; // Start angle at the top
+            const step = (2 * Math.PI / modulus);
+            let count = 0;
+            const interval = setInterval(() => {
+                ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
+                drawClock(modulus);
+
+                angle = count * step - Math.PI / 2; // Calculate angle for each count
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo((radius - 30) * Math.cos(angle), (radius - 30) * Math.sin(angle));
+                ctx.lineWidth = 4; // Double the line width
+                ctx.strokeStyle = '#2196f3'; // Hand color (blue)
+                ctx.stroke();
+
+                // Draw the point at the end of the hand
+                ctx.beginPath();
+                ctx.arc((radius - 30) * Math.cos(angle), (radius - 30) * Math.sin(angle), 5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#f44336'; // Point color (red)
+                ctx.fill();
+
+                count++;
+                if (count > number) {
+                    clearInterval(interval);
+                    displayResult(number, modulus, remainder);
+                }
+            }, 100); // Animate each count with a delay
+        }
+
+        function displayResult(number, modulus, remainder) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `${number} mod ${modulus} = ${remainder}`;
+        }
+    </script>
+</body>
+</html>
