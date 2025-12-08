@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circular Flow of Income - Interactive Simulation</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -393,6 +394,32 @@
             animation: fadeIn 1s ease-out 0.9s backwards;
         }
 
+        .chart-section {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            animation: fadeIn 1s ease-out 1.2s backwards;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .insights-title {
             font-size: 1.5rem;
             font-weight: 700;
@@ -636,6 +663,13 @@
             </div>
         </div>
 
+        <div class="chart-section">
+            <h2 class="chart-title">📊 Economic Variables Comparison</h2>
+            <div class="chart-container">
+                <canvas id="economicChart"></canvas>
+            </div>
+        </div>
+
         <div class="insights-section">
             <div class="insights-title">💡 Key Economic Insights</div>
             <div class="insights-content" id="insightsContent">
@@ -663,6 +697,118 @@
         let govSpending = 25;
         let taxRate = 20;
         let mpc = 0.80; // Marginal Propensity to Consume
+        let economicChart = null;
+
+        // Initialize Chart
+        function initializeChart() {
+            const ctx = document.getElementById('economicChart').getContext('2d');
+            
+            economicChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Household Income', 'Investment', 'Government Spending', 'Consumption', 'GDP'],
+                    datasets: [{
+                        label: 'Billions ($)',
+                        data: [100, 30, 25, 80, 225],
+                        backgroundColor: [
+                            'rgba(30, 64, 175, 0.7)',   // Primary blue
+                            'rgba(59, 130, 246, 0.7)',  // Light blue
+                            'rgba(96, 165, 250, 0.7)',  // Accent blue
+                            'rgba(147, 197, 253, 0.7)', // Lighter blue
+                            'rgba(30, 64, 175, 0.9)'    // Dark blue for GDP
+                        ],
+                        borderColor: [
+                            'rgba(30, 64, 175, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(96, 165, 250, 1)',
+                            'rgba(147, 197, 253, 1)',
+                            'rgba(30, 64, 175, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Current Economic State (in Billions)',
+                            font: {
+                                size: 16,
+                                family: 'Outfit',
+                                weight: '600'
+                            },
+                            color: '#1f2937'
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 64, 175, 0.9)',
+                            titleFont: {
+                                size: 14,
+                                family: 'Outfit'
+                            },
+                            bodyFont: {
+                                size: 13,
+                                family: 'JetBrains Mono'
+                            },
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toFixed(1) + 'B';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value + 'B';
+                                },
+                                font: {
+                                    family: 'Outfit',
+                                    size: 11
+                                },
+                                color: '#6b7280'
+                            },
+                            grid: {
+                                color: 'rgba(229, 231, 235, 0.5)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Outfit',
+                                    size: 11
+                                },
+                                color: '#6b7280'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(householdIncome, investment, govSpending, consumption, gdp) {
+            if (economicChart) {
+                economicChart.data.datasets[0].data = [
+                    householdIncome,
+                    investment,
+                    govSpending,
+                    consumption,
+                    gdp
+                ];
+                economicChart.update('none'); // 'none' for instant update without animation
+            }
+        }
 
         // Initialize event listeners
         document.getElementById('householdIncome').addEventListener('input', updateValues);
@@ -720,6 +866,9 @@
             document.getElementById('multiplier').textContent = `${multiplier.toFixed(1)}x`;
             document.getElementById('velocity').textContent = velocity.toFixed(2);
             document.getElementById('productionDisplay').textContent = `$${production.toFixed(0)}B`;
+
+            // Update chart
+            updateChart(householdIncome, investment, govSpending, consumption, gdp);
 
             // Update insights based on current state
             updateInsights(gdp, multiplier, mpc, taxRate);
@@ -825,7 +974,10 @@
         }
 
         // Initialize on load
-        calculateEconomy();
+        window.addEventListener('DOMContentLoaded', function() {
+            initializeChart();
+            calculateEconomy();
+        });
     </script>
 </body>
 </html>
