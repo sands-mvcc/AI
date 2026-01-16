@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional profile page for John Sands, Professor of Cybersecurity at Moraine Valley Community College.">
+    <title>John Sands - Professor of Cybersecurity</title>
+    <style>
+        /* Modern Reset and Base Styles */
+        :root {
+            --primary-color: #004a99; /* A professional academic blue */
+            --secondary-color: #2c3e50;
+            --bg-light: #f4f7f6;
+            --text-dark: #333;
+            --text-muted: #666;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Profile Container - Constrained for "half-page" feel */
+        .profile-container {
+            background: #fff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-wrap: wrap; /* Allows stacking on mobile */
+        }
+
+        /* Left Column - Image */
+        .profile-image-section {
+            flex: 1 1 300px; /* Grow, shrink, base width */
+            position: relative;
+            background-color: #e9ecef;
+            min-height: 350px;
+        }
+
+        .profile-image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+        }
+
+        /* Right Column - Content */
+        .profile-content-section {
+            flex: 2 1 400px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header Info */
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        header h2 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Bio Section */
+        .bio {
+            margin-bottom: 30px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        /* Contact Grid */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        .contact-value, .contact-value a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .contact-value a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Javascript Interaction Elements */
+        .email-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background-color: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+            }
+            .profile-image-section {
+                min-height: 300px;
+            }
+            .profile-content-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="profile-container">
+        <section class="profile-image-section">
+            <img src="image_0.png" alt="Portrait of John Sands">
+        </section>
+
+        <section class="profile-content-section">
+            <header>
+                <h1>John Sands</h1>
+                <h2>Professor Cybersecurity</h2>
+            </header>
+
+            <article class="bio">
+                <p>John Sands is a prominent Professor of Cybersecurity at Moraine Valley Community College. He serves as the Director and Principal Investigator of the Center for Systems Security and Information Assurance (CSSIA), a National Science Foundation (NSF) Advanced Technological Education (ATE) National Resource Center. He is actively involved in leading national initiatives to improve cybersecurity education and faculty development across the United States.</p>
+            </article>
+
+            <address class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-label">Email</span>
+                    <div class="email-container">
+                        <a href="mailto:sands@morainevalley.edu" id="email-text" class="contact-value">sands@morainevalley.edu</a>
+                        <button id="copyBtn" class="copy-btn" aria-label="Copy email address">Copy</button>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Office Location</span>
+                    <span class="contact-value">Building T, Room 901 (T901)</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Institution</span>
+                    <a href="https://www.morainevalley.edu" target="_blank" rel="noopener" class="contact-value">Moraine Valley Community College</a>
+                </div>
+            </address>
+        </section>
+    </main>
+
+    <script>
+        // JavaScript for utility: Copy email to clipboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyBtn = document.getElementById('copyBtn');
+            const emailText = document.getElementById('email-text').innerText;
+
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    // Use the modern Clipboard API
+                    await navigator.clipboard.writeText(emailText);
+                    
+                    // Visual feedback
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = 'Copied!';
+                    copyBtn.classList.add('copied');
+
+                    // Revert after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy email to clipboard. Please select and copy manually.');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
