@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson: Inside the Agentic Browser</title>
+    <style>
+        /* CSS VARIABLES & RESET */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --primary-green: #008000;
+            --light-green: #e6f9e6;
+            --border-color: #dddddd;
+            --code-bg: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* LAYOUT UTILS */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        h1 { font-size: 2.5rem; margin-top: 0; }
+        
+        .section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #006400;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* SECTION 1: COMPARISON CARDS */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            border: 2px solid var(--text-color);
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .card.agentic {
+            border-color: var(--primary-green);
+            background-color: var(--light-green);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* SECTION 2: SIMULATION UI */
+        .browser-mockup {
+            border: 3px solid var(--text-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            position: relative;
+        }
+
+        .browser-bar {
+            background: var(--text-color);
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .url-input {
+            background: #333;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            flex-grow: 1;
+            font-family: monospace;
+        }
+
+        .viewport {
+            height: 300px;
+            padding: 20px;
+            position: relative;
+            background: #f9f9f9;
+        }
+
+        /* Simulated Elements */
+        .sim-element {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .agent-cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transition: all 0.8s ease-in-out;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .agent-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--text-color);
+            color: var(--primary-green);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            width: 250px;
+            display: none;
+        }
+
+        .highlight {
+            border: 2px solid var(--primary-green);
+            background-color: var(--light-green);
+            box-shadow: 0 0 10px var(--primary-green);
+        }
+
+        /* SECTION 3: QUIZ */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+            background: white;
+            color: black;
+            border: 1px solid black;
+        }
+        
+        .quiz-option.correct {
+            background-color: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        .quiz-option.incorrect {
+            background-color: #333;
+            color: white;
+        }
+
+        #feedback {
+            margin-top: 1rem;
+            font-weight: bold;
+            min-height: 1.5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Agentic Browsers</h1>
+        <p>A highly interactive lesson on the future of web navigation.</p>
+    </header>
+
+    <div class="section" id="intro">
+        <h2>1. The Paradigm Shift</h2>
+        <p>Traditional browsers display data. Agentic browsers <strong>do work</strong>.</p>
+        
+        <div class="comparison-grid">
+            <div class="card">
+                <span class="icon">🖱️</span>
+                <h3>Traditional</h3>
+                <p>User reads content.</p>
+                <p>User decides where to click.</p>
+                <p>User fills out forms manually.</p>
+            </div>
+            <div class="card agentic">
+                <span class="icon">🤖</span>
+                <h3>Agentic</h3>
+                <p>AI scans the DOM (code).</p>
+                <p>AI plans the workflow.</p>
+                <p>AI executes clicks and typing.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="simulation">
+        <h2>2. How It Works: The Simulation</h2>
+        <p>Enter a task below to see how an Agentic Browser "thinks" and "acts" using the DOM.</p>
+        
+        <div style="margin-bottom: 1rem; display: flex; gap: 10px;">
+            <input type="text" id="user-prompt" placeholder="e.g., Book the cheapest hotel in Chicago..." style="flex-grow: 1; padding: 10px; border: 2px solid var(--text-color);">
+            <button class="btn" onclick="runAgent()">Run Agent</button>
+        </div>
+
+        <div class="browser-mockup">
+            <div class="browser-bar">
+                <span>⚪</span> <span>⚪</span> <span>⚪</span>
+                <input type="text" class="url-input" value="https://travel-site-demo.com" readonly>
+            </div>
+            <div class="viewport" id="sim-viewport">
+                <div class="sim-element" id="el-search">
+                    <span>Search Destination</span>
+                    <input type="text" disabled placeholder="City...">
+                </div>
+                <div class="sim-element" id="el-date">
+                    <span>Check-in Date</span>
+                    <input type="date" disabled>
+                </div>
+                <div class="sim-element" id="el-btn">
+                    <button class="btn" style="background:black; color:white; font-size:0.8rem;">Search Hotels</button>
+                </div>
+                <div class="sim-element" id="el-result1" style="opacity:0.5;">
+                    <span>Hotel Luxury ($500)</span>
+                </div>
+                <div class="sim-element" id="el-result2" style="opacity:0.5;">
+                    <span>Hotel Budget ($120)</span>
+                </div>
+
+                <div class="agent-cursor" id="cursor"></div>
+                <div class="agent-overlay" id="agent-log">Initializing...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="quiz">
+        <h2>3. Knowledge Check</h2>
+        <p>Which of the following best describes the "Intent Interpretation" phase of an agentic browser?</p>
+        
+        <button class="btn quiz-option" onclick="checkAnswer(this, false)">A. The browser downloads the HTML and CSS to display the page.</button>
+        <button class="btn quiz-option" onclick="checkAnswer(this, true)">B. The LLM translates natural language into a step-by-step plan.</button>
+        <button class="btn quiz-option" onclick="checkAnswer(this, false)">C. The user manually clicks the search bar.</button>
+        
+        <div id="feedback"></div>
+    </div>
+
+</div>
+
+<script>
+    // SIMULATION LOGIC
+    function runAgent() {
+        const prompt = document.getElementById('user-prompt').value;
+        const cursor = document.getElementById('cursor');
+        const log = document.getElementById('agent-log');
+        const elSearch = document.getElementById('el-search');
+        const elBtn = document.getElementById('el-btn');
+        const elRes2 = document.getElementById('el-result2'); // The "budget" option
+
+        if(!prompt) {
+            alert("Please enter a command first!");
+            return;
+        }
+
+        // Reset
+        document.querySelectorAll('.sim-element').forEach(el => el.classList.remove('highlight'));
+        elRes2.style.opacity = '0.5';
+        
+        // Start Sequence
+        log.style.display = 'block';
+        cursor.style.opacity = '1';
+        
+        // Step 1: Analyze
+        log.innerHTML = "> Analyzing DOM...<br>> Identifying inputs...";
+        
+        setTimeout(() => {
+            // Step 2: Action - Type City
+            log.innerHTML = "> Goal: " + prompt.substring(0, 15) + "...<br>> Action: Input text 'Chicago'";
+            cursor.style.top = elSearch.offsetTop + 15 + "px";
+            cursor.style.left = elSearch.offsetLeft + 100 + "px";
+            elSearch.classList.add('highlight');
+        }, 1500);
+
+        setTimeout(() => {
+            // Step 3: Action - Click Search
+            log.innerHTML = "> Action: Click [Search Button]";
+            cursor.style.top = elBtn.offsetTop + 15 + "px";
+            cursor.style.left = elBtn.offsetLeft + 50 + "px";
+            elSearch.classList.remove('highlight');
+            elBtn.classList.add('highlight');
+        }, 3500);
+
+        setTimeout(() => {
+            // Step 4: Result
+            log.innerHTML = "> Scanning Results...<br>> Found Cheapest: $120";
+            elBtn.classList.remove('highlight');
+            
+            cursor.style.top = elRes2.offsetTop + 15 + "px";
+            cursor.style.left = elRes2.offsetLeft + 50 + "px";
+            elRes2.style.opacity = '1';
+            elRes2.classList.add('highlight');
+            elRes2.style.backgroundColor = '#e6f9e6';
+        }, 5500);
+
+        setTimeout(() => {
+            log.innerHTML = "> Task Complete.<br>> Waiting for command.";
+            setTimeout(() => { cursor.style.opacity = '0'; }, 1000);
+        }, 7500);
+    }
+
+    // QUIZ LOGIC
+    function checkAnswer(btn, isCorrect) {
+        const feedback = document.getElementById('feedback');
+        const allBtns = document.querySelectorAll('.quiz-option');
+        
+        // Reset styles
+        allBtns.forEach(b => {
+            b.classList.remove('correct', 'incorrect');
+            b.disabled = true;
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            feedback.style.color = 'var(--primary-green)';
+            feedback.innerText = "Correct! The 'Brain' of the agent translates human words into machine actions.";
+        } else {
+            btn.classList.add('incorrect');
+            feedback.style.color = 'red';
+            feedback.innerText = "Incorrect. That describes standard browser rendering or manual usage.";
+            
+            // Highlight the correct one
+            allBtns[1].classList.add('correct');
+        }
+    }
+</script>
+
+</body>
+</html>
