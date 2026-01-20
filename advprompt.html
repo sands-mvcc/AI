@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering Lab: The Syllabus Architect</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --dark-green: #1b5e20;
+            --light-green: #e8f5e9;
+            --text-black: #222222;
+            --bg-white: #ffffff;
+            --border-gray: #e0e0e0;
+            --terminal-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-black);
+            background-color: var(--bg-white);
+            line-height: 1.6;
+        }
+
+        /* Layout */
+        header {
+            background-color: var(--bg-white);
+            border-bottom: 4px solid var(--primary-green);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary-green);
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Split screen: Controls vs Preview */
+            gap: 2rem;
+            min-height: 80vh;
+        }
+
+        /* Left Column: The Scenario & Controls */
+        .control-panel {
+            padding-right: 1rem;
+        }
+
+        .stage-container {
+            margin-bottom: 2rem;
+            border-left: 2px solid var(--border-gray);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .stage-number {
+            position: absolute;
+            left: -1rem;
+            top: 0;
+            background: var(--primary-green);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 2rem;
+            font-weight: bold;
+        }
+
+        .stage-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .scenario-text {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+
+        .option-card {
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-green);
+            background-color: var(--light-green);
+        }
+
+        .option-card.selected {
+            border-color: var(--dark-green);
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .option-card h4 { margin: 0 0 0.5rem 0; }
+        .option-card p { margin: 0; font-size: 0.9rem; }
+
+        /* Right Column: The Live Prompt Preview */
+        .preview-panel {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .terminal-window {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 0.8rem 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            min-height: 400px;
+            font-size: 0.9rem;
+        }
+
+        .prompt-block {
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .prompt-block.highlight {
+            background-color: rgba(46, 125, 50, 0.1);
+            border-left: 3px solid var(--primary-green);
+        }
+
+        .empty-state {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Output Logic */
+        .token { color: var(--dark-green); font-weight: bold; }
+        .var { color: #d84315; }
+
+        /* Final Action Button */
+        .run-simulation-btn {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .run-simulation-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .run-simulation-btn:hover {
+            background-color: var(--dark-green);
+        }
+        
+        /* Modal for Results */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            border-top: 5px solid var(--primary-green);
+        }
+
+        @media (max-width: 800px) {
+            .container { grid-template-columns: 1fr; }
+            .preview-panel { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Prompt Engineering Lab</h1>
+    <p>Scenario: The Syllabus Rescue Mission</p>
+</header>
+
+<div class="container">
+    
+    <div class="control-panel">
+        
+        <p><strong>The Mission:</strong> You are designing a prompt to generate a syllabus for a controversial course: <em>"The Ethics of AI Surveillance."</em> A standard prompt produced generic, biased results. Build an Advanced Prompt below to fix it.</p>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+        <div class="stage-container">
+            <div class="stage-number">1</div>
+            <h3 class="stage-title">Assign the Persona</h3>
+            <p class="scenario-text">The generic output sounded like a Wikipedia article. We need deep academic expertise.</p>
+            
+            <div class="option-card" onclick="selectOption(1, 'basic')">
+                <h4>Option A: Standard Role</h4>
+                <p>"You are a helpful assistant who knows about AI."</p>
+            </div>
+            
+            <div class="option-card" onclick="selectOption(1, 'advanced')">
+                <h4>Option B: Expert Domain Persona</h4>
+                <p>"Act as a Tenured Professor of Data Privacy Law & Ethics with 20 years of curriculum design experience."</p>
+            </div>
+        </div>
+
+        <div class="stage-container">
+            <div class="stage-number">2</div>
+            <h3 class="stage-title">Select Reasoning Strategy</h3>
+            <p class="scenario-text">The topic is complex. We need to prevent the AI from rushing to a shallow answer.</p>
+            
+            <div class="option-card" onclick="selectOption(2, 'tot')">
+                <h4>Option A: Tree of Thoughts (Branching)</h4>
+                <p>"Adopt three perspectives (Lawyer, Sociologist, Technologist). Debate the key topics before deciding the schedule."</p>
+            </div>
+            
+            <div class="option-card" onclick="selectOption(2, 'mit')">
+                <h4>Option B: MIT Style (Decomposition)</h4>
+                <p>"Break the problem into sub-tasks: 1. Learning Objectives, 2. Readings, 3. Assignments. Solve sequentially with confidence scores."</p>
+            </div>
+        </div>
+
+        <div class="stage-container">
+            <div class="stage-number">3</div>
+            <h3 class="stage-title">Add Verification Layer</h3>
+            <p class="scenario-text">AI often hallucinates book titles. How do we ensure the reading list is real?</p>
+            
+            <div class="option-card" onclick="selectOption(3, 'none')">
+                <h4>Option A: No Verification</h4>
+                <p>"Ensure the list is accurate." (Trusting the model blindly)</p>
+            </div>
+            
+            <div class="option-card" onclick="selectOption(3, 'cove')">
+                <h4>Option B: Chain of Verification</h4>
+                <p>"After drafting, stop. Cross-reference every citation against your internal database. If confidence is < 1.0, remove it."</p>
+            </div>
+        </div>
+
+        <button id="runBtn" class="run-simulation-btn" onclick="showResult()">Run Prompt Simulation</button>
+
+    </div>
+
+    <div class="preview-panel">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span>PROMPT_BUILDER_v1.0</span>
+                <span>STATUS: <span id="statusIndicator">WAITING...</span></span>
+            </div>
+            <div class="terminal-body" id="promptOutput">
+                <span class="empty-state">// Select options on the left to build your prompt structure...</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="resultModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color: var(--primary-green);">Simulation Complete</h2>
+        <p><strong>Result Analysis:</strong></p>
+        <div id="resultText"></div>
+        <button class="run-simulation-btn active" style="margin-top: 1rem;" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    // State Management
+    const state = {
+        role: null,
+        reasoning: null,
+        verification: null
+    };
+
+    // Prompt Part Definitions
+    const content = {
+        role: {
+            basic: `<div class="prompt-block highlight"><strong>### ROLE ###</strong><br>You are a helpful assistant knowledgeable about AI.</div>`,
+            advanced: `<div class="prompt-block highlight"><strong>### ROLE ###</strong><br>Act as a <strong>Tenured Professor of Data Privacy Law & Ethics</strong> at a Research-I University. Your tone should be academic, rigorous, and pedagogical.</div>`
+        },
+        reasoning: {
+            tot: `<div class="prompt-block highlight"><strong>### STRATEGY: TREE OF THOUGHTS ###</strong><br>Do not write the syllabus yet.<br>1. <strong>Perspectives:</strong> Adopt three personas: A Civil Rights Attorney, A Computer Vision Engineer, and a Sociologist.<br>2. <strong>Debate:</strong> Have them discuss the 5 most critical ethical failures in surveillance history.<br>3. <strong>Synthesize:</strong> Merge their insights to form the Weekly Themes.</div>`,
+            mit: `<div class="prompt-block highlight"><strong>### STRATEGY: METACOGNITIVE DECOMPOSITION ###</strong><br>1. <strong>Decompose:</strong> Break this task into: [A] Learning Objectives, [B] Weekly Schedule, [C] Assessment Strategy.<br>2. <strong>Solve:</strong> Address each sub-problem sequentially.<br>3. <strong>Confidence Check:</strong> For each section, rate your confidence (0.0-1.0). If <0.8, refine before moving on.</div>`
+        },
+        verification: {
+            none: `<div class="prompt-block highlight"><strong>### OUTPUT ###</strong><br>Please provide the final syllabus now. Ensure it is accurate.</div>`,
+            cove: `<div class="prompt-block highlight"><strong>### VERIFICATION LOOP ###</strong><br>STOP. Before outputting the final response:<br>1. <strong>Audit:</strong> Scan your draft for all cited readings.<br>2. <strong>Verify:</strong> Check if these texts exist in your training data. If a text is hallucinations, replace it.<br>3. <strong>Finalize:</strong> Output the corrected version.</div>`
+        }
+    };
+
+    function selectOption(stage, choice) {
+        // Update State
+        if (stage === 1) state.role = choice;
+        if (stage === 2) state.reasoning = choice;
+        if (stage === 3) state.verification = choice;
+
+        // UI Feedback: Highlight selected card, unhighlight others in same stage
+        // (Simplified for this demo by redrawing all)
+        updateVisualSelection(stage, choice);
+
+        // Update Terminal
+        renderPrompt();
+
+        // Check completion
+        if (state.role && state.reasoning && state.verification) {
+            document.getElementById('runBtn').classList.add('active');
+            document.getElementById('statusIndicator').innerText = "READY";
+            document.getElementById('statusIndicator').style.color = "#4caf50";
+        }
+    }
+
+    function updateVisualSelection(stage, choice) {
+        // Get the specific container for this stage
+        const containers = document.querySelectorAll('.stage-container');
+        const targetContainer = containers[stage - 1];
+        const cards = targetContainer.querySelectorAll('.option-card');
+        
+        // Remove 'selected' from all, then add to clicked
+        cards.forEach(card => {
+            card.classList.remove('selected');
+            // This is a naive check; in production use IDs. 
+            // Here we assume order matches options provided in HTML.
+            // But let's rely on the onclick trigger logic visual update
+            if(card.getAttribute('onclick').includes(`'${choice}'`)) {
+                card.classList.add('selected');
+            }
+        });
+    }
+
+    function renderPrompt() {
+        let html = "";
+        
+        if (state.role) html += content.role[state.role];
+        else html += `<div class="prompt-block" style="opacity:0.3">Waiting for Role Selection...</div>`;
+
+        if (state.reasoning) html += content.reasoning[state.reasoning];
+        else html += `<div class="prompt-block" style="opacity:0.3">Waiting for Strategy Selection...</div>`;
+
+        if (state.verification) html += content.verification[state.verification];
+        else html += `<div class="prompt-block" style="opacity:0.3">Waiting for Verification Selection...</div>`;
+
+        document.getElementById('promptOutput').innerHTML = html;
+    }
+
+    function showResult() {
+        const modal = document.getElementById('resultModal');
+        const text = document.getElementById('resultText');
+        
+        let feedback = "";
+        
+        // Scoring Logic
+        let score = 0;
+        if(state.role === 'advanced') score++;
+        if(state.reasoning === 'tot' || state.reasoning === 'mit') score++;
+        if(state.verification === 'cove') score++;
+
+        if (score === 3) {
+            feedback = `<p style="color:green; font-weight:bold;">🏆 SUCCESS: High-Fidelity Output Generated.</p>
+            <p>Your prompt combined expert persona constraints, structured reasoning, and a verification loop.</p>
+            <ul>
+                <li><strong>Persona:</strong> Ensured the tone was academic.</li>
+                <li><strong>Strategy:</strong> Prevented generic answers by forcing deep processing.</li>
+                <li><strong>Verification:</strong> Caught 2 hallucinated citations and fixed them before output.</li>
+            </ul>`;
+        } else if (score === 2) {
+            feedback = `<p style="color:orange; font-weight:bold;">⚠️ PARTIAL SUCCESS: Good, but risky.</p>
+            <p>You missed a critical layer. Without the full stack (Role + Reason + Verify), the syllabus is decent but might contain fake citations or generic learning objectives.</p>`;
+        } else {
+            feedback = `<p style="color:red; font-weight:bold;">❌ FAILURE: Generic Output.</p>
+            <p>Your prompt lacked the necessary constraints. The AI produced a generic syllabus that looks like a Wikipedia summary and includes a book that doesn't exist.</p>`;
+        }
+
+        text.innerHTML = feedback;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('resultModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
