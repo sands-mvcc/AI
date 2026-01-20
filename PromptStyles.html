@@ -212,7 +212,6 @@
             font-family: 'Courier New', monospace;
             margin: 0.5rem 0;
             border-left: 4px solid #006600;
-            white-space: pre-wrap;
         }
 
         .interactive-demo {
@@ -391,7 +390,7 @@
 
     <div class="nav-container">
         <nav class="main-nav">
-            <button class="nav-btn active" onclick="showSection('intro')">Introduction</button>
+            <button class="nav-btn" onclick="showSection('intro')">Introduction</button>
             <button class="nav-btn" onclick="showSection('style1')">1. Role-Based</button>
             <button class="nav-btn" onclick="showSection('style2')">2. Chain-of-Thought</button>
             <button class="nav-btn" onclick="showSection('style3')">3. Few-Shot</button>
@@ -511,13 +510,19 @@
                     <h4>💡 Educational Examples</h4>
                     
                     <p><strong>Example 1: Lesson Planning</strong></p>
-                    <div class="prompt-display">"You are an experienced middle school math teacher with 15 years of classroom experience. Create a 45-minute lesson plan on introducing algebraic expressions to 7th graders who have never seen variables before. Include differentiation strategies for struggling learners."</div>
+                    <div class="prompt-display">
+                        "You are an experienced middle school math teacher with 15 years of classroom experience. Create a 45-minute lesson plan on introducing algebraic expressions to 7th graders who have never seen variables before. Include differentiation strategies for struggling learners."
+                    </div>
 
                     <p style="margin-top: 1rem;"><strong>Example 2: Assessment Creation</strong></p>
-                    <div class="prompt-display">"You are a college-level psychology professor specializing in cognitive development. Design a rubric for evaluating student research papers on Piaget's stages of development. The rubric should assess understanding of theory, application of concepts, and critical analysis."</div>
+                    <div class="prompt-display">
+                        "You are a college-level psychology professor specializing in cognitive development. Design a rubric for evaluating student research papers on Piaget's stages of development. The rubric should assess understanding of theory, application of concepts, and critical analysis."
+                    </div>
 
                     <p style="margin-top: 1rem;"><strong>Example 3: Student Support</strong></p>
-                    <div class="prompt-display">"You are a patient and encouraging reading specialist working with elementary students. Explain the difference between consonant blends and digraphs using simple language and everyday examples that a 2nd grader would understand."</div>
+                    <div class="prompt-display">
+                        "You are a patient and encouraging reading specialist working with elementary students. Explain the difference between consonant blends and digraphs using simple language and everyday examples that a 2nd grader would understand."
+                    </div>
                 </div>
 
                 <div class="interactive-demo">
@@ -604,14 +609,20 @@
                     <h4>💡 Educational Examples</h4>
                     
                     <p><strong>Example 1: Math Problem Solving</strong></p>
-                    <div class="prompt-display">"Solve this problem step-by-step: A classroom has 24 students. If 1/3 are absent and 2 more leave early, how many remain? Show your thinking at each step."</div>
+                    <div class="prompt-display">
+                        "Solve this problem step-by-step: A classroom has 24 students. If 1/3 are absent and 2 more leave early, how many remain? Show your thinking at each step."
+                    </div>
                     <p style="margin-top: 0.5rem;"><em>Why it works: The AI will calculate 1/3 of 24, subtract that, then subtract 2 more, showing each calculation.</em></p>
 
                     <p style="margin-top: 1rem;"><strong>Example 2: Scientific Reasoning</strong></p>
-                    <div class="prompt-display">"A student claims plants can grow without sunlight if given extra water. Evaluate this claim step-by-step: (1) Explain what plants need sunlight for, (2) Identify what water provides, (3) Determine if one can replace the other, (4) State your conclusion with evidence."</div>
+                    <div class="prompt-display">
+                        "A student claims plants can grow without sunlight if given extra water. Evaluate this claim step-by-step: (1) Explain what plants need sunlight for, (2) Identify what water provides, (3) Determine if one can replace the other, (4) State your conclusion with evidence."
+                    </div>
 
                     <p style="margin-top: 1rem;"><strong>Example 3: Writing Process</strong></p>
-                    <div class="prompt-display">"Help a student develop a thesis statement for an essay on climate change. Think step-by-step: First, identify the specific aspect of climate change they want to focus on. Second, determine their position on that aspect. Third, craft a clear, arguable statement. Fourth, check that it's specific enough for a 5-page essay."</div>
+                    <div class="prompt-display">
+                        "Help a student develop a thesis statement for an essay on climate change. Think step-by-step: First, identify the specific aspect of climate change they want to focus on. Second, determine their position on that aspect. Third, craft a clear, arguable statement. Fourth, check that it's specific enough for a 5-page essay."
+                    </div>
                 </div>
 
                 <div class="interactive-demo">
@@ -659,210 +670,1087 @@
             </div>
         </div>
 
-        <!-- Additional sections would continue here in the same pattern -->
-        <!-- For brevity in the artifact, I'm including a condensed comparison section -->
-
-        <!-- Comparison Section -->
-        <div id="comparison" class="section">
+        <!-- Style 3: Few-Shot -->
+        <div id="style3" class="section">
             <div class="style-card">
-                <h2>📊 Comprehensive Style Comparison</h2>
+                <h2><span class="style-number">Style 3</span> Few-Shot Prompting</h2>
                 
                 <div class="subsection">
-                    <h3>Quick Reference: When to Use Each Style</h3>
+                    <h3>📖 Definition</h3>
+                    <p>Few-Shot prompting provides the AI with 3-5 examples of the desired input-output pattern, tone, or format before presenting the actual task. This "learning by example" approach helps the AI understand exactly what you want without lengthy explanations.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>📚 Teaching Analogy</h4>
+                    <p>Think about teaching vocabulary to young students. Instead of just defining "mammal," you show examples: "A dog is a mammal. A cat is a mammal. A whale is a mammal. Now, is a eagle a mammal?" Students learn the pattern from examples. Few-Shot prompting works the same way—show the AI several examples, and it infers the rule.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Pattern Recognition:</strong> AI learns from examples rather than explicit instructions</li>
+                        <li><strong>Consistency:</strong> Examples should follow the same format and style</li>
+                        <li><strong>Representative Samples:</strong> Choose examples that cover the range of inputs you expect</li>
+                        <li><strong>3-5 Sweet Spot:</strong> Too few examples miss patterns; too many waste tokens</li>
+                        <li><strong>Format Matching:</strong> Structure your examples exactly as you want outputs structured</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Select representative examples:</strong> Choose 3-5 examples that show the pattern clearly</li>
+                        <li><strong>Use consistent formatting:</strong> Keep Input/Output labels and structure identical</li>
+                        <li><strong>Show variety:</strong> Include different types of valid inputs/outputs</li>
+                        <li><strong>End with your task:</strong> Present your actual question in the same format</li>
+                        <li><strong>Test and refine:</strong> If outputs are inconsistent, adjust your examples</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Classification Tasks</strong></p>
+                    <div class="prompt-display">
+Input: "The mitochondria is the powerhouse of the cell."
+Output: Biology
+
+Input: "F = ma describes the relationship between force, mass, and acceleration."
+Output: Physics
+
+Input: "The Treaty of Versailles ended World War I."
+Output: History
+
+Input: "Photosynthesis converts light energy into chemical energy."
+Output: ?
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Creating Study Questions</strong></p>
+                    <div class="prompt-display">
+Input: "Cell division"
+Output: "What are the four phases of mitosis and what occurs in each?"
+
+Input: "French Revolution"
+Output: "What were the three main causes of the French Revolution?"
+
+Input: "Pythagorean Theorem"
+Output: "How would you use the Pythagorean Theorem to find the length of a ladder needed to reach a window 12 feet high if the base is 5 feet from the wall?"
+
+Input: "Photosynthesis"
+Output: ?
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Feedback Templates</strong></p>
+                    <div class="prompt-display">
+Input: Student writes "I goed to the store"
+Output: "Great effort! The past tense of 'go' is 'went.' Try: 'I went to the store.'"
+
+Input: Student writes "The dog is more bigger"
+Output: "Good try! We don't need 'more' with 'bigger.' Try: 'The dog is bigger.'"
+
+Input: Student writes "She dont like pizza"
+Output: "Close! With 'she,' we use 'doesn't.' Try: 'She doesn't like pizza.'"
+
+Input: Student writes "Me and him was there"
+Output: ?
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Create a few-shot prompt for a classification task. Enter your category and examples:</p>
+                    <input type="text" class="demo-input" id="fewshotCategory" placeholder="What are you classifying? (e.g., 'literary devices')">
+                    <input type="text" class="demo-input" id="fewshotEx1" placeholder="Example 1: Input -> Output">
+                    <input type="text" class="demo-input" id="fewshotEx2" placeholder="Example 2: Input -> Output">
+                    <input type="text" class="demo-input" id="fewshotEx3" placeholder="Example 3: Input -> Output">
+                    <button class="demo-button" onclick="generateFewShotPrompt()">Generate Few-Shot Prompt</button>
+                    <div class="demo-output" id="fewshotOutput">Your prompt structure will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Start with classification:</strong> Easier for students to understand pattern-matching</p>
+                    <p><span class="tip-icon">✓</span> <strong>Co-create examples:</strong> Have students help generate the example set</p>
+                    <p><span class="tip-icon">✓</span> <strong>Test edge cases:</strong> Show what happens with ambiguous examples</p>
+                    <p><span class="tip-icon">✓</span> <strong>Compare to human learning:</strong> We all learn from examples (learning to identify animals, parts of speech, etc.)</p>
+                    <p><span class="tip-icon">✓</span> <strong>Quality over quantity:</strong> Three excellent examples beat ten mediocre ones</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>✅ Few-Shot vs. Zero-Shot: When to Use Each</h3>
                     <table class="comparison-table">
                         <tr>
-                            <th>Style</th>
+                            <th>Situation</th>
+                            <th>Use Few-Shot</th>
+                            <th>Use Zero-Shot</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Format Matters</strong></td>
+                            <td>✓ When precise formatting is critical</td>
+                            <td>Generic formats work fine</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ambiguous Task</strong></td>
+                            <td>✓ When task description alone is unclear</td>
+                            <td>Task is self-explanatory</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Consistency Needed</strong></td>
+                            <td>✓ When outputs must follow exact pattern</td>
+                            <td>Varied outputs are acceptable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Simple Tasks</strong></td>
+                            <td>Wastes tokens unnecessarily</td>
+                            <td>✓ Clear instruction is sufficient</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 4: Zero-Shot -->
+        <div id="style4" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 4</span> Zero-Shot Prompting</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Zero-Shot prompting uses direct, clear instructions without providing any examples. It relies on the AI's pre-existing training to understand and complete straightforward tasks. This is the simplest and most efficient prompting style for routine tasks.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🎯 Teaching Analogy</h4>
+                    <p>Imagine asking a colleague who teaches English to "please summarize this article in three sentences." You don't need to show examples of summaries—they already know what a summary is and how to create one. Zero-Shot prompting works the same way: the AI already understands common tasks like summarizing, translating, or explaining, so you can simply ask directly.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Direct Instructions:</strong> State exactly what you want using clear action verbs</li>
+                        <li><strong>No Examples Needed:</strong> For common, well-understood tasks</li>
+                        <li><strong>Efficiency:</strong> Fastest prompt style, uses fewest tokens</li>
+                        <li><strong>Action Verbs:</strong> Summarize, explain, translate, list, define, compare, analyze</li>
+                        <li><strong>Best for Simple Tasks:</strong> When the task is unambiguous and commonly performed</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Start with an action verb:</strong> Summarize, explain, translate, create, etc.</li>
+                        <li><strong>Specify constraints:</strong> Include word count, format, or style requirements</li>
+                        <li><strong>Provide context if needed:</strong> Specify audience level or purpose</li>
+                        <li><strong>Be concise:</strong> Keep instructions brief and focused</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Content Summarization</strong></p>
+                    <div class="prompt-display">
+                        "Summarize the attached article about photosynthesis in five bullet points suitable for 8th-grade students."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Concept Explanation</strong></p>
+                    <div class="prompt-display">
+                        "Explain the difference between weather and climate using language appropriate for elementary students."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Question Generation</strong></p>
+                    <div class="prompt-display">
+                        "Create 10 multiple-choice questions based on Chapter 5 of the textbook, covering key vocabulary and main concepts."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 4: Translation Task</strong></p>
+                    <div class="prompt-display">
+                        "Translate this assignment description into Spanish, maintaining a formal academic tone."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 5: List Creation</strong></p>
+                    <div class="prompt-display">
+                        "List 15 real-world applications of quadratic equations that would interest high school students."
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Transform a vague request into a clear zero-shot prompt:</p>
+                    <input type="text" class="demo-input" id="zeroshotInput" placeholder="E.g., 'I need something about the solar system'">
+                    <button class="demo-button" onclick="generateZeroShotPrompt()">Generate Clear Zero-Shot Prompt</button>
+                    <div class="demo-output" id="zeroshotOutput">Your improved prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Teach clarity first:</strong> This is the foundation for all other prompting styles</p>
+                    <p><span class="tip-icon">✓</span> <strong>Focus on action verbs:</strong> Create a classroom list of powerful instruction verbs</p>
+                    <p><span class="tip-icon">✓</span> <strong>Practice specificity:</strong> Compare vague vs. specific zero-shot prompts</p>
+                    <p><span class="tip-icon">✓</span> <strong>Connect to writing instructions:</strong> Same skills used in clear technical writing</p>
+                    <p><span class="tip-icon">✓</span> <strong>Start here:</strong> This should be the first style students master</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>⭐ Powerful Action Verbs for Zero-Shot Prompts</h3>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>Analysis:</strong> Compare, contrast, analyze, evaluate, distinguish, categorize</li>
+                            <li><strong>Creation:</strong> Create, generate, design, develop, compose, construct</li>
+                            <li><strong>Explanation:</strong> Explain, describe, clarify, demonstrate, illustrate</li>
+                            <li><strong>Transformation:</strong> Summarize, simplify, translate, convert, rewrite</li>
+                            <li><strong>Organization:</strong> List, organize, outline, sort, rank, prioritize</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Common Mistakes & Fixes</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Weak Prompt</th>
+                            <th>Problem</th>
+                            <th>Strong Version</th>
+                        </tr>
+                        <tr>
+                            <td>"Tell me about mitosis"</td>
+                            <td>Too vague, no constraints</td>
+                            <td>"Explain the four stages of mitosis in a two-paragraph summary for biology students"</td>
+                        </tr>
+                        <tr>
+                            <td>"Make a quiz"</td>
+                            <td>No topic, format, or difficulty specified</td>
+                            <td>"Create a 10-question multiple-choice quiz on World War II causes, appropriate for 10th graders"</td>
+                        </tr>
+                        <tr>
+                            <td>"Help with my lesson"</td>
+                            <td>No specific action or content</td>
+                            <td>"Generate three hands-on activities to teach fractions to 4th graders using everyday objects"</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 5: Instructional -->
+        <div id="style5" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 5</span> Instructional Prompting</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Instructional prompting uses specific constraints and delimiters to define precise boundaries around the AI's output, including length limits, format requirements, and structural guidelines. This style ensures outputs meet exact specifications for length, tone, and format.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>📐 Teaching Analogy</h4>
+                    <p>Think of instructional prompting like giving students a detailed rubric before an assignment. Instead of saying "write an essay," you specify: "Write a 500-700 word argumentative essay with an introduction, three body paragraphs, and a conclusion. Use MLA format. Include at least three cited sources." The constraints create a clear target, making success measurable.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Quantitative Limits:</strong> Word count, number of items, time constraints</li>
+                        <li><strong>Format Specifications:</strong> Structure, style, tone requirements</li>
+                        <li><strong>Delimiters:</strong> Using symbols (""", ###, ---) to separate sections</li>
+                        <li><strong>Boundary Setting:</strong> Defining what to include and exclude</li>
+                        <li><strong>Professional Standards:</strong> Matching output to industry or academic formats</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Define length constraints:</strong> Specify word count, sentence limits, or time duration</li>
+                        <li><strong>Set format requirements:</strong> Bullet points, paragraphs, tables, etc.</li>
+                        <li><strong>Use delimiters:</strong> Separate instructions from content with triple quotes (""") or other markers</li>
+                        <li><strong>Specify tone/style:</strong> Formal, conversational, academic, persuasive</li>
+                        <li><strong>List what to exclude:</strong> Sometimes stating what NOT to include is helpful</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Executive Summary with Constraints</strong></p>
+                    <div class="prompt-display">
+Write an executive summary of this research report on learning styles.
+
+Constraints:
+- Maximum 150 words
+- Three paragraphs: Background, Findings, Implications
+- Professional academic tone
+- Include no more than three statistics
+- Use present tense
+
+Content to summarize:
+"""
+[Research report text would go here]
+"""
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Lesson Plan Format</strong></p>
+                    <div class="prompt-display">
+Create a lesson plan for teaching the Pythagorean theorem.
+
+Requirements:
+- 60-minute class period
+- Include: Learning objectives (3), Materials needed, Step-by-step procedure, Assessment method, Differentiation strategies
+- Format: Use headers for each section
+- Grade level: 8th grade
+- Exclude: Homework assignments (not needed)
+
+Focus the lesson on practical applications students can relate to.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Feedback with Parameters</strong></p>
+                    <div class="prompt-display">
+Provide feedback on this student essay.
+
+Guidelines:
+- Begin with two specific strengths
+- Identify three areas for improvement
+- Each point should be 1-2 sentences
+- Use encouraging, constructive language
+- End with one concrete next step
+- Total length: 200-250 words
+
+Student essay:
+"""
+[Essay text]
+"""
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Add instructional constraints to a basic prompt:</p>
+                    <input type="text" class="demo-input" id="instructionalBase" placeholder="Basic prompt (e.g., 'Explain photosynthesis')">
+                    <input type="text" class="demo-input" id="instructionalLength" placeholder="Length constraint (e.g., '100 words')">
+                    <input type="text" class="demo-input" id="instructionalFormat" placeholder="Format (e.g., 'three paragraphs')">
+                    <input type="text" class="demo-input" id="instructionalTone" placeholder="Tone (e.g., 'simple language for 5th graders')">
+                    <button class="demo-button" onclick="generateInstructionalPrompt()">Add Constraints</button>
+                    <div class="demo-output" id="instructionalOutput">Your constrained prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Connect to rubrics:</strong> This is essentially creating a rubric for AI</p>
+                    <p><span class="tip-icon">✓</span> <strong>Practice boundary-setting:</strong> Teach students to think about exactly what they want</p>
+                    <p><span class="tip-icon">✓</span> <strong>Show constraint impact:</strong> Run same prompt with/without constraints to see differences</p>
+                    <p><span class="tip-icon">✓</span> <strong>Teach professional communication:</strong> This mirrors real-world project specifications</p>
+                    <p><span class="tip-icon">✓</span> <strong>Build progressively:</strong> Start with one constraint, add more over time</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Common Constraints in Education</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Constraint Type</th>
+                            <th>Examples</th>
+                            <th>When to Use</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Length</strong></td>
+                            <td>Word count, sentence count, paragraph count, time duration</td>
+                            <td>Presentations, summaries, student handouts</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Format</strong></td>
+                            <td>Bullet points, numbered lists, table, dialogue, Q&A</td>
+                            <td>Study guides, worksheets, reference materials</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tone</strong></td>
+                            <td>Formal, conversational, encouraging, technical, age-appropriate</td>
+                            <td>Differentiation, parent communications, assessments</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Content</strong></td>
+                            <td>Include examples, exclude jargon, use analogies, cite sources</td>
+                            <td>Explanations, lesson plans, student resources</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 6: Self-Consistency -->
+        <div id="style6" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 6</span> Self-Consistency Prompting</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Self-Consistency prompting asks the AI to generate multiple reasoning paths to solve the same problem, then select the most consistent or frequently appearing answer. This technique improves accuracy on complex problems where there might be multiple valid approaches.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🔍 Teaching Analogy</h4>
+                    <p>Imagine three math teachers independently solving a complex word problem. If all three arrive at the same answer using different methods, you can be confident it's correct. But if one gets a different answer, you'd investigate further. Self-Consistency prompting applies this "multiple experts" approach—the AI solves the problem several ways and looks for agreement among the solutions.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Multiple Pathways:</strong> Generating diverse approaches to the same problem</li>
+                        <li><strong>Cross-Verification:</strong> Checking if different methods yield same answer</li>
+                        <li><strong>Majority Voting:</strong> The most common answer is likely correct</li>
+                        <li><strong>Error Detection:</strong> Inconsistent results flag potential problems</li>
+                        <li><strong>Confidence Building:</strong> Agreement across methods increases certainty</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Request multiple approaches:</strong> Ask for 3-5 different reasoning paths</li>
+                        <li><strong>Vary the methods:</strong> Explicitly request different strategies if needed</li>
+                        <li><strong>Compare results:</strong> Have AI identify which answers match</li>
+                        <li><strong>Select most consistent:</strong> Choose the answer appearing most frequently</li>
+                        <li><strong>Investigate outliers:</strong> If answers differ significantly, determine why</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Math Problem Verification</strong></p>
+                    <div class="prompt-display">
+Solve this problem using three different approaches, then identify the most consistent answer:
+
+"A teacher has 150 sheets of paper. She gives each of her 24 students the same number of sheets and has 6 left over. How many sheets did each student receive?"
+
+Approach 1: Use division and remainder
+Approach 2: Work backwards from the known remainder
+Approach 3: Use algebraic equation
+
+Then state which answer appears most often and is therefore most reliable.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Historical Analysis</strong></p>
+                    <div class="prompt-display">
+Analyze the causes of World War I from three different historical perspectives:
+
+1. Political/diplomatic perspective
+2. Economic perspective
+3. Social/cultural perspective
+
+Identify which causes appear in all three analyses—these are likely the most significant factors.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Scientific Reasoning</strong></p>
+                    <div class="prompt-display">
+A plant in a classroom is wilting. Generate three different diagnostic pathways:
+
+1. Consider water-related factors
+2. Consider light-related factors
+3. Consider soil/nutrient factors
+
+For each pathway, determine if it could explain ALL the symptoms. Which explanation is most consistent with all observations?
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Enter a problem that could be solved multiple ways:</p>
+                    <input type="text" class="demo-input" id="selfconsistencyInput" placeholder="E.g., 'Calculate the area of an irregular shape'">
+                    <button class="demo-button" onclick="generateSelfConsistencyPrompt()">Generate Self-Consistency Prompt</button>
+                    <div class="demo-output" id="selfconsistencyOutput">Your multi-path prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Teach verification skills:</strong> Multiple methods = higher confidence in answers</p>
+                    <p><span class="tip-icon">✓</span> <strong>Connect to peer review:</strong> Scientists verify results through replication</p>
+                    <p><span class="tip-icon">✓</span> <strong>Build problem-solving flexibility:</strong> Students learn there are multiple valid approaches</p>
+                    <p><span class="tip-icon">✓</span> <strong>Develop critical thinking:</strong> When answers differ, students must analyze why</p>
+                    <p><span class="tip-icon">✓</span> <strong>Use for high-stakes problems:</strong> Important calculations, critical analyses</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>⚖️ When to Use Self-Consistency</h3>
+                    <table class="comparison-table">
+                        <tr>
                             <th>Best For</th>
-                            <th>Complexity Level</th>
-                            <th>Time Investment</th>
+                            <th>Not Necessary For</th>
                         </tr>
                         <tr>
-                            <td><strong>1. Role-Based</strong></td>
-                            <td>Expert-level content, specific perspectives</td>
-                            <td>Low</td>
-                            <td>Low</td>
+                            <td>Complex math problems with multiple solution paths</td>
+                            <td>Simple arithmetic or straightforward calculations</td>
                         </tr>
                         <tr>
-                            <td><strong>2. Chain-of-Thought</strong></td>
-                            <td>Multi-step problems, reasoning tasks</td>
-                            <td>Medium</td>
-                            <td>Medium</td>
+                            <td>Critical analyses where accuracy is essential</td>
+                            <td>Creative brainstorming or opinion-based responses</td>
                         </tr>
                         <tr>
-                            <td><strong>3. Few-Shot</strong></td>
-                            <td>Pattern-following, consistent formatting</td>
-                            <td>Medium</td>
-                            <td>Medium</td>
+                            <td>Scientific reasoning with multiple variables</td>
+                            <td>Factual recall questions with single correct answers</td>
                         </tr>
                         <tr>
-                            <td><strong>4. Zero-Shot</strong></td>
-                            <td>Simple, common tasks</td>
-                            <td>Low</td>
-                            <td>Very Low</td>
-                        </tr>
-                        <tr>
-                            <td><strong>5. Instructional</strong></td>
-                            <td>Precise specifications, professional outputs</td>
-                            <td>Low-Medium</td>
-                            <td>Medium</td>
-                        </tr>
-                        <tr>
-                            <td><strong>6. Self-Consistency</strong></td>
-                            <td>High-stakes problems, verification needed</td>
-                            <td>High</td>
-                            <td>High</td>
-                        </tr>
-                        <tr>
-                            <td><strong>7. Meta-Prompting</strong></td>
-                            <td>Creating reusable prompts, optimization</td>
-                            <td>Medium-High</td>
-                            <td>Medium</td>
-                        </tr>
-                        <tr>
-                            <td><strong>8. ReAct</strong></td>
-                            <td>Research-based tasks, dynamic information</td>
-                            <td>High</td>
-                            <td>High</td>
-                        </tr>
-                        <tr>
-                            <td><strong>9. Generated Knowledge</strong></td>
-                            <td>Complex analysis requiring background facts</td>
-                            <td>Medium</td>
-                            <td>Medium</td>
-                        </tr>
-                        <tr>
-                            <td><strong>10. Style Matching</strong></td>
-                            <td>Maintaining consistency, audience adaptation</td>
-                            <td>Medium</td>
-                            <td>Low-Medium</td>
+                            <td>Problems where student confidence needs building</td>
+                            <td>Time-limited tasks where efficiency matters most</td>
                         </tr>
                     </table>
                 </div>
 
                 <div class="subsection">
-                    <h3>🎓 Teaching Progression: Building Student Mastery</h3>
-                    <div class="key-points">
-                        <p><strong>Week 1-2: Foundations</strong></p>
-                        <ul>
-                            <li>Start with Zero-Shot (clarity in instructions)</li>
-                            <li>Introduce Role-Based (perspective and audience awareness)</li>
-                        </ul>
+                    <h3>🎓 Teaching Metacognition Through Self-Consistency</h3>
+                    <p>This prompt style is particularly valuable for teaching students about their own thinking processes. By explicitly showing multiple approaches to the same problem, students learn:</p>
+                    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                        <li>There are often multiple valid solution strategies</li>
+                        <li>Cross-checking answers increases accuracy</li>
+                        <li>Inconsistent results should trigger re-examination</li>
+                        <li>Different perspectives can reveal different aspects of a problem</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-                        <p style="margin-top: 1rem;"><strong>Week 3-4: Structure & Patterns</strong></p>
-                        <ul>
-                            <li>Add Instructional Prompting (precise specifications)</li>
-                            <li>Introduce Few-Shot (learning from examples)</li>
-                        </ul>
+        <!-- Style 7: Meta-Prompting -->
+        <div id="style7" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 7</span> Meta-Prompting</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Meta-Prompting uses AI to generate, refine, or improve prompts themselves. Instead of directly asking for content, you ask the AI to help you craft a better prompt for another task. This is "prompting about prompting"—using AI as a prompt engineering assistant.</p>
+                </div>
 
-                        <p style="margin-top: 1rem;"><strong>Week 5-6: Reasoning & Thinking</strong></p>
-                        <ul>
-                            <li>Teach Chain-of-Thought (step-by-step reasoning)</li>
-                            <li>Introduce Generated Knowledge (activating prior knowledge)</li>
-                        </ul>
+                <div class="analogy-box">
+                    <h4>🎓 Teaching Analogy</h4>
+                    <p>Imagine you're designing an assignment but aren't sure how to phrase the instructions clearly. You ask a colleague, "How should I word this assignment so students understand exactly what I want?" They help you craft clearer directions. Meta-prompting does the same—it helps you improve how you ask the AI for help, making your eventual outputs better.</p>
+                </div>
 
-                        <p style="margin-top: 1rem;"><strong>Week 7-8: Advanced Techniques</strong></p>
-                        <ul>
-                            <li>Explore Self-Consistency (verification methods)</li>
-                            <li>Introduce Style Matching (audience adaptation)</li>
-                        </ul>
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Prompt Optimization:</strong> Improving unclear or ineffective prompts</li>
+                        <li><strong>Iterative Refinement:</strong> Building better prompts through AI assistance</li>
+                        <li><strong>Learning Tool:</strong> Teaches users what makes prompts effective</li>
+                        <li><strong>Template Generation:</strong> Creating reusable prompt structures</li>
+                        <li><strong>Expertise Transfer:</strong> AI shares prompt engineering best practices</li>
+                    </ul>
+                </div>
 
-                        <p style="margin-top: 1rem;"><strong>Week 9-10: Expert Level</strong></p>
-                        <ul>
-                            <li>Teach ReAct (combining reasoning with action)</li>
-                            <li>Introduce Meta-Prompting (optimization and templates)</li>
-                        </ul>
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>State your goal:</strong> Explain what you ultimately want to accomplish</li>
+                        <li><strong>Request prompt creation:</strong> Ask AI to write an effective prompt for that goal</li>
+                        <li><strong>Review and refine:</strong> Test the generated prompt, request improvements</li>
+                        <li><strong>Ask for explanation:</strong> Have AI explain why the prompt is structured that way</li>
+                        <li><strong>Save successful prompts:</strong> Build a library of effective prompt templates</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Creating Assessment Prompts</strong></p>
+                    <div class="prompt-display">
+"I need to assess student understanding of photosynthesis for 7th graders. Write a highly effective prompt I can use to generate a quiz that tests both factual knowledge and conceptual understanding. The quiz should include multiple question types and be appropriate for students reading at grade level."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Lesson Planning Meta-Prompt</strong></p>
+                    <div class="prompt-display">
+"Help me create a prompt template I can reuse for generating lesson plans. The template should work for any subject and grade level, include all essential lesson components, and ensure differentiation strategies are included. Show me the template, then explain why each element is included."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Improving Vague Requests</strong></p>
+                    <div class="prompt-display">
+"I have this vague prompt: 'Help me teach fractions.' Rewrite this as a clear, detailed prompt that would produce a useful teaching resource. Explain what you added and why."
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 4: Creating Student-Facing Prompts</strong></p>
+                    <div class="prompt-display">
+"Write a prompt that my high school students can use to get AI help with essay outlining without having AI write the essay for them. The prompt should guide students through their own thinking process while preventing academic dishonesty."
                     </div>
                 </div>
 
-                <div class="subsection" style="margin-top: 2rem;">
-                    <h3>⚡ Quick Decision Flowchart</h3>
-                    <div style="background-color: #f0f9f0; padding: 2rem; border-radius: 8px; border: 2px solid #006600;">
-                        <p><strong>START: What's your primary goal?</strong></p>
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Describe what you want to accomplish, and we'll generate a meta-prompt:</p>
+                    <input type="text" class="demo-input" id="metaGoal" placeholder="What's your end goal? (e.g., 'teach students about climate change')">
+                    <input type="text" class="demo-input" id="metaContext" placeholder="Any constraints? (e.g., '9th grade, 45-minute class')">
+                    <button class="demo-button" onclick="generateMetaPrompt()">Generate Meta-Prompt</button>
+                    <div class="demo-output" id="metaOutput">Your meta-prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Advanced technique:</strong> Teach this after students master basic prompting</p>
+                    <p><span class="tip-icon">✓</span> <strong>Build prompt libraries:</strong> Have students collect effective prompts for different tasks</p>
+                    <p><span class="tip-icon">✓</span> <strong>Teach reflection:</strong> Meta-prompting encourages thinking about thinking</p>
+                    <p><span class="tip-icon">✓</span> <strong>Create class templates:</strong> Build reusable prompts for common classroom tasks</p>
+                    <p><span class="tip-icon">✓</span> <strong>Encourage experimentation:</strong> Students test and refine AI-generated prompts</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🔄 The Meta-Prompting Workflow</h3>
+                    <div class="key-points">
+                        <p><strong>Step 1: Define Your Goal</strong></p>
+                        <p style="margin-left: 1rem;">Clearly articulate what you ultimately want to accomplish</p>
                         
-                        <p style="margin: 1rem 0 0.5rem 1rem;">→ <strong>Simple, straightforward task?</strong> Use <span class="highlight">Zero-Shot</span></p>
+                        <p style="margin-top: 1rem;"><strong>Step 2: Request Prompt Generation</strong></p>
+                        <p style="margin-left: 1rem;">Ask AI to create an effective prompt for achieving that goal</p>
                         
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Need expert perspective?</strong> Use <span class="highlight">Role-Based</span></p>
+                        <p style="margin-top: 1rem;"><strong>Step 3: Test the Generated Prompt</strong></p>
+                        <p style="margin-left: 1rem;">Use the AI-created prompt to see if it produces desired results</p>
                         
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Multi-step problem?</strong> Use <span class="highlight">Chain-of-Thought</span></p>
+                        <p style="margin-top: 1rem;"><strong>Step 4: Iterate and Improve</strong></p>
+                        <p style="margin-left: 1rem;">Request modifications based on what worked or didn't work</p>
                         
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Specific format required?</strong> Use <span class="highlight">Few-Shot</span> or <span class="highlight">Instructional</span></p>
-                        
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Match existing style/tone?</strong> Use <span class="highlight">Style Matching</span></p>
-                        
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Need current information?</strong> Use <span class="highlight">ReAct</span></p>
-                        
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Complex analysis needed?</strong> Use <span class="highlight">Generated Knowledge</span></p>
-                        
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Accuracy is critical?</strong> Use <span class="highlight">Self-Consistency</span></p>
-                        
-                        <p style="margin: 0.5rem 0 0.5rem 1rem;">→ <strong>Creating reusable prompts?</strong> Use <span class="highlight">Meta-Prompting</span></p>
+                        <p style="margin-top: 1rem;"><strong>Step 5: Document and Reuse</strong></p>
+                        <p style="margin-left: 1rem;">Save successful prompts as templates for future use</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>💡 Real-World Applications</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Teaching Task</th>
+                            <th>Meta-Prompt Application</th>
+                        </tr>
+                        <tr>
+                            <td>Curriculum Development</td>
+                            <td>Generate prompts for creating unit plans, scope sequences, learning progressions</td>
+                        </tr>
+                        <tr>
+                            <td>Assessment Design</td>
+                            <td>Create prompts that produce various question types, rubrics, and evaluation tools</td>
+                        </tr>
+                        <tr>
+                            <td>Differentiation</td>
+                            <td>Develop prompts that automatically adapt content for different learning levels</td>
+                        </tr>
+                        <tr>
+                            <td>Student Independence</td>
+                            <td>Craft prompts students can use for self-directed learning without over-reliance on AI</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 8: ReAct -->
+        <div id="style8" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 8</span> ReAct (Reason + Act)</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>ReAct prompting combines reasoning with action execution, instructing the AI to first think through a problem logically and then perform specific actions like searching for information, running calculations, or accessing tools. This creates a cycle of reasoning and acting that mirrors how humans solve complex, real-world problems.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>🔬 Teaching Analogy</h4>
+                    <p>Imagine a scientist conducting an experiment. They don't just jump to action—they first reason: "I need to measure pH levels to test my hypothesis." Then they act: they get a pH meter and conduct the test. Then they reason again: "The pH is 3.5, which means..." This cycle of think-then-do-then-think is exactly what ReAct prompting accomplishes.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Reasoning Phase:</strong> AI explains what it needs to do and why</li>
+                        <li><strong>Action Phase:</strong> AI performs specific tasks (search, calculate, retrieve data)</li>
+                        <li><strong>Iterative Process:</strong> Multiple reason→act cycles may be needed</li>
+                        <li><strong>Tool Integration:</strong> Combines AI reasoning with external resources</li>
+                        <li><strong>Dynamic Problem-Solving:</strong> Adapts based on information discovered</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Request reasoning first:</strong> Ask AI to explain what information it needs</li>
+                        <li><strong>Specify available actions:</strong> Tell AI what tools or resources it can use</li>
+                        <li><strong>Structure the cycle:</strong> "First reason what's needed, then [action], then reason about results"</li>
+                        <li><strong>Allow iteration:</strong> Let AI repeat the cycle if initial information is insufficient</li>
+                        <li><strong>Request synthesis:</strong> After actions, ask AI to integrate findings into final answer</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Research-Based Lesson Planning</strong></p>
+                    <div class="prompt-display">
+Create a lesson plan on renewable energy for 6th graders using the ReAct approach:
+
+1. REASON: What information do you need about current renewable energy usage to make this relevant?
+2. ACT: Search for recent statistics on renewable energy adoption in the US
+3. REASON: Based on those findings, what teaching approach would be most engaging?
+4. ACT: Create the lesson plan incorporating the real-world data
+
+Show your reasoning at each step before taking action.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Current Events Integration</strong></p>
+                    <div class="prompt-display">
+Help me create discussion questions about economic policy for my high school government class:
+
+1. REASON: What recent economic policy changes should students be aware of?
+2. ACT: Look up current Federal Reserve interest rate decisions
+3. REASON: How does this connect to our curriculum on monetary policy?
+4. ACT: Generate 5 discussion questions linking current events to course concepts
+
+Explain your reasoning before each action.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Fact-Checking Student Claims</strong></p>
+                    <div class="prompt-display">
+A student claims "Most scientists don't believe in climate change." Use ReAct to verify:
+
+1. REASON: What evidence would confirm or refute this claim?
+2. ACT: Search for scientific consensus data on climate change
+3. REASON: Is the student's claim accurate based on this evidence?
+4. ACT: Draft a response correcting the misconception with evidence
+
+Show each reasoning step before searching or responding.
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Enter a teaching task that requires both reasoning and information gathering:</p>
+                    <input type="text" class="demo-input" id="reactInput" placeholder="E.g., 'Create current examples of supply and demand'">
+                    <button class="demo-button" onclick="generateReActPrompt()">Generate ReAct Prompt</button>
+                    <div class="demo-output" id="reactOutput">Your ReAct-structured prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Model scientific method:</strong> ReAct mirrors hypothesis→experiment→conclusion</p>
+                    <p><span class="tip-icon">✓</span> <strong>Teach research skills:</strong> Shows how to identify needed information and where to find it</p>
+                    <p><span class="tip-icon">✓</span> <strong>Combine with current events:</strong> Perfect for keeping content timely and relevant</p>
+                    <p><span class="tip-icon">✓</span> <strong>Develop critical thinking:</strong> Students learn to question what information they need</p>
+                    <p><span class="tip-icon">✓</span> <strong>Show process transparency:</strong> Makes AI's decision-making visible to students</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🔄 The ReAct Cycle in Education</h3>
+                    <div style="background-color: #f0f9f0; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                        <p><strong>REASON:</strong> "To teach this concept effectively, I need to know..."</p>
+                        <p style="margin: 0.5rem 0 0.5rem 2rem;">↓</p>
+                        <p><strong>ACT:</strong> "Search for current data / Look up examples / Retrieve information"</p>
+                        <p style="margin: 0.5rem 0 0.5rem 2rem;">↓</p>
+                        <p><strong>REASON:</strong> "Based on what I found, the best approach is..."</p>
+                        <p style="margin: 0.5rem 0 0.5rem 2rem;">↓</p>
+                        <p><strong>ACT:</strong> "Create the lesson / Draft the assessment / Design the activity"</p>
+                        <p style="margin: 0.5rem 0 0.5rem 2rem;">↓</p>
+                        <p><strong>FINAL OUTPUT:</strong> Contextualized, evidence-based educational content</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Ideal Use Cases for ReAct</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Educational Scenario</th>
+                            <th>Why ReAct Works Well</th>
+                        </tr>
+                        <tr>
+                            <td>Current events integration</td>
+                            <td>Requires looking up recent information before creating content</td>
+                        </tr>
+                        <tr>
+                            <td>Data-driven lessons</td>
+                            <td>Needs to find statistics or research before designing activities</td>
+                        </tr>
+                        <tr>
+                            <td>Fact-checking assignments</td>
+                            <td>Must verify claims through research before responding</td>
+                        </tr>
+                        <tr>
+                            <td>Real-world applications</td>
+                            <td>Requires finding authentic examples before creating problems</td>
+                        </tr>
+                        <tr>
+                            <td>Interdisciplinary connections</td>
+                            <td>Needs to research multiple domains before synthesizing</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style 9: Generated Knowledge -->
+        <div id="style9" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 9</span> Generated Knowledge Prompting</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Generated Knowledge prompting instructs the AI to first list or generate relevant background facts about a topic before answering a complex question. This technique improves answer quality by ensuring the AI has activated relevant knowledge before reasoning about the problem.</p>
+                </div>
+
+                <div class="analogy-box">
+                    <h4>📚 Teaching Analogy</h4>
+                    <p>Before writing an essay, good students brainstorm what they know about the topic. They list key facts, important dates, relevant concepts—activating prior knowledge before attempting to construct an argument. Generated Knowledge prompting makes AI do the same: recall relevant information first, then use that foundation to build the answer.</p>
+                </div>
+
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Knowledge Activation:</strong> Bringing relevant facts to the forefront before reasoning</li>
+                        <li><strong>Two-Step Process:</strong> Generate knowledge, then apply it to the question</li>
+                        <li><strong>Improved Accuracy:</strong> Having facts "on the table" reduces errors</li>
+                        <li><strong>Transparency:</strong> Shows what information is being used to reach conclusions</li>
+                        <li><strong>Teaching Tool:</strong> Models how to activate prior knowledge before problem-solving</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Request knowledge generation first:</strong> "First, list 3-5 key facts about..."</li>
+                        <li><strong>Be specific about relevance:</strong> Indicate what type of facts are needed</li>
+                        <li><strong>Then pose the question:</strong> "Based on those facts, explain/analyze..."</li>
+                        <li><strong>Request explicit connection:</strong> Ask AI to show how facts support the answer</li>
+                        <li><strong>Verify fact accuracy:</strong> Check that generated facts are correct</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Science Concept Explanation</strong></p>
+                    <div class="prompt-display">
+First, list three key facts about how neurons transmit signals.
+
+Based on those facts, explain why certain drugs can affect mood and behavior. Make explicit connections between the facts you listed and your explanation.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Historical Analysis</strong></p>
+                    <div class="prompt-display">
+Before analyzing the causes of the Civil War, first list:
+- 3 economic differences between North and South
+- 2 key political disagreements
+- 2 social/cultural factors
+
+Then, using these facts, explain which factor was most significant and why. Reference specific facts in your analysis.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Literature Interpretation</strong></p>
+                    <div class="prompt-display">
+First, identify three key symbols used in "The Great Gatsby" and what each represents.
+
+Based on these symbols, analyze what Fitzgerald is saying about the American Dream. Show how each symbol supports your interpretation.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 4: Math Problem Context</strong></p>
+                    <div class="prompt-display">
+Before solving this problem, list three important properties of right triangles.
+
+Problem: A 25-foot ladder leans against a wall, reaching 20 feet high. How far is the base of the ladder from the wall?
+
+Use the properties you listed to solve this problem step-by-step.
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Turn a complex question into a Generated Knowledge prompt:</p>
+                    <input type="text" class="demo-input" id="gkTopic" placeholder="What's the topic? (e.g., 'photosynthesis')">
+                    <input type="text" class="demo-input" id="gkQuestion" placeholder="What's the complex question?">
+                    <button class="demo-button" onclick="generateGKPrompt()">Generate Knowledge-First Prompt</button>
+                    <div class="demo-output" id="gkOutput">Your two-step prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Model KWL strategy:</strong> This is like the "K" (What I Know) before the "L" (What I Learned)</p>
+                    <p><span class="tip-icon">✓</span> <strong>Teach prior knowledge activation:</strong> Essential study skill for all subjects</p>
+                    <p><span class="tip-icon">✓</span> <strong>Build schema connections:</strong> Shows how facts relate to complex understanding</p>
+                    <p><span class="tip-icon">✓</span> <strong>Improve essay writing:</strong> Students learn to gather evidence before arguing</p>
+                    <p><span class="tip-icon">✓</span> <strong>Develop source awareness:</strong> Makes explicit what information is being used</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Comparing Generated Knowledge to Related Styles</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Style</th>
+                            <th>When to Use</th>
+                            <th>Key Difference</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Generated Knowledge</strong></td>
+                            <td>Complex questions requiring background facts</td>
+                            <td>AI generates its own relevant facts first</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chain-of-Thought</strong></td>
+                            <td>Multi-step procedural problems</td>
+                            <td>Focuses on reasoning steps, not fact collection</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ReAct</strong></td>
+                            <td>Problems requiring external information</td>
+                            <td>AI searches for facts; doesn't generate from memory</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Zero-Shot</strong></td>
+                            <td>Simple, straightforward tasks</td>
+                            <td>No preliminary knowledge activation needed</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>💡 Why This Works: The Psychology</h3>
+                    <div class="key-points">
+                        <p>Generated Knowledge prompting leverages several cognitive principles:</p>
+                        <ul>
+                            <li><strong>Priming:</strong> Activating relevant concepts makes them more accessible for reasoning</li>
+                            <li><strong>Working Memory Management:</strong> Having facts explicitly stated reduces cognitive load</li>
+                            <li><strong>Schema Activation:</strong> Listing facts activates related knowledge networks</li>
+                            <li><strong>Explicit Reasoning:</strong> Makes the connection between facts and conclusions visible</li>
+                        </ul>
+                        <p style="margin-top: 1rem;">This same technique improves human learning and problem-solving, making it valuable to teach students this approach for their own work.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Remaining style sections 3-10 would follow the same pattern -->
-        <!-- Condensed for artifact viewing -->
+        <!-- Style 10: Style Matching -->
+        <div id="style10" class="section">
+            <div class="style-card">
+                <h2><span class="style-number">Style 10</span> Style Matching</h2>
+                
+                <div class="subsection">
+                    <h3>📖 Definition</h3>
+                    <p>Style Matching prompting provides the AI with a reference text sample and asks it to replicate that specific writing style, tone, vocabulary level, or rhetorical approach. This technique is powerful for maintaining consistency across documents or matching content to specific audiences or formats.</p>
+                </div>
 
-    </div>
+                <div class="analogy-box">
+                    <h4>🎨 Teaching Analogy</h4>
+                    <p>Think of an art student studying the masters. To learn Impressionism, they examine Monet's brushstrokes, color palette, and light treatment, then create their own painting "in the style of Monet." Style Matching prompting works similarly—you show AI an example of the style you want, and it creates new content matching those characteristics.</p>
+                </div>
 
-    <script>
-        let visitedSections = new Set(['intro']);
-        
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active');
-            
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (sectionId.startsWith('style')) {
-                visitedSections.add(sectionId);
-                updateProgress();
-            }
-            
-            window.scrollTo(0, 0);
-        }
-        
-        function updateProgress() {
-            const total = 10;
-            const visited = visitedSections.size - 1;
-            const percentage = (visited / total) * 100;
-            
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = `${visited} of ${total} styles explored`;
-        }
-        
-        function generateRolePrompt() {
-            const input = document.getElementById('roleInput').value;
-            const output = document.getElementById('roleOutput');
-            
-            if (!input) {
-                output.innerHTML = '<em>Please enter a teaching task...</em>';
-                return;
-            }
-            
-            const enhanced = `<strong>Enhanced Role-Based Prompt:</strong><br><br>"You are an experienced educator with expertise in creating engaging learning materials. ${input}. Ensure the content is age-appropriate, incorporates best practices in pedagogy, and includes clear learning objectives."`;
-            
-            output.innerHTML = enhanced;
-        }
-        
-        function generateCoTPrompt() {
-            const input = document.getElementById('cotInput').value;
-            const output = document.getElementById('cotOutput');
-            
-            if (!input) {
-                output.innerHTML = '<em>Please enter a problem...</em>';
-                return;
-            }
-            
-            const enhanced = `<strong>Chain-of-Thought Prompt:</strong><br><br>"${input}<br><br>Think step-by-step:<br>1. Identify what information you have<br>2. Determine what you need to find<br>3. Choose the appropriate method or formula<br>4. Execute each step, showing your work<br>5. Verify your answer makes sense<br><br>Show your reasoning at each step."`;
-            
-            output.innerHTML = enhanced;
-        }
-    </script>
-</body>
-</html>
+                <div class="key-points">
+                    <h3>🔑 Key Concepts</h3>
+                    <ul>
+                        <li><strong>Reference Text:</strong> Providing an exemplar for AI to analyze and emulate</li>
+                        <li><strong>Style Elements:</strong> Tone, vocabulary, sentence structure, rhetorical devices</li>
+                        <li><strong>Consistency:</strong> Maintaining uniform voice across multiple pieces</li>
+                        <li><strong>Audience Matching:</strong> Adapting content to specific reading levels or demographics</li>
+                        <li><strong>Brand Voice:</strong> Maintaining consistent institutional or personal writing style</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>📋 How to Use It (Directions)</h3>
+                    <ol style="margin-left: 2rem;">
+                        <li><strong>Select representative sample:</strong> Choose text that clearly demonstrates the desired style</li>
+                        <li><strong>Provide the sample:</strong> Include the reference text in your prompt</li>
+                        <li><strong>Be explicit about matching:</strong> Use phrases like "write in the style of this example"</li>
+                        <li><strong>Specify what to match:</strong> Tone? Vocabulary? Sentence length? Structure?</li>
+                        <li><strong>Present your content request:</strong> State what new content you need in that style</li>
+                    </ol>
+                </div>
+
+                <div class="example-box">
+                    <h4>💡 Educational Examples</h4>
+                    
+                    <p><strong>Example 1: Matching Reading Level</strong></p>
+                    <div class="prompt-display">
+Here's a passage written for 5th graders:
+
+"The water cycle is nature's way of recycling water. First, the sun heats water in lakes and oceans, turning it into invisible water vapor. This process is called evaporation. Next, the water vapor rises into the sky and cools down, forming tiny droplets that cluster together as clouds."
+
+Write a similar explanation of the rock cycle in the same style—simple vocabulary, short sentences, clear sequence words like "first" and "next," and everyday comparisons.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 2: Matching Instructional Tone</strong></p>
+                    <div class="prompt-display">
+Match the encouraging, supportive tone of this feedback:
+
+"You're making great progress with multiplication! I noticed you correctly solved 7 of the 10 problems. Let's look at problem #3 together—what strategy did you use there? Sometimes drawing groups can help us visualize what's happening. Want to try that approach on the next few?"
+
+Provide similar feedback for a student struggling with subject-verb agreement.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 3: Matching Academic Writing Style</strong></p>
+                    <div class="prompt-display">
+Here's a sample paragraph from a college-level research paper:
+
+"Recent empirical evidence suggests that inquiry-based learning significantly impacts student engagement (Martinez, 2023). However, implementation challenges persist, particularly regarding adequate teacher preparation and resource allocation. This study examines three urban schools that successfully adopted inquiry-based pedagogy despite these constraints."
+
+Write an introduction paragraph about project-based learning using this same formal, research-oriented style with proper citations and hedging language.
+                    </div>
+
+                    <p style="margin-top: 1rem;"><strong>Example 4: Matching Newsletter Voice</strong></p>
+                    <div class="prompt-display">
+Our school newsletter uses this friendly, conversational style:
+
+"What an exciting week in Room 12! Our third graders dove into a hands-on geometry project, building 3D shapes from toothpicks and marshmallows. (Pro tip: Keep extra marshmallows handy—they have a tendency to disappear!) Ask your child to explain the difference between a cube and a rectangular prism. You might be surprised by what they know!"
+
+Write a similar newsletter update about our upcoming science fair using the same enthusiastic, conversational tone with the occasional aside to parents.
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h4>🎮 Interactive Practice</h4>
+                    <p>Provide a style sample and new content request:</p>
+                    <textarea class="demo-input" id="styleReference" rows="3" placeholder="Paste a reference text that demonstrates the style you want..."></textarea>
+                    <input type="text" class="demo-input" id="styleContent" placeholder="What new content do you need in that style?">
+                    <button class="demo-button" onclick="generateStyleMatchPrompt()">Generate Style Matching Prompt</button>
+                    <div class="demo-output" id="styleOutput">Your style-matched prompt will appear here...</div>
+                </div>
+
+                <div class="teaching-tips">
+                    <h4>🎓 Tips for Teaching This Style</h4>
+                    <p><span class="tip-icon">✓</span> <strong>Teach style awareness:</strong> Students learn to identify stylistic elements</p>
+                    <p><span class="tip-icon">✓</span> <strong>Practice audience adaptation:</strong> Same content, different audiences, different styles</p>
+                    <p><span class="tip-icon">✓</span> <strong>Build style library:</strong> Collect exemplars for different purposes (formal, informal, technical, etc.)</p>
+                    <p><span class="tip-icon">✓</span> <strong>Analyze before matching:</strong> Have students identify what makes the reference text distinctive</p>
+                    <p><span class="tip-icon">✓</span> <strong>Compare variations:</strong> Show how same information changes across styles</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 What Style Matching Can Match</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Style Element</th>
+                            <th>Examples</th>
+                            <th>Educational Applications</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Reading Level</strong></td>
+                            <td>Elementary, middle school, high school, college</td>
+                            <td>Differentiating materials for diverse learners</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tone</strong></td>
+                            <td>Formal, casual, encouraging, technical, humorous</td>
+                            <td>Parent communications, student feedback, academic writing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Format</strong></td>
+                            <td>Bullet points, narratives, dialogue, Q&A</td>
+                            <td>Study guides, assessments, instructional materials</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Voice</strong></td>
+                            <td>First person, second person, objective third person</td>
+                            <td>Consistent institutional communication, student writing models</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vocabulary</strong></td>
+                            <td>Technical jargon, everyday language, discipline-specific terms</td>
+                            <td>Scaffolding academic language development</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>💡 Creating a Style Guide for Your Classroom</h3>
+                    <div class="key-points">
+                        <p>Consider building a collection of style exemplars for different purposes:</p>
+                        <ul>
+                            <li><strong>Student-facing materials:</strong> Clear, encouraging, grade-appropriate</li>
+                            <li><strong>Parent communications:</strong> Friendly, informative, professional</li>
+                            <li><strong>Academic writing:</strong> Formal, evidence-based, properly cited</li>
+                            <li><strong
