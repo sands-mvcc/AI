@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CWC AI Grant Opportunities | Executive Briefing</title>
+    <style>
+        /* --- CWC BRANDING & VARIABLES --- */
+        :root {
+            /* CWC "Rust" Color Approximation */
+            --cwc-rust: #C64c1D; 
+            --cwc-dark: #1A1A1A;
+            --cwc-gray: #F4F4F4;
+            --white: #FFFFFF;
+            --text-main: #333333;
+            --border-radius: 8px;
+        }
+
+        /* --- GLOBAL STYLES --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--white);
+            border-bottom: 4px solid var(--cwc-rust);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-placeholder {
+            background-color: var(--cwc-rust);
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--cwc-dark);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* --- CONTAINER & NAV --- */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .nav-panel {
+            background-color: var(--cwc-gray);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: none;
+            border: 1px solid transparent;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #e0e0e0;
+            color: var(--cwc-rust);
+        }
+
+        .nav-btn.active {
+            background-color: var(--cwc-rust);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(198, 76, 29, 0.3);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .content-panel {
+            background-color: var(--white);
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block; /* Shown when active */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--cwc-rust);
+            border-bottom: 2px solid var(--cwc-gray);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--cwc-dark);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--cwc-gray);
+            padding: 15px;
+            border-left: 4px solid var(--cwc-rust);
+            border-radius: 4px;
+        }
+
+        .stat-card h4 { margin: 0 0 5px 0; color: #555; font-size: 0.9rem; }
+        .stat-card p { margin: 0; font-weight: bold; font-size: 1.1rem; color: var(--cwc-dark); }
+
+        /* --- ROADMAP TIMELINE --- */
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 25px;
+            border-left: 2px solid var(--cwc-rust);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: var(--cwc-rust);
+            border-radius: 50%;
+        }
+
+        .timeline-title { font-weight: bold; color: var(--cwc-dark); }
+        .timeline-date { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
+
+        /* --- COMPARISON TABLE --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: var(--cwc-gray);
+            color: var(--cwc-rust);
+        }
+        tr:hover { background-color: #fafafa; }
+
+        /* --- CTA BUTTON --- */
+        .cta-button {
+            display: inline-block;
+            background-color: var(--cwc-dark);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .cta-button:hover {
+            background-color: var(--cwc-rust);
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .nav-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .nav-btn { text-align: center; margin-bottom: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <div class="logo-placeholder">CWC</div>
+        <div>
+            <h1>NSF AI Grant Opportunities</h1>
+            <div class="subtitle">Prepared for Central Wyoming College Executive Team</div>
+        </div>
+    </div>
+    <div style="text-align: right; font-size: 0.9rem; color: #777;">
+        <strong>Presentation Date:</strong> January 2026<br>
+        <strong>Focus:</strong> AI & Cybersecurity
+    </div>
+</header>
+
+<div class="container">
+    <nav class="nav-panel">
+        <button class="nav-btn active" onclick="openTab('summary')">Executive Summary</button>
+        <button class="nav-btn" onclick="openTab('ate')">1. ATE (Top Priority)</button>
+        <button class="nav-btn" onclick="openTab('expandai')">2. ExpandAI</button>
+        <button class="nav-btn" onclick="openTab('iuse')">3. IUSE: ITYC</button>
+        <button class="nav-btn" onclick="openTab('comparison')">Data Comparison</button>
+        <button class="nav-btn" onclick="openTab('roadmap')">Strategic Roadmap</button>
+    </nav>
+
+    <main class="content-panel">
+
+        <div id="summary" class="tab-content active">
+            <h2>Executive Overview</h2>
+            <p>Our research into the National Science Foundation (NSF) landscape identifies a significant opportunity for Central Wyoming College to secure funding for Artificial Intelligence (AI) program development.</p>
+            
+            <div class="stat-card" style="background: #FFF0E6; border: none; margin-bottom: 20px;">
+                <h3 style="color: var(--cwc-rust); margin-top:0;">Key Finding</h3>
+                <p>The <strong>ATE (Advanced Technological Education)</strong> program is our strongest entry point. It is congressionally mandated to support technician education at 2-year colleges. However, new programs like <strong>ExpandAI</strong> offer unique "capacity building" funds specifically for institutions outside the major research hubs.</p>
+            </div>
+
+            <h3>Why Now?</h3>
+            <ul>
+                <li><strong>Workforce Demand:</strong> Regional need for AI-literate technicians is growing.</li>
+                <li><strong>NSF Mandate:</strong> The NSF is actively seeking to fund rural and community college AI initiatives to democratize access to technology.</li>
+                <li><strong>Faculty Readiness:</strong> Our current expertise in Cybersecurity provides the perfect foundation for an AI expansion.</li>
+            </ul>
+        </div>
+
+        <div id="ate" class="tab-content">
+            <span class="tag">Top Priority</span>
+            <h2>Advanced Technological Education (ATE)</h2>
+            <p><strong>Purpose:</strong> Focuses on the education of technicians for high-technology fields. This is the gold standard for community college funding.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h4>Grant Size (Project)</h4>
+                    <p>Up to $650,000</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Duration</h4>
+                    <p>3 Years</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Deadline</h4>
+                    <p>Early October</p>
+                </div>
+            </div>
+
+            <h3>Strategy for CWC</h3>
+            <p>We should propose a "New-to-ATE" project or a standard Project grant to develop an <strong>"AI Technician Certificate."</strong></p>
+            <ul>
+                <li><strong>Curriculum:</strong> Develop 3-4 new courses in AI fundamentals and ML Operations.</li>
+                <li><strong>Equipment:</strong> Upgrade labs with GPU-capable workstations.</li>
+                <li><strong>Industry:</strong> Partner with local energy or tech sectors to validate the skills matrix.</li>
+            </ul>
+        </div>
+
+        <div id="expandai" class="tab-content">
+            <span class="tag">Capacity Building</span>
+            <h2>ExpandAI</h2>
+            <p><strong>Purpose:</strong> Designed to significantly broaden participation in AI research and education. It targets institutions that have not yet fully benefited from NSF AI investments.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h4>Concept Grants</h4>
+                    <p>$200,000</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Partnerships</h4>
+                    <p>Up to $1.2M</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Deadline</h4>
+                    <p>Rolling / Seasonal</p>
+                </div>
+            </div>
+
+            <h3>Why This Fits CWC</h3>
+            <p>Unlike ATE (which is workforce-only), ExpandAI can help us build the <strong>infrastructure</strong> and faculty expertise needed to teach high-level AI concepts. It encourages partnerships with established AI Institutes at larger universities.</p>
+        </div>
+
+        <div id="iuse" class="tab-content">
+            <span class="tag">Pedagogy & Transfer</span>
+            <h2>IUSE: Innovation in Two-Year College STEM Education (ITYC)</h2>
+            <p><strong>Purpose:</strong> A specific track dedicated solely to two-year colleges to improve student success, retention, and transfer rates in STEM fields.</p>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h4>Funding Limit</h4>
+                    <p>Up to $500,000</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Focus Area</h4>
+                    <p>Student Success</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Deadline</h4>
+                    <p>May (Annual)</p>
+                </div>
+            </div>
+
+            <h3>Application</h3>
+            <p>We could utilize this to fund a "Bridge Program" that supports students moving from our 2-year AI program to a 4-year Computer Science degree.</p>
+        </div>
+
+        <div id="comparison" class="tab-content">
+            <h2>Program Comparison Matrix</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Program</th>
+                        <th>Focus</th>
+                        <th>Est. Funding</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ATE</strong></td>
+                        <td>Workforce / Technicians</td>
+                        <td>$650k (Project)</td>
+                        <td>October</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ExpandAI</strong></td>
+                        <td>Capacity / Infrastructure</td>
+                        <td>$300k - $1.2M</td>
+                        <td>Rolling</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IUSE: ITYC</strong></td>
+                        <td>Teaching / Transfer</td>
+                        <td>$500k</td>
+                        <td>May</td>
+                    </tr>
+                    <tr>
+                        <td><strong>S-STEM</strong></td>
+                        <td>Student Scholarships</td>
+                        <td>$1M - $2.5M</td>
+                        <td>March</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="roadmap" class="tab-content">
+            <h2>Recommended Strategic Roadmap</h2>
+            <p>To maximize our chances of success, I recommend the following phased approach:</p>
+            <br>
+
+            <div class="timeline-item">
+                <div class="timeline-title">Phase 1: Secure the Foundation (Year 1)</div>
+                <div class="timeline-date">Target: NSF ATE Program</div>
+                <p>Develop an "AI Technician" certificate. Establish an Industry Advisory Board to validate local workforce needs. This is our "low-hanging fruit."</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-title">Phase 2: Build Capacity (Year 1-2)</div>
+                <div class="timeline-date">Target: ExpandAI</div>
+                <p>While the ATE grant funds the curriculum, use ExpandAI to fund faculty professional development and partnership building with a major university AI Institute.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-title">Phase 3: Support Students (Year 3)</div>
+                <div class="timeline-date">Target: S-STEM</div>
+                <p>Once the program is established, apply for S-STEM to provide scholarships that attract low-income, high-talent students to the new AI major.</p>
+            </div>
+
+            <a href="#" class="cta-button" onclick="alert('Action: Draft Concept Paper for ATE Grant')">Initialize Phase 1: Draft Concept Paper</a>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    function openTab(tabId) {
+        // 1. Hide all tab content
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.classList.remove('active'));
+
+        // 2. Remove active class from all buttons
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // 3. Show specific tab content
+        document.getElementById(tabId).classList.add('active');
+
+        // 4. Highlight specific button (find button that calls this function)
+        // This simple iteration finds the button with the matching onclick text
+        buttons.forEach(btn => {
+            if(btn.getAttribute('onclick').includes(tabId)) {
+                btn.classList.add('active');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
