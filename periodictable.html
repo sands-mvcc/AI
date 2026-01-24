@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Periodic Table - Full Data</title>
+    <title>Periodic Table - Layout Updated</title>
     <style>
         :root {
             /* Main Theme Colors */
@@ -52,7 +52,7 @@
 
         /* LEGEND */
         .legend-container {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             padding: 10px;
             background: var(--panel-bg);
             border-radius: 8px;
@@ -66,18 +66,20 @@
         .legend-item { display: flex; align-items: center; font-size: 0.8rem; color: var(--text-color-main); }
         .legend-color { width: 15px; height: 15px; border-radius: 3px; margin-right: 5px; border: 1px solid #555;}
 
-        /* MAIN LAYOUT */
+        /* --- UPDATED MAIN LAYOUT --- */
         .main-container {
             display: flex;
-            gap: 20px;
+            /* Change direction to column to stack items vertically */
+            flex-direction: column; 
+            gap: 30px; /* Increased gap for better separation */
             width: 100%;
             max-width: 1600px;
             flex-grow: 1;
-            align-items: flex-start;
+            align-items: center; /* Center children horizontally */
         }
 
         .periodic-table-wrapper {
-            flex: 3;
+            /* Removed flex: 3 */
             width: 100%;
             aspect-ratio: 18 / 10;
         }
@@ -93,7 +95,7 @@
 
         .element-cell {
             background-color: #333; 
-            color: var(--cell-text-color); /* Dark text for pastel backgrounds */
+            color: var(--cell-text-color); 
             border: 1px solid transparent;
             display: flex;
             flex-direction: column;
@@ -134,65 +136,72 @@
         .lanthanide { grid-row: 9; }
         .actinide { grid-row: 10; }
 
-        /* --- INFO PANEL --- */
+        /* --- UPDATED INFO PANEL --- */
         .info-panel {
-            flex: 1;
-            min-width: 260px;
+            /* Removed sidebar-specific props (flex, sticky, height constraints) */
+            width: 100%;
+            max-width: 1200px; /* Ensure text lines don't get too long */
             background-color: var(--panel-bg);
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
             border: 2px solid #444;
-            position: sticky;
-            top: 20px;
-            max-height: 85vh;
-            overflow-y: auto;
-            color: var(--text-color-main); 
+            color: var(--text-color-main);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .panel-header {
             display: flex;
             align-items: center;
             border-bottom: 2px solid #555;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .panel-symbol {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: bold;
-            margin-right: 15px;
+            margin-right: 25px;
             background: var(--col-hydrogen); 
             color: var(--cell-text-color);
-            padding: 5px 20px;
-            border-radius: 8px;
-            min-width: 60px;
+            padding: 10px 25px;
+            border-radius: 12px;
+            min-width: 80px;
             text-align: center;
         }
 
-        .panel-title h2 { margin: 0; font-size: 1.8rem; }
+        .panel-title h2 { margin: 0; font-size: 2.2rem; }
         .category-tag { 
             background: #444; 
             color: #fff;
-            padding: 4px 10px; 
-            border-radius: 12px; 
-            font-size: 0.8rem; 
+            padding: 6px 14px; 
+            border-radius: 16px; 
+            font-size: 0.9rem; 
             display: inline-block; 
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .data-item label { display: block; color: #aaa; font-size: 0.85rem; margin-bottom: 4px;}
-        .data-item span { font-size: 1.1rem; font-weight: bold; }
-        .context-section h3 { border-bottom: 1px solid #555; padding-bottom: 8px; font-size: 1.2rem; margin-top: 0;}
-        .context-section p { line-height: 1.6; font-size: 1rem; color: #d0d0d0;}
+        /* Make data grid responsive for wider layout */
+        .data-grid { 
+            display: grid; 
+            /* Auto-fit columns, at least 250px wide */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 30px; 
+        }
+        .data-item label { display: block; color: #aaa; font-size: 0.9rem; margin-bottom: 5px;}
+        .data-item span { font-size: 1.3rem; font-weight: bold; }
+        .context-section h3 { border-bottom: 1px solid #555; padding-bottom: 10px; font-size: 1.4rem; margin-top: 0;}
+        .context-section p { line-height: 1.7; font-size: 1.1rem; color: #d0d0d0; max-width: 90ch;}
 
         @media (max-width: 900px) {
-            .main-container { flex-direction: column; }
-            .periodic-table-wrapper { width: 100%; aspect-ratio: auto; }
-            .info-panel { width: 100%; min-width: auto; }
+            /* Vertical stack is now default, so we only need font sizing here */
+            .periodic-table-wrapper { aspect-ratio: auto; }
             .periodic-table { gap: 1px; }
             .symbol { font-size: 0.8rem; }
             .atom-num { font-size: 0.45rem; }
+            .info-panel { padding: 20px; }
+            .panel-symbol { font-size: 3rem; padding: 5px 20px;}
+            .panel-title h2 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -201,7 +210,7 @@
     <header>
         <h1>The Periodic Table of Elements</h1>
         <div class="intro-text">
-            Click any element to reveal its complete chemical data, including mass and discovery year.
+            Click any element to reveal its complete chemical data below.
         </div>
     </header>
 
@@ -259,23 +268,22 @@
     // 1. COMPLETE SYMBOL LIST
     const allSymbols = [null, "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", " Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"];
 
-    // 2. COMPLETE COMPREHENSIVE DATA (Mass & Year for 1-118)
-    // Mass in brackets [] indicates the mass number of the most stable isotope for synthetic elements.
+    // 2. COMPLETE COMPREHENSIVE DATA
     const completeElementData = {
-        1: { name: 'Hydrogen', mass: '1.008', year: 1766, context: "The fuel of stars. Used here on Earth for rocket propulsion and clean energy fuel cells." },
-        2: { name: 'Helium', mass: '4.0026', year: 1868, context: "Used to cool MRI magnets and superconducting instruments. Also fills party balloons." },
-        3: { name: 'Lithium', mass: '6.94', year: 1817, context: "Crucial for modern rechargeable batteries in phones, laptops, and EVs." },
+        1: { name: 'Hydrogen', mass: '1.008', year: 1766, context: "The most abundant element in the universe. It fuels stars through nuclear fusion. On Earth, it's used in rocket fuel, industrial processing, and increasingly in clean energy fuel cells." },
+        2: { name: 'Helium', mass: '4.0026', year: 1868, context: "Used to cool MRI magnets and superconducting instruments because it remains liquid at near absolute zero. Also fills party balloons." },
+        3: { name: 'Lithium', mass: '6.94', year: 1817, context: "Crucial for modern rechargeable batteries in phones, laptops, and electric vehicles. Also used in mood-stabilizing medication." },
         4: { name: 'Beryllium', mass: '9.0122', year: 1798 },
         5: { name: 'Boron', mass: '10.81', year: 1808 },
-        6: { name: 'Carbon', mass: '12.011', year: 'Antiquity', context: "The backbone of all life on Earth. Exists as graphite, diamonds, and graphene." },
+        6: { name: 'Carbon', mass: '12.011', year: 'Antiquity', context: "The backbone of all life on Earth. It exists as soft graphite (pencil 'lead'), hard diamonds, and newer materials like graphene." },
         7: { name: 'Nitrogen', mass: '14.007', year: 1772 },
-        8: { name: 'Oxygen', mass: '15.999', year: 1774, context: "Vital for respiration. Highly reactive, supports combustion and causes rusting." },
+        8: { name: 'Oxygen', mass: '15.999', year: 1774, context: "Makes up 21% of air and is vital for respiration. Highly reactive, it supports combustion and causes rusting (oxidation) in metals." },
         9: { name: 'Fluorine', mass: '18.998', year: 1886 },
         10: { name: 'Neon', mass: '20.180', year: 1898 },
         11: { name: 'Sodium', mass: '22.990', year: 1807 },
         12: { name: 'Magnesium', mass: '24.305', year: 1755 },
-        13: { name: 'Aluminium', mass: '26.982', year: 1825, context: "Lightweight, corrosion-resistant metal used in soda cans, foil, and airplane frames." },
-        14: { name: 'Silicon', mass: '28.085', year: 1824, context: "The basis of the digital age. Primary semiconductor for microchips." },
+        13: { name: 'Aluminium', mass: '26.982', year: 1825, context: "Lightweight, corrosion-resistant metal used everywhere: soda cans, foil, airplane frames, and window frames." },
+        14: { name: 'Silicon', mass: '28.085', year: 1824, context: "The basis of the digital age. It is the primary semiconductor used to make microchips for computers and phones. Also the main ingredient in glass/sand." },
         15: { name: 'Phosphorus', mass: '30.974', year: 1669 },
         16: { name: 'Sulfur', mass: '32.06', year: 'Antiquity' },
         17: { name: 'Chlorine', mass: '35.45', year: 1774 },
@@ -287,10 +295,10 @@
         23: { name: 'Vanadium', mass: '50.942', year: 1801 },
         24: { name: 'Chromium', mass: '51.996', year: 1797 },
         25: { name: 'Manganese', mass: '54.938', year: 1774 },
-        26: { name: 'Iron', mass: '55.845', year: 'Antiquity', context: "When mixed with carbon, makes steel for modern infrastructure like buildings and bridges." },
+        26: { name: 'Iron', mass: '55.845', year: 'Antiquity', context: "The most common metal in modern infrastructure. When mixed with carbon, it makes steel for buildings, cars, and bridges. Also carries oxygen in your blood." },
         27: { name: 'Cobalt', mass: '58.933', year: 1735 },
         28: { name: 'Nickel', mass: '58.693', year: 1751 },
-        29: { name: 'Copper', mass: '63.546', year: 'Antiquity', context: "Excellent electrical conductor used in wiring and plumbing." },
+        29: { name: 'Copper', mass: '63.546', year: 'Antiquity', context: "Excellent conductor of electricity and heat, used in most electrical wiring and plumbing. Turns green when oxidized (like the Statue of Liberty)." },
         30: { name: 'Zinc', mass: '65.38', year: 'Antiquity' },
         31: { name: 'Gallium', mass: '69.723', year: 1875 },
         32: { name: 'Germanium', mass: '72.630', year: 1886 },
@@ -308,7 +316,7 @@
         44: { name: 'Ruthenium', mass: '101.07', year: 1844 },
         45: { name: 'Rhodium', mass: '102.91', year: 1803 },
         46: { name: 'Palladium', mass: '106.42', year: 1803 },
-        47: { name: 'Silver', mass: '107.87', year: 'Antiquity', context: "The best electrical conductor of all metals, used in high-end electronics and jewelry." },
+        47: { name: 'Silver', mass: '107.87', year: 'Antiquity', context: "The best electrical conductor of all metals, used in high-end electronics. Also used in jewelry, coins, and historically in photography." },
         48: { name: 'Cadmium', mass: '112.41', year: 1817 },
         49: { name: 'Indium', mass: '114.82', year: 1863 },
         50: { name: 'Tin', mass: '118.71', year: 'Antiquity' },
@@ -340,7 +348,7 @@
         76: { name: 'Osmium', mass: '190.23', year: 1803 },
         77: { name: 'Iridium', mass: '192.22', year: 1803 },
         78: { name: 'Platinum', mass: '195.08', year: 1735 },
-        79: { name: 'Gold', mass: '196.97', year: 'Antiquity', context: "Highly valued for rarity and lack of corrosion. Used in jewelry and spacecraft electronics." },
+        79: { name: 'Gold', mass: '196.97', year: 'Antiquity', context: "Highly valued for its rarity, lack of corrosion, and beauty in jewelry. Also used in reliable connectors for spacecraft electronics." },
         80: { name: 'Mercury', mass: '200.59', year: 'Antiquity' },
         81: { name: 'Thallium', mass: '204.38', year: 1861 },
         82: { name: 'Lead', mass: '207.2', year: 'Antiquity' },
@@ -353,7 +361,7 @@
         89: { name: 'Actinium', mass: '[227]', year: 1899 },
         90: { name: 'Thorium', mass: '232.04', year: 1829 },
         91: { name: 'Protactinium', mass: '231.04', year: 1913 },
-        92: { name: 'Uranium', mass: '238.03', year: 1789, context: "Radioactive heavy metal used as fuel in nuclear power plants." },
+        92: { name: 'Uranium', mass: '238.03', year: 1789, context: "Radioactive heavy metal used as the primary fuel source in nuclear power plants to generate electricity." },
         93: { name: 'Neptunium', mass: '[237]', year: 1940 },
         94: { name: 'Plutonium', mass: '[244]', year: 1940 },
         95: { name: 'Americium', mass: '[243]', year: 1944 },
@@ -421,7 +429,6 @@
     function renderFullTable() {
         for (let z = 1; z <= 118; z++) {
             const posData = getElementPositionData(z);
-            // Pull data from the complete list
             const elementDetails = completeElementData[z];
             const symbol = allSymbols[z];
 
