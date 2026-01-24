@@ -77,7 +77,7 @@
             font-size: 0.9rem;
         }
         .btn:hover { background-color: var(--accent-hover); }
-        .btn-outline { background: white; border: 2px solid var(--accent-color); color: var(--accent-color); }
+        .btn-outline { background: white; border: 2px solid var(--accent-color); color: var(--accent-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;}
         .btn-outline:hover { background: #e8f5e9; }
         .btn-danger { background-color: var(--danger-color); }
         .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
@@ -140,6 +140,38 @@
         /* Scenario Lab */
         textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid var(--border-color); margin-bottom: 10px; font-family: var(--font-main); }
         .feedback-box { margin-top: 10px; padding: 10px; background: #e8f5e9; border: 1px solid var(--accent-color); border-radius: 4px; }
+
+        /* MODAL */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: var(--text-color); }
+        .modal-header h2 { margin-top: 0; color: var(--accent-color); border-bottom: 2px solid var(--light-gray); padding-bottom: 10px;}
 
         /* Print Media */
         @media print {
@@ -339,11 +371,22 @@
         </div>
     </div>
 
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h2 id="modal-title">Case Title</h2>
+            </div>
+            <div id="modal-body" style="white-space: pre-wrap;">
+                </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
 /* * DATA SOURCE: CASE STUDIES
- * Verbatim summaries from prompt
+ * Verbatim summaries from prompt + Extended Summaries
  */
 const cases = [
     {
@@ -351,35 +394,40 @@ const cases = [
         title: "WannaCry (May 2017)",
         details: "Worm-style ransomware exploiting SMBv1 via EternalBlue (leaked NSA tool). Hitted >200k systems (UK NHS, FedEx). Demanded $300-$600.",
         mistakes: "Many victims had not applied MS17-010 patch released 2 months prior.",
-        lessons: "Timely patching, disable legacy protocols, network segmentation, tested backups."
+        lessons: "Timely patching, disable legacy protocols, network segmentation, tested backups.",
+        summary: "WannaCry demonstrated the devastating power of a 'wormable' exploit. Unlike traditional ransomware requiring user interaction (phishing), WannaCry scanned port 445 for the EternalBlue vulnerability (CVE-2017-0144). Once one machine was infected, it automatically spread to all other vulnerable hosts on the network. \n\nThe attack was notably halted when researcher Marcus Hutchins registered a 'kill switch' domain found in the code. This case cemented the importance of patching critical vulnerabilities immediately and disabling unused legacy protocols like SMBv1."
     },
     {
         id: "notpetya",
         title: "NotPetya / ExPetr (June 2017)",
         details: "Launched via compromised MeDoc update (supply chain), then lateral movement via EternalBlue. Acted as a wiper. $10B damage.",
         mistakes: "Trusting single third-party update channel, flat networks.",
-        lessons: "Treat supply chain as high risk, assume destructive intent."
+        lessons: "Treat supply chain as high risk, assume destructive intent.",
+        summary: "NotPetya is often cited as the most destructive cyberattack in history. It masqueraded as ransomware, but the payment infrastructure was non-functional; its true goal was pure destruction (a wiper). \n\nThe attack vector was a supply chain compromise of M.E.Doc, a mandatory accounting software in Ukraine. From there, it used Mimikatz to scrape credentials and EternalBlue to traverse flat corporate networks globally (including Maersk, Merck, and FedEx). It highlighted that if your trusted vendor is compromised, you are compromised."
     },
     {
         id: "colonial",
         title: "Colonial Pipeline (May 2021)",
         details: "DarkSide used compromised VPN password of former employee; account lacked MFA. Paid $4.4M. Pipeline shut down.",
         mistakes: "Active unused VPN account without MFA, insufficient IT/OT separation.",
-        lessons: "Enforce MFA, disable stale accounts, IT/OT segmentation."
+        lessons: "Enforce MFA, disable stale accounts, IT/OT segmentation.",
+        summary: "This incident brought ransomware to the forefront of US national security. The DarkSide ransomware group gained Initial Access via a single compromised password for a legacy VPN account that was no longer in use but hadn't been disabled. Crucially, it lacked Multi-Factor Authentication (MFA). \n\nAlthough the ransomware only locked IT systems (billing/email), Colonial Pipeline preemptively shut down OT (Operational Technology) pipelines to prevent potential spread, causing massive gas shortages on the US East Coast."
     },
     {
         id: "atlanta",
         title: "City of Atlanta – SamSam (Mar 2018)",
         details: "Used exposed RDP/vulnerable web apps. Manually deployed ransomware. Demanded $51k; refused and paid huge recovery costs.",
         mistakes: "Weak external attack surface, insufficient monitoring, limited tested offline backups.",
-        lessons: "Harden remote access, continuous logging, offline tested backups."
+        lessons: "Harden remote access, continuous logging, offline tested backups.",
+        summary: "The SamSam group differed from WannaCry in that they were 'hands-on' attackers. They brute-forced exposed RDP ports and exploited web vulnerabilities (JBoss) to gain a foothold. Once inside, they escalated privileges and manually deployed ransomware to domain controllers. \n\nThe City refused to pay the $51,000 demand, but ultimately spent over $2.6 million in recovery and cleanup. This highlighted the 'cost of downtime' versus the 'cost of ransom' dilemma, though refusing payment is generally recommended by law enforcement."
     },
     {
         id: "kaseya",
         title: "Kaseya VSA / REvil (July 2021)",
         details: "Exploited VSA zero-days to push malicious 'hotfix' to MSPs and customers. Demand: $70M.",
         mistakes: "Concentrated privileged access in management tool, implicit trust by MSP clients.",
-        lessons: "Secure remote management, fast patching, layered defenses."
+        lessons: "Secure remote management, fast patching, layered defenses.",
+        summary: "This was a 'many-to-one' supply chain attack. The REvil gang discovered zero-day vulnerabilities (Authentication Bypass & SQL Injection) in Kaseya VSA, a remote management tool used by Managed Service Providers (MSPs). \n\nAttackers bypassed authentication and pushed a malicious update—disguised as a 'Kaseya VSA Agent Hotfix'—to thousands of downstream businesses simultaneously. This demonstrated the extreme risk of RMM (Remote Monitoring and Management) tools: they hold the 'keys to the kingdom' for hundreds of networks at once."
     }
 ];
 
@@ -404,14 +452,42 @@ function switchTab(tabId) {
 function renderCases() {
     const container = document.querySelector('.case-grid');
     container.innerHTML = cases.map(c => `
-        <div class="case-card card">
-            <h3>${c.title}</h3>
-            <p><strong>Details:</strong> ${c.details}</p>
-            <p style="color:#d32f2f"><strong>Mistakes:</strong> ${c.mistakes}</p>
-            <p style="color:#008000"><strong>Lessons:</strong> ${c.lessons}</p>
+        <div class="case-card card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+                <h3>${c.title}</h3>
+                <p><strong>Details:</strong> ${c.details}</p>
+                <p style="color:#d32f2f"><strong>Mistakes:</strong> ${c.mistakes}</p>
+                <p style="color:#008000"><strong>Lessons:</strong> ${c.lessons}</p>
+            </div>
+            <div style="margin-top:15px;">
+                <button class="btn btn-outline" style="width:100%" onclick="openModal('${c.id}')">📖 View Detailed Analysis</button>
+            </div>
         </div>
     `).join('');
 }
+
+/* * MODAL LOGIC * */
+function openModal(id) {
+    const data = cases.find(c => c.id === id);
+    if(!data) return;
+    
+    document.getElementById('modal-title').innerText = data.title;
+    document.getElementById('modal-body').innerText = data.summary;
+    document.getElementById('detail-modal').style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById('detail-modal').style.display = "none";
+}
+
+// Close modal if clicking outside box
+window.onclick = function(event) {
+    const modal = document.getElementById('detail-modal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 
 /* * ACTIVITY 1: KILL CHAIN 
  */
