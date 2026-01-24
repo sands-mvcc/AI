@@ -236,7 +236,7 @@
 
             <h3>Synthesis: Common Themes across Major Attacks</h3>
             <div style="text-align: center; margin: 20px 0;">
-                <img src="rw6.png" alt="Ransomware Synthesis Infographic showing common attack vectors and defenses" style="max-width: 100%; border: 1px solid #ddd;">
+                <button class="btn-primary" onclick="openOverviewModal()">View Comparison Infographic</button>
             </div>
             <div class="card" style="background: #f9f9f9;">
                 <h3>Lecture Notes: Cross-Cutting Themes</h3>
@@ -461,7 +461,43 @@
     });
 
     /**
-     * Tab 2: Case Studies Data & Modals
+     * Modal Logic (Overview & Case Studies)
+     */
+    
+    // Function to open the modal for the specific case study infographic
+    function openCaseStudyModal(caseId) {
+        const cs = caseStudies.find(c => c.id === caseId);
+        const body = document.getElementById('modal-body');
+        // Inject content including the specific case infographic (rw1.png - rw5.png)
+        body.innerHTML = `<h2>${cs.title} - Detail</h2><p>${cs.details}</p><img src="${cs.img}" alt="Infographic for ${cs.title}">`;
+        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
+        document.addEventListener('keydown', handleEscClose);
+    }
+
+    // Function to open the modal for the general comparison infographic on the Overview tab
+    function openOverviewModal() {
+        const body = document.getElementById('modal-body');
+        // Inject content for the comparison infographic (rw6.png)
+        body.innerHTML = `
+            <h2>Ransomware Comparison: Synthesis across Major Attacks</h2>
+            <img src="rw6.png" alt="Ransomware Synthesis Infographic showing common attack vectors and defenses">
+        `;
+        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
+        document.addEventListener('keydown', handleEscClose);
+    }
+
+    function closeModal(e) {
+        // Close if clicking overlay or close button
+        if (!e || e.target === document.getElementById('modal-overlay') || e.target.classList.contains('modal-close')) {
+            document.getElementById('modal-overlay').setAttribute('aria-hidden', 'true');
+            document.removeEventListener('keydown', handleEscClose);
+        }
+    }
+
+    function handleEscClose(e) { if (e.key === 'Escape') closeModal(); }
+
+    /**
+     * Tab 2: Case Studies Data
      */
     const caseStudies = [
         {
@@ -501,28 +537,11 @@
         caseStudies.forEach(cs => {
             const card = document.createElement('div');
             card.className = 'card col-1-2';
-            card.innerHTML = `<h3>${cs.title}</h3><p>${cs.summary}</p><button class="btn-primary" onclick="openModal('${cs.id}')">View Detailed Analysis</button>`;
+            // Button calls openCaseStudyModal to show specific infographic (rw1-rw5)
+            card.innerHTML = `<h3>${cs.title}</h3><p>${cs.summary}</p><button class="btn-primary" onclick="openCaseStudyModal('${cs.id}')">View Detailed Analysis</button>`;
             container.appendChild(card);
         });
     }
-
-    function openModal(caseId) {
-        const cs = caseStudies.find(c => c.id === caseId);
-        const body = document.getElementById('modal-body');
-        body.innerHTML = `<h2>${cs.title} - Detail</h2><p>${cs.details}</p><img src="${cs.img}" alt="Infographic for ${cs.title}">`;
-        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
-        document.addEventListener('keydown', handleEscClose);
-    }
-
-    function closeModal(e) {
-        // Close if clicking overlay or close button
-        if (!e || e.target === document.getElementById('modal-overlay') || e.target.classList.contains('modal-close')) {
-            document.getElementById('modal-overlay').setAttribute('aria-hidden', 'true');
-            document.removeEventListener('keydown', handleEscClose);
-        }
-    }
-
-    function handleEscClose(e) { if (e.key === 'Escape') closeModal(); }
 
     /**
      * Tab 3: Kill Chain Lab (Drag & Drop)
