@@ -259,7 +259,7 @@
         <section id="tab-3" role="tabpanel" aria-labelledby="tab-btn-3" class="tab-panel" aria-hidden="true">
             <h2>Lab 1: Kill Chain Mapping</h2>
             <p>Drag the attack events from the pool on the left into the correct Cyber Kill Chain phase on the right based on the case study details. (Keyboard users: use the 'Move' button on cards).</p>
-            
+            <button class="btn-primary" onclick="openKCMModal()">View Cyber Kill Chain Model</button>
             <div class="kc-container">
                 <div class="kc-pool" id="kc-pool" ondrop="drop(event)" ondragover="allowDrop(event)">
                     <h3>Event Pool</h3>
@@ -481,6 +481,34 @@
         body.innerHTML = `
             <h2>Ransomware Comparison: Synthesis across Major Attacks</h2>
             <img src="rw6.png" alt="Ransomware Synthesis Infographic showing common attack vectors and defenses">
+        `;
+        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
+        document.addEventListener('keydown', handleEscClose);
+    }
+// Function to open the modal for the Cyber Kill Chain Model
+    function openKCMModal() {
+        const body = document.getElementById('modal-body');
+        // Inject content for the comparison infographic (rw6.png)
+        body.innerHTML = `
+            <h2>Cyber Kill Chain Model</h2> 
+<p>The cyber kill chain is the process by which perpetrators carry out cyberattacks. Lockheed Martin adapted the concept of the kill chain from a military setting to information security, using it as a method for modeling intrusions on a computer network. </p>
+<p>Attack phases and countermeasures</p>
+<p>Computer scientists at Lockheed-Martin corporation described a new "intrusion kill chain" framework or model to defend computer networks in 2011. They wrote that attacks may occur in phases and can be disrupted through controls established at each phase. Since then, the "cyber kill chain" has been adopted by data security organizations to define phases of cyberattacks. </p>
+<p>A cyber kill chain reveals the phases of a cyberattack: from early reconnaissance to the goal of data exfiltration. The kill chain can also be used as a management tool to help continuously improve network defense. According to Lockheed Martin, threats must progress through several phases in the model, including:</p>
+<p>1.	Reconnaissance: Intruder selects target, researches it, and attempts to identify vulnerabilities in the target network.</p>
+<p>2.	Weaponization: Intruder creates remote access malware weapon, such as a virus or worm, tailored to one or more vulnerabilities.</p>
+<p>3.	Delivery: Intruder transmits weapon to target (e.g., via e-mail attachments, websites or USB drives)</p>
+<p>4.	Exploitation: Malware weapon's program code triggers, which takes action on target network to exploit vulnerability.</p>
+<p>5.	Installation: Malware weapon installs an access point (e.g., "backdoor") usable by the intruder.</p>
+<p>6.	Command and Control: Malware enables intruder to have "hands on the keyboard" persistent access to the target network.</p>
+<p>7.	Actions on Objective: Intruder takes action to achieve their goals, such as data exfiltration, data destruction, or encryption for ransom.</p>
+<p>Defensive actions taken against these phases:</p>
+<p>1.	Detect: Determine whether an intruder is present.</p>
+<p>2.	Deny: Prevent information disclosure and unauthorized access.</p>
+<p>3.	Disrupt: Stop or change outbound traffic (to attacker).</p>
+<p>4.	Degrade: Counter-attack command and control.</p>
+<p>5.	Deceive: Interfere with command and control.</p>
+<p>6.	Contain: Network segmentation changes</p>
         `;
         document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
         document.addEventListener('keydown', handleEscClose);
