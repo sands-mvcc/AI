@@ -1,0 +1,80 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 800" style="background-color: #ffffff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <title>Equine Science: Points of the Horse - Skeletal vs. Muscular</title>
+  <desc>An educational infographic comparing the internal skeletal structure of a horse with its external muscular points.</desc>
+
+  <rect x="0" y="0" width="1200" height="80" fill="#2c3e50" />
+  <text x="600" y="50" text-anchor="middle" fill="#ffffff" font-size="36" font-weight="bold" letter-spacing="1px">EQUINE SCIENCE: POINTS OF THE HORSE</text>
+  
+  <text x="300" y="120" text-anchor="middle" fill="#7f8c8d" font-size="24" font-weight="bold">SKELETAL FOUNDATION (Internal)</text>
+  <text x="900" y="120" text-anchor="middle" fill="#c0392b" font-size="24" font-weight="bold">MUSCULAR STRUCTURE (External)</text>
+
+  <g transform="translate(100, 150)">
+    
+    <defs>
+      <path id="horse-outline" d="M250,200 C260,150 300,110 350,100 C380,50 400,20 430,30 C450,40 440,80 420,100 C400,130 380,160 380,200 C450,210 550,210 650,200 C750,190 800,170 850,190 C900,210 920,250 920,300 C920,380 900,450 880,500 L890,650 L930,650 L920,550 C940,530 960,500 950,450 C980,350 950,250 900,220 C850,200 800,210 750,220 C650,240 550,240 450,230 C450,300 460,350 470,400 L480,550 L520,550 L510,450 C500,400 480,350 450,300 C420,320 380,350 350,400 C320,450 330,550 340,650 L380,650 L370,550 C360,500 380,450 400,400 C350,380 300,350 280,300 C260,250 240,220 250,200 Z" />
+      
+      <clipPath id="clip-left">
+        <rect x="0" y="0" width="600" height="800" />
+      </clipPath>
+       <clipPath id="clip-right">
+         <rect x="600" y="0" width="600" height="800" />
+      </clipPath>
+    </defs>
+
+    <g clip-path="url(#clip-left)">
+      <use xlink:href="#horse-outline" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" />
+      <g fill="none" stroke="#95a5a6" stroke-width="4" stroke-linecap="round">
+        <path d="M380,160 L420,250" /> <path d="M420,250 L400,350" /> <path d="M400,350 L380,500" /> <circle cx="380" cy="500" r="8" fill="#bdc3c7"/> <path d="M380,508 L370,600" /> <path d="M380,160 C450,170 550,170 650,160" stroke="#bdc3c7" stroke-width="6"/> <path d="M850,220 L900,300" /> <path d="M900,300 L880,420" /> <circle cx="880" cy="420" r="10" fill="#bdc3c7"/> <path d="M880,430 L890,550" /> <circle cx="890" cy="550" r="8" fill="#bdc3c7"/> </g>
+    </g>
+
+    <g clip-path="url(#clip-right)">
+       <use xlink:href="#horse-outline" fill="#d35400" stroke="#a04000" stroke-width="2" />
+       <g fill="none" stroke="#e67e22" stroke-width="3" opacity="0.6">
+          <path d="M600,220 C650,230 750,230 850,210" /> <path d="M850,210 C900,230 930,280 920,350" /> <path d="M920,350 C900,420 880,480 890,530" /> <path d="M880,300 C850,350 850,400 870,450" /> </g>
+    </g>
+    
+    <line x1="600" y1="50" x2="600" y2="700" stroke="#2c3e50" stroke-width="3" stroke-dasharray="10,5"/>
+
+    <g font-size="14" font-weight="bold">
+      
+      <g fill="#2c3e50">
+        <line x1="250" y1="120" x2="380" y2="160" stroke="#2c3e50" stroke-width="2"/>
+        <text x="240" y="120" text-anchor="end">Scapula (Shoulder Blade)</text>
+
+        <line x1="250" y1="350" x2="400" y2="350" stroke="#2c3e50" stroke-width="2"/>
+        <text x="240" y="355" text-anchor="end">Humerus</text>
+
+        <line x1="250" y1="500" x2="372" y2="500" stroke="#2c3e50" stroke-width="2"/>
+        <text x="240" y="505" text-anchor="end">Carpus (Knee Bones)</text>
+
+        <line x1="250" y1="600" x2="365" y2="600" stroke="#2c3e50" stroke-width="2"/>
+        <text x="240" y="605" text-anchor="end">Cannon Bone</text>
+      </g>
+
+      <g fill="#c0392b">
+        <line x1="950" y1="190" x2="850" y2="190" stroke="#c0392b" stroke-width="2"/>
+        <text x="960" y="195" text-anchor="start">Croup</text>
+
+        <line x1="950" y1="300" x2="920" y2="300" stroke="#c0392b" stroke-width="2"/>
+        <text x="960" y="305" text-anchor="start">Point of Hip</text>
+
+        <line x1="950" y1="420" x2="890" y2="420" stroke="#c0392b" stroke-width="2"/>
+        <text x="960" y="425" text-anchor="start">Stifle</text>
+
+        <line x1="950" y1="490" x2="890" y2="490" stroke="#c0392b" stroke-width="2"/>
+        <text x="960" y="495" text-anchor="start">Gaskin (Muscle)</text>
+
+        <line x1="950" y1="550" x2="900" y2="550" stroke="#c0392b" stroke-width="2"/>
+        <text x="960" y="555" text-anchor="start">Hock (Tarsus)</text>
+      </g>
+
+      <g fill="#2c3e50">
+          <line x1="600" y1="140" x2="600" y2="170" stroke="#2c3e50" stroke-width="2"/>
+          <text x="600" y="130" text-anchor="middle">The Back (Thoracic Vertebrae)</text>
+      </g>
+    </g>
+  </g>
+
+  <rect x="0" y="760" width="1200" height="40" fill="#ecf0f1" />
+  <text x="600" y="785" text-anchor="middle" fill="#7f8c8d" font-size="14">Equine Science Education Module | Instructional resource for breed judging and anatomy.</text>
+</svg>
