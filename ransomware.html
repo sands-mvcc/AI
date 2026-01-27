@@ -3,1013 +3,1131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ransomware Analysis & Defense Workshop</title>
+    <title>Ransomware Campaign Analysis & Defense — Workshop</title>
     <style>
-        /* * CSS Styles - Academic / Professional Theme
-         * Colors: White bg, dark text, green success, red error.
-         */
+        /* --- CSS VARIABLES & RESET --- */
         :root {
-            --color-bg: #ffffff;
-            --color-bg-secondary: #f4f4f4;
-            --color-text: #333333;
-            --color-text-light: #666666;
-            --color-accent: #0056b3; /* Professional Blue for interactive elements */
-            --color-success: #28a745;
-            --color-error: #dc3545;
-            --color-border: #dddddd;
-            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --col-bg: #ffffff;
+            --col-text: #1a1a1a;
+            --col-primary: #006400; /* Academic Green */
+            --col-primary-light: #e0f2e0;
+            --col-border: #cccccc;
+            --col-accent: #2e8b57;
+            --col-error: #8b0000;
+            --col-success: #006400;
+            --col-gray-light: #f4f4f4;
+            --shadow-card: 0 2px 5px rgba(0,0,0,0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: var(--font-family);
-            color: var(--color-text);
-            background-color: var(--color-bg-secondary);
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--col-bg);
+            color: var(--col-text);
             line-height: 1.6;
         }
 
-        /* Global Header & Nav */
-        .global-header {
-            background: #fff;
-            padding: 1rem;
-            border-bottom: 1px solid var(--color-border);
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none !important; }
+        .btn {
+            background-color: var(--col-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .btn:hover { background-color: var(--col-accent); }
+        .btn:focus { outline: 3px solid orange; }
+        .btn-outline {
+            background-color: white;
+            color: var(--col-primary);
+            border: 2px solid var(--col-primary);
+        }
+        .btn-small { padding: 4px 8px; font-size: 0.85rem; }
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0); border: 0;
+        }
+        .feedback { font-weight: bold; margin-top: 10px; padding: 10px; border-radius: 4px; }
+        .feedback.success { background-color: var(--col-primary-light); color: var(--col-success); border: 1px solid var(--col-success); }
+        .feedback.error { background-color: #fdeaea; color: var(--col-error); border: 1px solid var(--col-error); }
+
+        /* --- HEADER --- */
+        header {
+            background-color: #f8f8f8;
+            border-bottom: 3px solid var(--col-primary);
+            padding: 1rem 0;
+        }
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        h1 { margin: 0; font-size: 1.5rem; color: var(--col-primary); }
+        .header-actions { gap: 10px; display: flex; }
 
-        .header-title h1 { margin: 0; font-size: 1.5rem; }
-        .header-actions button { margin-left: 0.5rem; }
-
-        #instructor-note-bar {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 0.75rem 1rem;
-            text-align: center;
-            border-bottom: 1px solid #ffeeba;
-            position: relative;
-        }
-        #instructor-note-bar button {
-            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
-            background: none; border: none; font-size: 1.2rem; cursor: pointer; color: inherit;
-        }
-
-        /* Main Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            min-height: calc(100vh - 140px);
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
-        }
-
-        /* Tabs */
-        .tab-list {
+        /* --- ALERT BAR --- */
+        #instructor-alert {
+            background-color: #e0f7fa;
+            border-bottom: 1px solid #b2ebf2;
+            padding: 10px 20px;
             display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-            border-bottom: 2px solid var(--color-border);
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
         }
-        .tab-button {
-            padding: 10px 15px;
-            cursor: pointer;
+        #instructor-alert button {
+            background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: #555;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background-color: #333;
+            color: white;
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+        }
+        .nav-item { flex: 1; text-align: center; }
+        .nav-btn {
+            width: 100%;
             background: none;
             border: none;
-            border-bottom: 3px solid transparent;
-            font-weight: 600;
-            color: var(--color-text-light);
-            transition: all 0.2s;
+            color: #ccc;
+            padding: 15px 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            border-bottom: 4px solid transparent;
+            white-space: nowrap;
         }
-        .tab-button:hover, .tab-button:focus { background-color: var(--color-bg-secondary); outline: none; }
-        .tab-button[aria-selected="true"] {
-            border-bottom-color: var(--color-accent);
-            color: var(--color-accent);
+        .nav-btn:hover, .nav-btn:focus { background-color: #444; color: white; outline: none; }
+        .nav-btn.active {
+            color: white;
+            border-bottom-color: var(--col-primary);
+            background-color: #222;
+            font-weight: bold;
         }
-        .tab-panel { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .tab-panel[aria-hidden="false"] { display: block; }
+
+        /* --- TAB CONTENT AREAS --- */
+        .tab-panel {
+            padding: 20px 0;
+            animation: fadeIn 0.3s ease-in-out;
+        }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* General UI Components */
-        button {
-            padding: 8px 12px;
-            border: 1px solid var(--color-border);
-            background: var(--color-bg-secondary);
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-        button:hover { background: #e9e9e9; }
-        .btn-primary { background: var(--color-accent); color: white; border: none; }
-        .btn-primary:hover { background-color: #004494; }
+        /* --- OVERVIEW TAB --- */
+        .overview-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
         .card {
-            border: 1px solid var(--color-border);
+            border: 1px solid var(--col-border);
+            border-radius: 6px;
+            padding: 20px;
+            background: white;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
+        }
+        .card h3 { margin-top: 0; color: var(--col-primary); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* --- CASE STUDIES TAB --- */
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- LAB 1: KILL CHAIN --- */
+        .kc-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .kc-pool {
+            flex: 1;
+            min-width: 250px;
+            background: var(--col-gray-light);
             padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            background: #fff;
+            border-radius: 6px;
+            border: 2px dashed #ccc;
         }
-        .flex-grid { display: flex; flex-wrap: wrap; gap: 20px; }
-        .col-1-2 { flex: 1 1 45%; min-width: 300px; }
+        .kc-phases {
+            flex: 2;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .kc-phase {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            min-height: 80px;
+        }
+        .kc-phase h4 { margin: 0 0 10px 0; font-size: 1rem; color: #555; pointer-events: none;}
+        .draggable-card {
+            background: white;
+            border: 1px solid var(--col-primary);
+            border-left: 5px solid var(--col-primary);
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: grab;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .draggable-card:active { cursor: grabbing; }
+        .draggable-card.correct { border-color: var(--col-success); background-color: #f0fff0; }
+        .draggable-card.incorrect { border-color: var(--col-error); background-color: #fff0f0; }
 
-        /* Tab 2: Case Study Modals */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: none;
-            justify-content: center; align-items: center; z-index: 100;
-        }
-        .modal-overlay[aria-hidden="false"] { display: flex; }
-        .modal-content {
-            background: #fff; padding: 25px; border-radius: 8px;
-            max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;
-            position: relative;
-        }
-        .modal-close { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; border: none; background: none; }
-        .modal-body img { max-width: 100%; height: auto; border: 1px solid var(--color-border); margin: 15px 0; }
-
-        /* Tab 3: Kill Chain Lab (Drag & Drop) */
-        .kc-container { display: flex; gap: 20px; }
-        .kc-pool, .kc-zones { flex: 1; }
-        .kc-pool { border-right: 2px dashed var(--color-border); padding-right: 20px; }
-        .kc-card {
-            padding: 10px; border: 1px solid var(--color-accent); background: #f9fbff;
-            margin-bottom: 10px; cursor: grab; border-radius: 4px; position: relative;
-        }
-        .kc-card:active { cursor: grabbing; }
-        .kc-zone {
-            border: 2px dashed var(--color-border); padding: 15px; margin-bottom: 15px;
-            min-height: 80px; background: var(--color-bg-secondary);
-        }
-        .kc-zone h4 { margin-top: 0; border-bottom: 1px solid #ccc; }
-        /* Correct/Incorrect feedback states */
-        .kc-card.correct { border-color: var(--color-success); background-color: #d4edda; }
-        .kc-card.incorrect { border-color: var(--color-error); background-color: #f8d7da; }
-        .kc-feedback { font-size: 0.85rem; margin-top: 5px; font-style: italic; }
-        /* Keyboard fallback for DnD */
-        .kc-move-btn { position: absolute; right: 5px; top: 5px; padding: 2px 5px; font-size: 0.8rem; }
-
-        /* Tab 5: Network Sandbox */
-        .sandbox-container { display: flex; gap: 20px; }
-        .sandbox-controls { flex: 1; max-width: 300px; background: var(--color-bg-secondary); padding: 15px; }
-        .sandbox-grid-container { flex: 2; }
-        .sandbox-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 15px; padding: 20px; border: 1px solid var(--color-border);
+        /* --- LAB 3: SIMULATION --- */
+        .sim-container { display: grid; grid-template-columns: 3fr 1fr; gap: 20px; }
+        .sim-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            background: #222;
+            padding: 20px;
+            border-radius: 8px;
         }
         .node {
-            width: 60px; height: 60px; background: #e0e0e0; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; transition: all 0.5s ease; border: 3px solid #ccc;
+            aspect-ratio: 1;
+            background-color: #555;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            position: relative;
         }
-        .node.infected { background: orange; border-color: darkorange; animation: pulse 1s infinite; }
-        .node.compromised { background: var(--color-error); border-color: darkred; color: white; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .sim-log { height: 150px; overflow-y: auto; background: #eee; font-family: monospace; padding: 10px; margin-top: 15px; }
-
-        /* Tab 6 & 7: Scenarios & Quiz */
-        textarea { width: 100%; height: 100px; padding: 10px; margin-bottom: 10px; border: 1px solid var(--color-border); }
-        .feedback-box { padding: 10px; margin-top: 10px; border-radius: 4px; display: none; }
-        .feedback-box.success { background: #d4edda; color: #155724; display: block; }
-        .feedback-box.error { background: #f8d7da; color: #721c24; display: block; }
-        .quiz-option { display: block; margin-bottom: 8px; cursor: pointer; }
-
-        /* Instructor Panel */
-        .instructor-panel details { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; margin-top: 30px; }
-        .instructor-panel summary { font-weight: bold; cursor: pointer; }
-        .key-table th, .key-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-
-        /* Responsive & Print */
-        @media (max-width: 768px) {
-            .kc-container, .sandbox-container { flex-direction: column; }
-            .tab-button { flex: 1 1 auto; text-align: center; }
+        .node::after {
+            content: attr(data-id);
+            position: absolute;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            bottom: 2px;
         }
+        .node.healthy { background-color: #4caf50; border: 2px solid #2e7d32; }
+        .node.infected { background-color: #ff9800; border: 2px solid #e65100; animation: pulse 1s infinite; }
+        .node.compromised { background-color: #f44336; border: 2px solid #b71c1c; }
+        
+        /* Segmentation lines visualization */
+        .node.segment-a { border-radius: 10%; } /* Visual distinction for subnets */
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        .sim-controls label { display: block; margin-bottom: 8px; }
+        .console-log {
+            background: #111;
+            color: #0f0;
+            font-family: monospace;
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+        }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 10px; right: 15px;
+            background: none; border: none; font-size: 1.5rem; cursor: pointer;
+        }
+        .modal-img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+        }
+        .kb-move-dialog {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            max-width: 400px;
+        }
+        .kb-move-options label { display: block; margin: 8px 0; cursor: pointer; }
+
+        /* --- PRINT STYLES --- */
         @media print {
-            .global-header button, #instructor-note-bar, .tab-list, .btn-primary, .sandbox-controls { display: none !important; }
-            .tab-panel { display: block !important; opacity: 1 !important; margin-bottom: 30px; page-break-inside: avoid; }
-            .container { box-shadow: none; }
+            nav, .header-actions, .btn, #instructor-alert, .kc-pool, .sim-controls, .console-log { display: none !important; }
+            .tab-panel { display: block !important; opacity: 1 !important; page-break-after: always; }
+            body { font-size: 12pt; background: white; color: black; }
+            .draggable-card { border: 1px solid #000; box-shadow: none; }
+            .kc-phase { border: 1px solid #000; margin-bottom: 10px; }
+            /* Show text answers */
+            input[type="text"], textarea { border: none; border-bottom: 1px solid #000; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .overview-grid, .sim-container, .kc-container { grid-template-columns: 1fr; display: block; }
+            .sim-grid { margin-bottom: 20px; }
+            .kc-pool { margin-bottom: 20px; }
         }
     </style>
 </head>
 <body>
 
-<header class="global-header">
-    <div class="header-title">
-        <h1>Ransomware Analysis & Defense Workshop</h1>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-content">
+            <h1>Ransomware Analysis & Defense Workshop</h1>
+            <div class="header-actions">
+                <button class="btn btn-outline" id="resetBtn" aria-label="Reset Workshop">Reset</button>
+                <button class="btn btn-outline" id="exportBtn" aria-label="Export Progress to JSON">Export JSON</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- INSTRUCTOR ALERT -->
+    <div id="instructor-alert" role="alert">
+        <span><strong>Instructor Note:</strong> This is a self-contained lab lasting 45–90 minutes.</span>
+        <button id="dismissAlertBtn" aria-label="Dismiss note">×</button>
     </div>
-    <div class="header-actions">
-        <button onclick="resetLabState()">Reset Lab</button>
-        <button onclick="exportLabState()">Export Progress (JSON)</button>
-    </div>
-</header>
 
-<div id="instructor-note-bar" role="alert">
-    Instructor Note: This is a self-contained lab lasting 45–90 minutes.
-    <button onclick="dismissInstructorNote()" aria-label="Dismiss note">×</button>
-</div>
+    <!-- NAVIGATION -->
+    <nav aria-label="Workshop Sections">
+        <ul class="nav-list" role="tablist">
+            <li class="nav-item"><button class="nav-btn active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview">Overview</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-cases" role="tab" aria-selected="false" aria-controls="panel-cases">Case Studies</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-lab1" role="tab" aria-selected="false" aria-controls="panel-lab1">Lab 1: Kill Chain</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-lab2" role="tab" aria-selected="false" aria-controls="panel-lab2">Lab 2: Controls</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-lab3" role="tab" aria-selected="false" aria-controls="panel-lab3">Lab 3: Simulation</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-lab4" role="tab" aria-selected="false" aria-controls="panel-lab4">Lab 4: IR</button></li>
+            <li class="nav-item"><button class="nav-btn" id="tab-quiz" role="tab" aria-selected="false" aria-controls="panel-quiz">Quiz</button></li>
+        </ul>
+    </nav>
 
-<div class="container">
-    <main>
-        <nav aria-label="Workshop sections">
-            <ul class="tab-list" role="tablist">
-                <li><button role="tab" aria-selected="true" aria-controls="tab-1" id="tab-btn-1" class="tab-button">Overview</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-2" id="tab-btn-2" class="tab-button">Case Studies</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-3" id="tab-btn-3" class="tab-button">Lab: Kill Chain</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-4" id="tab-btn-4" class="tab-button">Lab: Controls</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-5" id="tab-btn-5" class="tab-button">Simulation</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-6" id="tab-btn-6" class="tab-button">Scenarios</button></li>
-                <li><button role="tab" aria-selected="false" aria-controls="tab-7" id="tab-btn-7" class="tab-button">Quiz</button></li>
-            </ul>
-        </nav>
+    <!-- MAIN CONTENT -->
+    <main class="container">
 
-        <section id="tab-1" role="tabpanel" aria-labelledby="tab-btn-1" class="tab-panel">
-            <h2>Workshop Overview</h2>
-            <p>This workshop focuses on analyzing major historical ransomware campaigns to understand attacker methodology and design effective defenses. By the end of this session, you will be able to:</p>
-            <ul>
-                <li>Analyze ransomware campaigns to identify common patterns.</li>
-                <li>Map attack steps to the Cyber Kill Chain framework.</li>
-                <li>Match security controls (preventative and detective) to specific attack techniques.</li>
-                <li>Develop basic incident response plans for ransomware scenarios.</li>
-            </ul>
-
-            <h3>Synthesis: Common Themes and Best Practices</h3>
-            <div style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 10px;">
-                <button class="btn-primary" onclick="openOverviewModal()">View Comparison Infographic</button>
-                <button class="btn-primary" onclick="openBestPracticesModal()">Best Practices</button>
-            </div>
-            <div class="card" style="background: #f9f9f9;">
-                <h3>Lecture Notes: Cross-Cutting Themes</h3>
-                <ul>
-                    <li><strong>Identity is the Perimeter:</strong> MFA deficiencies were the primary entry point in major incidents like Colonial Pipeline. Stolen credentials remain a top vector.</li>
-                    <li><strong>Supply Chain Risks:</strong> Attacks like NotPetya and Kaseya demonstrated that trusted vendor software updates can be weaponized to bypass perimeter defenses, affecting many victims instantly ("many-to-one").</li>
-                    <li><strong>Resilience vs. Prevention:</strong> Prevention fails. The ability to recover (Resilience) is paramount. This requires verified, offline backups and network segmentation to limit the "blast radius" of an infection.</li>
-                    <li><strong>IT/OT Convergence Risks:</strong> Attacks on corporate IT networks (like billing systems in Colonial Pipeline) often force preemptive shutdowns of Operational Technology (OT) due to a lack of confident segmentation between the environments.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="tab-2" role="tabpanel" aria-labelledby="tab-btn-2" class="tab-panel" aria-hidden="true">
-            <h2>Reference: Major Ransomware Case Studies</h2>
-            <p>Use these summaries as reference material for the labs. Click "View Detailed Analysis" for technical depth and infographics.</p>
-            <div class="flex-grid" id="case-study-container">
-                </div>
-        </section>
-
-        <section id="tab-3" role="tabpanel" aria-labelledby="tab-btn-3" class="tab-panel" aria-hidden="true">
-            <h2>Lab 1: Kill Chain Mapping</h2>
-            <p>Drag the attack events from the pool on the left into the correct Cyber Kill Chain phase on the right based on the case study details. (Keyboard users: use the 'Move' button on cards).</p>
-            <button class="btn-primary" onclick="openKCMModal()" style="margin-bottom: 15px;">View Cyber Kill Chain Model</button>
-            <div class="kc-container">
-                <div class="kc-pool" id="kc-pool" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    <h3>Event Pool</h3>
+        <!-- TAB 1: OVERVIEW -->
+        <div id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview">
+            <div class="overview-grid">
+                <div>
+                    <h2>Workshop Objectives</h2>
+                    <ul>
+                        <li>Analyze patterns across major ransomware incidents (WannaCry, NotPetya, etc.).</li>
+                        <li>Map incident events to specific phases of the Cyber Kill Chain.</li>
+                        <li>Match primary controls (MFA, Patching, Segmentation) to attack scenarios.</li>
+                        <li>Develop concise initial response plans for active incidents.</li>
+                    </ul>
+                    
+                    <div class="card">
+                        <h3>Lecture Notes: Cross-Cutting Themes</h3>
+                        <ul>
+                            <li><strong>Identity as the New Perimeter:</strong> Attacks often start with weak credentials (legacy VPNs, no MFA). Stale accounts are a liability.</li>
+                            <li><strong>Supply Chain Risks:</strong> Trust can be weaponized (e.g., Kaseya, MeDoc). Managed Service Providers (MSPs) are high-value targets.</li>
+                            <li><strong>Resilience vs. Prevention:</strong> You cannot prevent 100% of intrusions. The game is about limiting blast radius and ensuring recovery via Verified Offline Backups.</li>
+                            <li><strong>IT/OT Convergence:</strong> Ransomware in IT can force OT shutdowns (Colonial Pipeline) due to lack of visibility or segmentation.</li>
+                        </ul>
                     </div>
-                <div class="kc-zones" id="kc-zones">
-                    </div>
-            </div>
-        </section>
-
-        <section id="tab-4" role="tabpanel" aria-labelledby="tab-btn-4" class="tab-panel" aria-hidden="true">
-            <h2>Lab 2: Controls Effectiveness Analysis</h2>
-            <p>For each specific attack technique derived from the cases, select the most effective primary security control.</p>
-            <div id="controls-lab-container">
                 </div>
-        </section>
-
-        <section id="tab-5" role="tabpanel" aria-labelledby="tab-btn-5" class="tab-panel" aria-hidden="true">
-            <h2>Lab 3: Network Sandbox Simulation</h2>
-            <p>Visualize how different attack types propagate and how controls change the outcome. Nodes: Grey=Healthy, Orange=Infected (spreading), Red=Compromised (locked).</p>
-            <div class="sandbox-container">
-                <div class="sandbox-controls">
-                    <h3>Configuration</h3>
-                    <label style="display:block; margin-bottom:10px;">Scenario Type:
-                        <select id="sim-scenario" style="width:100%; padding: 5px;">
-                            <option value="worm">Worm Outbreak (WannaCry style)</option>
-                            <option value="supply">Supply Chain Wiper (NotPetya style)</option>
-                            <option value="credential">Credential Compromise (Colonial style)</option>
-                        </select>
-                    </label>
-                    <h4>Defenses:</h4>
-                    <label style="display:block;"><input type="checkbox" id="sim-patch"> Apply MS17-010 Patch</label>
-                    <label style="display:block;"><input type="checkbox" id="sim-mfa"> Enforce MFA</label>
-                    <label style="display:block;"><input type="checkbox" id="sim-segment"> Segment Network (4 subnets)</label>
-                    <label style="display:block;"><input type="checkbox" id="sim-backup"> Enable Offline Backups</label>
-                    <hr>
-                    <button class="btn-primary" onclick="runSimulation()">Run Simulation</button>
-                    <button onclick="resetSimulation()">Reset</button>
-                    <div class="sim-log" id="sim-log">Simulation log...</div>
-                </div>
-                <div class="sandbox-grid-container">
-                    <div id="sandbox-grid" class="sandbox-grid">
-                        </div>
+                <div>
+                    <h3>Resources</h3>
+                    <p>Use these references throughout the lab.</p>
+                    <button class="btn" style="width:100%; margin-bottom:10px;" onclick="openModal('rw6.png', 'Comparison Infographic', 'A matrix comparing attack vectors and impacts of WannaCry, NotPetya, Colonial, and others.')">View Comparison Infographic</button>
+                    <button class="btn btn-outline" style="width:100%;" onclick="openModal('rw10.png', 'Defense Best Practices', 'Top 10 cybersecurity controls including MFA, patching cadence, and backup strategies.')">View Best Practices</button>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="tab-6" role="tabpanel" aria-labelledby="tab-btn-6" class="tab-panel" aria-hidden="true">
-            <h2>Lab 4: Incident Response Scenarios</h2>
-            <p>Provide an immediate 3-step incident response plan for the following situations.</p>
+        <!-- TAB 2: CASE STUDIES -->
+        <div id="panel-cases" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-cases">
+            <h2>Reference: Major Ransomware Campaigns</h2>
+            <div class="case-grid">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 3: LAB 1 KILL CHAIN -->
+        <div id="panel-lab1" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-lab1">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2>Lab 1: Kill Chain Mapping</h2>
+                <button class="btn btn-small btn-outline" onclick="openModal('rw10.png', 'Cyber Kill Chain Model', 'Standard 7-step model: Recon, Weaponization, Delivery, Exploit, Installation, C2, Actions.')">View Model Reference</button>
+            </div>
+            <p>Drag the events on the left to the correct Kill Chain Phase on the right. Keyboard users: Tab to a card and press "Move".</p>
             
-            <div class="card">
-                <h3>Scenario 1: Late Night Ransom</h3>
-                <p><strong>Situation:</strong> Helpdesk reports servers being renamed with .LOCKED extension at 02:00. (WannaCry-style rapid spread indicated).</p>
-                <textarea id="scenario-resp-1" placeholder="Step 1: ... Step 2: ... Step 3: ..."></textarea>
-                <button class="btn-primary" onclick="submitScenario(1)">Submit Plan</button>
-                <div id="scenario-feedback-1" class="feedback-box"></div>
-            </div>
-
-            <div class="card">
-                <h3>Scenario 2: Vendor Compromise</h3>
-                <p><strong>Situation:</strong> Multiple clients report system-wide outages immediately after a scheduled vendor management agent update. (Kaseya/NotPetya-style).</p>
-                <textarea id="scenario-resp-2" placeholder="Step 1: ... Step 2: ... Step 3: ..."></textarea>
-                <button class="btn-primary" onclick="submitScenario(2)">Submit Plan</button>
-                <div id="scenario-feedback-2" class="feedback-box"></div>
-            </div>
-        </section>
-
-        <section id="tab-7" role="tabpanel" aria-labelledby="tab-btn-7" class="tab-panel" aria-hidden="true">
-            <h2>Knowledge Quiz</h2>
-            <div id="quiz-container">
+            <div class="kc-container">
+                <div class="kc-pool" id="kc-pool" aria-label="Unsorted Events">
+                    <!-- Draggable items injected here -->
                 </div>
-            <button class="btn-primary" onclick="submitQuiz()" style="margin-top: 20px;">Submit Quiz</button>
-            <div id="quiz-result" class="feedback-box" style="margin-top: 20px;"></div>
-        </section>
+                <div class="kc-phases">
+                    <div class="kc-phase" id="phase-1" data-phase="recon"><h4>1. Reconnaissance</h4></div>
+                    <div class="kc-phase" id="phase-2" data-phase="weaponization"><h4>2. Weaponization</h4></div>
+                    <div class="kc-phase" id="phase-3" data-phase="delivery"><h4>3. Delivery</h4></div>
+                    <div class="kc-phase" id="phase-4" data-phase="exploitation"><h4>4. Exploitation</h4></div>
+                    <div class="kc-phase" id="phase-5" data-phase="installation"><h4>5. Installation</h4></div>
+                    <div class="kc-phase" id="phase-6" data-phase="c2"><h4>6. Command & Control</h4></div>
+                    <div class="kc-phase" id="phase-7" data-phase="actions"><h4>7. Actions on Objectives</h4></div>
+                </div>
+            </div>
+        </div>
 
-        <section class="instructor-panel">
-            <details>
-                <summary>Instructor Resources (Click to Expand)</summary>
-                <h3>Answer Keys & Rubrics</h3>
-                
-                <h4>Kill Chain Key</h4>
-                <p><em>Note: Use the on-screen "Show Answer Key" toggle in Lab 1 for visual confirmation.</em></p>
-                <table class="key-table">
-                    <tr><th>Phase</th><th>Correct Events</th></tr>
-                    <tr><td>Initial Access</td><td>Compromised MeDoc update; Exposed RDP/web vulns; Compromised legacy VPN password; VSA zero-day exploit push</td></tr>
-                    <tr><td>Execution</td><td>Worm-style exploiting SMBv1; Malicious hotfix execution</td></tr>
-                    <tr><td>Privilege Escalation</td><td>Manual privilege escalation (SamSam)</td></tr>
-                    <tr><td>Lateral Movement</td><td>Lateral movement via EternalBlue/creds; Manual deployment after RDP access</td></tr>
-                    <tr><td>Impact</td><td>Acted as a wiper disguised as ransomware; IT network encrypted / OT shut down preemptively</td></tr>
-                </table>
+        <!-- TAB 4: LAB 2 CONTROLS -->
+        <div id="panel-lab2" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-lab2">
+            <h2>Lab 2: Controls Effectiveness</h2>
+            <p>Select the <strong>single most effective primary control</strong> to prevent or drastically mitigate the specific scenario described.</p>
+            <div id="controls-container">
+                <!-- Scenarios injected via JS -->
+            </div>
+        </div>
 
-                <h4>Controls Effectiveness Key</h4>
-                <ul>
-                    <li><strong>Worm/SMBv1:</strong> Patching (Stops the exploit root cause).</li>
-                    <li><strong>Stolen VPN Creds:</strong> MFA (Prevents login even with password).</li>
-                    <li><strong>Malicious Vendor Update:</strong> Network Segmentation (Limits blast radius when trusted path is abused; patching doesn't help if the update itself is malicious).</li>
-                </ul>
+        <!-- TAB 5: LAB 3 SIMULATION -->
+        <div id="panel-lab3" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-lab3">
+            <h2>Lab 3: Network Sandbox Simulation</h2>
+            <p>Test how different controls affect propagation speed and impact.</p>
+            
+            <div class="sim-container">
+                <div class="sim-main">
+                    <div class="sim-grid" id="sim-grid" aria-label="Network Grid of 20 Nodes">
+                        <!-- Nodes injected via JS -->
+                    </div>
+                    <div class="console-log" id="sim-console" aria-live="polite">
+                        > System ready. Select parameters and click Start...
+                    </div>
+                </div>
+                <div class="sim-controls card">
+                    <h3>Configuration</h3>
+                    <label for="sim-scenario"><strong>Scenario:</strong></label>
+                    <select id="sim-scenario" style="width:100%; padding:5px; margin-bottom:15px;">
+                        <option value="worm">Worm (WannaCry style)</option>
+                        <option value="supply">Supply Chain (NotPetya style)</option>
+                        <option value="cred">Credential Compromise (Colonial)</option>
+                    </select>
 
-                <h4>Scenario Response Rubric</h4>
-                <p>Points awarded for including keywords (case-insensitive stems): ["isolate", "disconnect", "preserve logs", "backup", "notify", "forensic", "MFA", "rotate credentials", "segmentation"]</p>
-                <ul>
-                    <li><strong>3+ keywords:</strong> Excellent response.</li>
-                    <li><strong>1-2 keywords:</strong> Needs improvement, focusing on containment first.</li>
-                    <li><strong>0 keywords:</strong> Incorrect prioritization.</li>
-                </ul>
+                    <label><strong>Defenses:</strong></label>
+                    <label><input type="checkbox" id="sim-patch"> Patching Program</label>
+                    <label><input type="checkbox" id="sim-seg"> Network Segmentation</label>
+                    <label><input type="checkbox" id="sim-mfa"> MFA Enforcement</label>
+                    <label><input type="checkbox" id="sim-backup"> Offline Backups</label>
 
-                <h4>Discussion Prompts</h4>
-                <ul>
-                    <li>If offline backups exist, why do companies still pay ransoms? (Time to recover, data exfiltration leverage).</li>
-                    <li>How does the legal liability differ between a direct breach and a supply chain compromise like Kaseya?</li>
-                    <li>Discuss the ethics of the Colonial Pipeline decision to shut down OT systems when only IT was impacted.</li>
-                </ul>
-            </details>
-        </section>
+                    <hr>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn" id="sim-start">Start Simulation</button>
+                        <button class="btn btn-outline" id="sim-reset">Reset</button>
+                    </div>
+                    <p id="sim-stats" style="font-size:0.9rem; margin-top:10px;">Nodes: 20 | Infected: 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: LAB 4 IR -->
+        <div id="panel-lab4" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-lab4">
+            <h2>Lab 4: Incident Response Scenarios</h2>
+            <p>For each active scenario, list the 3 most critical immediate steps.</p>
+            <div id="ir-container">
+                <!-- IR Scenarios injected via JS -->
+            </div>
+        </div>
+
+        <!-- TAB 7: QUIZ -->
+        <div id="panel-quiz" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-quiz">
+            <h2>Knowledge Check</h2>
+            <div id="quiz-container">
+                <!-- Questions injected via JS -->
+            </div>
+            <button class="btn" id="quiz-submit" style="margin-top:20px;">Submit Quiz</button>
+            <div id="quiz-result" class="feedback hidden"></div>
+        </div>
 
     </main>
-</div>
 
-<div id="modal-overlay" class="modal-overlay" aria-hidden="true" onclick="closeModal(event)">
-    <div class="modal-content" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
-        <div id="modal-body" class="modal-body">
+    <!-- FOOTER / INSTRUCTOR PANEL -->
+    <footer class="container">
+        <details>
+            <summary style="cursor:pointer; color:var(--col-primary); font-weight:bold;">Instructor Resources (Click to Expand)</summary>
+            <div class="card" style="margin-top:10px; background:#f9f9f9;">
+                <h3>Answer Keys & Rubrics</h3>
+                <h4>Lab 1: Kill Chain</h4>
+                <ul>
+                    <li>Recon: Exposed RDP/Web Vulns</li>
+                    <li>Delivery: Phishing / Supply Chain Push</li>
+                    <li>Exploitation: SMBv1 EternalBlue / VSA Zero-day</li>
+                    <li>Installation: Lateral Movement / Tools Drop</li>
+                    <li>Actions: Encryption (.LOCKED) / Wiper Activity</li>
+                </ul>
+                <h4>Lab 2: Controls</h4>
+                <ul>
+                    <li>Scenario 1 (Worm): Patching (stops exploit).</li>
+                    <li>Scenario 2 (Supply Chain): Segmentation (limits blast radius - patching often fails 0-days).</li>
+                    <li>Scenario 3 (Credentials): MFA (stops login).</li>
+                </ul>
+                <h4>Lab 4: IR Keywords</h4>
+                <p>Look for: Isolate/Disconnect, Backup/Snapshot (check viability), Logs/Evidence, Notify, Rotate Credentials.</p>
             </div>
-    </div>
-</div>
+        </details>
+        <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:#777;">&copy; 2025 Cybersecurity Workshop Series. Local execution only.</p>
+    </footer>
 
-<script>
-    /**
-     * State Management (localStorage)
-     */
-    const STORAGE_KEY = 'ransomware_lab_v1';
-    let labState = {
-        instructorNoteDismissed: false,
-        killChainMappings: {}, // cardId -> zoneId
-        controlsSelections: {}, // stepId -> { selection, correct }
-        simulationState: null, // last run config/nodes
-        scenarioResponses: {}, // scenarioId -> { text, score }
-        quizAnswers: {}, // questionIdx -> selectedOptionIdx
-        quizSubmitted: false
-    };
+    <!-- MODAL TEMPLATES -->
+    <dialog id="image-modal" class="modal-content">
+        <button class="modal-close" id="modal-close-btn" aria-label="Close Modal">×</button>
+        <h3 id="modal-title"></h3>
+        <img id="modal-img" src="" alt="" class="modal-img">
+        <p id="modal-desc"></p>
+    </dialog>
 
-    function loadState() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                labState = { ...labState, ...JSON.parse(saved) };
-            } catch (e) { console.error("Failed to parse saved state", e); }
-        }
-        applyStateToUI();
-    }
+    <dialog id="kb-move-dialog" class="kb-move-dialog">
+        <h3>Move Card To:</h3>
+        <p id="kb-move-card-name" style="font-weight:bold;"></p>
+        <form id="kb-move-form" class="kb-move-options">
+            <!-- Radios injected via JS -->
+        </form>
+        <div style="margin-top:15px; display:flex; justify-content:flex-end; gap:10px;">
+            <button type="button" class="btn btn-outline" id="kb-move-cancel">Cancel</button>
+            <button type="button" class="btn" id="kb-move-confirm">Confirm</button>
+        </div>
+    </dialog>
 
-    function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(labState));
-    }
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA & CONTENT ---
+        const CASES = [
+            { id: 'wc', title: 'WannaCry', year: '2017', img: 'rw1.png', summary: 'Global worm leveraging EternalBlue.', details: 'Used SMBv1 exploit (MS17-010). Affected NHS, FedEx. Mistake: Unpatched legacy systems. Lesson: Patching speed is critical.' },
+            { id: 'np', title: 'NotPetya', year: '2017', img: 'rw2.png', summary: 'Supply chain attack acting as a wiper.', details: 'Compromised MeDoc accounting software updates. Lateral movement via stolen creds and EternalBlue. Irreversible encryption. Lesson: Network segmentation limits supply chain impact.' },
+            { id: 'col', title: 'Colonial Pipeline', year: '2021', img: 'rw3.png', summary: 'Legacy VPN compromise shutdown OT.', details: 'DarkSide affiliate used leaked VPN password. No MFA. IT network encrypted; OT shutdown preemptively. Lesson: Identity is the perimeter; MFA is mandatory.' },
+            { id: 'atl', title: 'City of Atlanta', year: '2018', img: 'rw4.png', summary: 'SamSam manual brute force.', details: 'Exploited exposed RDP and Java vulnerabilities. Manual deployment of ransomware. Lesson: Reduce attack surface; monitor public-facing assets.' },
+            { id: 'kas', title: 'Kaseya VSA', year: '2021', img: 'rw5.png', summary: 'MSP Supply Chain Zero-day.', details: 'REvil exploited VSA zero-days to push malicious hotfix to managed clients. Lesson: Vendor risk management and diverse backups.' }
+        ];
 
-    function resetLabState() {
-        if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
-            localStorage.removeItem(STORAGE_KEY);
-            window.location.reload();
-        }
-    }
+        const KC_EVENTS = [
+            { id: 'e1', text: 'Worm-style exploiting SMBv1 (EternalBlue)', phase: 'exploitation' },
+            { id: 'e2', text: 'Legacy VPN password / missing MFA', phase: 'delivery' }, // Initial Access/Delivery overlap, mapping to delivery for simplicity of model
+            { id: 'e3', text: 'VSA zero-day push of malicious hotfix', phase: 'delivery' },
+            { id: 'e4', text: 'Lateral movement via Creds & Tools', phase: 'installation' },
+            { id: 'e5', text: 'Servers renamed with .LOCKED extension', phase: 'actions' },
+            { id: 'e6', text: 'Scanning for open RDP ports (Shodan)', phase: 'recon' },
+            { id: 'e7', text: 'Beaconing to C2 server over HTTP', phase: 'c2' }
+        ];
 
-    function exportLabState() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(labState, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "ransomware_lab_progress.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    }
+        const LAB2_SCENARIOS = [
+            { id: 's1', text: 'Scenario A: Worm spreading via SMBv1 unpatched vulnerability (WannaCry style).', correct: 'patch', rationale: 'Patching removes the specific vulnerability the worm exploits to travel.' },
+            { id: 's2', text: 'Scenario B: Supply chain update pushes destructive payload (NotPetya style).', correct: 'seg', rationale: 'You cannot patch a zero-day/trusted update easily. Segmentation prevents it from flattening the whole network.' },
+            { id: 's3', text: 'Scenario C: Remote access compromised via legacy VPN password (Colonial style).', correct: 'mfa', rationale: 'MFA prevents the reuse of stolen passwords, stopping the initial access.' }
+        ];
 
-    function applyStateToUI() {
-        if (labState.instructorNoteDismissed) {
-            document.getElementById('instructor-note-bar').style.display = 'none';
-        }
-        // Other UI updates happen during respective component initialization
-    }
+        const QUIZ = [
+            { q: "Which vulnerability did WannaCry exploit?", opts: ["Log4j", "SMBv1 (EternalBlue)", "PrintNightmare", "RDP BlueKeep"], a: 1 },
+            { q: "What was the primary vector for NotPetya?", opts: ["Phishing email", "USB Drive", "MeDoc Supply Chain Update", "Brute Force"], a: 2 },
+            { q: "Why did Colonial Pipeline shut down operations?", opts: ["OT was encrypted", "Precaution/Lack of visibility", "ISP outage", "Power failure"], a: 1 },
+            { q: "Which control best mitigates stolen credentials?", opts: ["Antivirus", "Firewall", "MFA", "Backups"], a: 2 },
+            { q: "Which phase comes immediately before 'Actions on Objectives'?", opts: ["Recon", "Delivery", "Command & Control (C2)", "Weaponization"], a: 2 }
+        ];
 
-    function dismissInstructorNote() {
-        document.getElementById('instructor-note-bar').style.display = 'none';
-        labState.instructorNoteDismissed = true;
-        saveState();
-    }
-
-    /**
-     * Navigation Tabs
-     */
-    const tabs = document.querySelectorAll('[role="tab"]');
-    const panels = document.querySelectorAll('[role="tabpanel"]');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
-            panels.forEach(p => p.setAttribute('aria-hidden', 'true'));
-            tab.setAttribute('aria-selected', 'true');
-            document.getElementById(tab.getAttribute('aria-controls')).setAttribute('aria-hidden', 'false');
-        });
-    });
-
-    /**
-     * Modal Logic (Overview & Case Studies)
-     */
-    
-    // Function to open the modal for the specific case study infographic
-    function openCaseStudyModal(caseId) {
-        const cs = caseStudies.find(c => c.id === caseId);
-        const body = document.getElementById('modal-body');
-        // Inject content including the specific case infographic (rw1.png - rw5.png)
-        body.innerHTML = `<h2>${cs.title} - Detail</h2><p>${cs.details}</p><img src="${cs.img}" alt="Infographic for ${cs.title}">`;
-        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
-        document.addEventListener('keydown', handleEscClose);
-    }
-
-    // Function to open the modal for the general comparison infographic on the Overview tab
-    function openOverviewModal() {
-        const body = document.getElementById('modal-body');
-        // Inject content for the comparison infographic (rw6.png)
-        body.innerHTML = `
-            <h2>Ransomware Comparison: Synthesis across Major Attacks</h2>
-            <img src="rw6.png" alt="Ransomware Synthesis Infographic showing common attack vectors and defenses">
-        `;
-        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
-        document.addEventListener('keydown', handleEscClose);
-    }
-
-    // Added function to open the modal for the Best Practices infographic (rw10.png)
-    function openBestPracticesModal() {
-        const body = document.getElementById('modal-body');
-        // Inject content for the Best Practices infographic
-        body.innerHTML = `
-            <h2>Ransomware Defense: Best Practices</h2>
-            <img src="rw10.png" alt="Infographic outlining ransomware defense best practices">
-        `;
-        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
-        document.addEventListener('keydown', handleEscClose);
-    }
-
-    // Function to open the modal for the Cyber Kill Chain Model
-    function openKCMModal() {
-        const body = document.getElementById('modal-body');
-        // Inject content for the Cyber Kill Chain Model text
-        body.innerHTML = `
-            <h2>Cyber Kill Chain Model</h2> 
-            <p>The cyber kill chain is the process by which perpetrators carry out cyberattacks. Lockheed Martin adapted the concept of the kill chain from a military setting to information security, using it as a method for modeling intrusions on a computer network.</p>
-            <h3>Attack phases and countermeasures</h3>
-            <p>Computer scientists at Lockheed-Martin corporation described a new "intrusion kill chain" framework or model to defend computer networks in 2011. They wrote that attacks may occur in phases and can be disrupted through controls established at each phase. Since then, the "cyber kill chain" has been adopted by data security organizations to define phases of cyberattacks.</p>
-            <p>A cyber kill chain reveals the phases of a cyberattack: from early reconnaissance to the goal of data exfiltration. The kill chain can also be used as a management tool to help continuously improve network defense. According to Lockheed Martin, threats must progress through several phases in the model, including:</p>
-            <ol>
-                <li><strong>Reconnaissance:</strong> Intruder selects target, researches it, and attempts to identify vulnerabilities in the target network.</li>
-                <li><strong>Weaponization:</strong> Intruder creates remote access malware weapon, such as a virus or worm, tailored to one or more vulnerabilities.</li>
-                <li><strong>Delivery:</strong> Intruder transmits weapon to target (e.g., via e-mail attachments, websites or USB drives).</li>
-                <li><strong>Exploitation:</strong> Malware weapon's program code triggers, which takes action on target network to exploit vulnerability.</li>
-                <li><strong>Installation:</strong> Malware weapon installs an access point (e.g., "backdoor") usable by the intruder.</li>
-                <li><strong>Command and Control:</strong> Malware enables intruder to have "hands on the keyboard" persistent access to the target network.</li>
-                <li><strong>Actions on Objective:</strong> Intruder takes action to achieve their goals, such as data exfiltration, data destruction, or encryption for ransom.</li>
-            </ol>
-            <h3>Defensive actions taken against these phases:</h3>
-            <ol>
-                <li><strong>Detect:</strong> Determine whether an intruder is present.</li>
-                <li><strong>Deny:</strong> Prevent information disclosure and unauthorized access.</li>
-                <li><strong>Disrupt: Stop</strong> or change outbound traffic (to attacker).</li>
-                <li><strong>Degrade:</strong> Counter-attack command and control.</li>
-                <li><strong>Deceive:</strong> Interfere with command and control.</li>
-                <li><strong>Contain:</strong> Network segmentation changes.</li>
-            </ol>
-            <p style="font-size: 0.9em; color: #666;">[Source adapted from Lockheed Martin and related cybersecurity definitions]</p>
-        `;
-        document.getElementById('modal-overlay').setAttribute('aria-hidden', 'false');
-        document.addEventListener('keydown', handleEscClose);
-    }
-
-    function closeModal(e) {
-        // Close if clicking overlay or close button
-        if (!e || e.target === document.getElementById('modal-overlay') || e.target.classList.contains('modal-close')) {
-            document.getElementById('modal-overlay').setAttribute('aria-hidden', 'true');
-            document.removeEventListener('keydown', handleEscClose);
-        }
-    }
-
-    function handleEscClose(e) { if (e.key === 'Escape') closeModal(); }
-
-    /**
-     * Tab 2: Case Studies Data
-     */
-    const caseStudies = [
-        {
-            id: 'wannacry', title: 'WannaCry (May 2017)',
-            summary: 'Worm-style exploiting SMBv1 via EternalBlue. Hit >200k systems globally (NHS, FedEx). Mistakes: Unpatched MS17-010, legacy protocols enabled. Lessons: Timely patching, disable legacy protocols, network segmentation, wormable exploit awareness.',
-            details: 'WannaCry demonstrated the devastating speed of a "wormable" exploit. It used the leaked ETERNALBLUE exploit to compromise machines via the SMBv1 protocol, then installed DoublePulsar backdoor to execute the ransomware payload. It spread automatically across flat networks and the public internet via port 445. The root cause was failure to apply the MS17-010 patch released two months prior and leaving legacy SMBv1 enabled.',
-            img: 'rw1.png'
-        },
-        {
-            id: 'notpetya', title: 'NotPetya/ExPetr (June 2017)',
-            summary: 'Supply chain attack via compromised MeDoc update, then lateral movement via EternalBlue/credentials. Acted as a wiper disguised as ransomware. Mistakes: Trusting single vendor channel, flat networks. Lessons: Supply chain risk, assume destructive intent (wiper), segmentation.',
-            details: 'NotPetya was a destructive wiper masquerading as ransomware; no decryption key existed. It began by compromising the update server of M.E.Doc, Ukrainian accounting software. Once inside a network via the malicious update, it used multiple methods for lateral movement: ETERNALBLUE exploit and harvesting credentials from memory (Mimikatz style) to move using legitimate admin tools like PsExec and WMI. Its speed was due to flat network architectures.',
-            img: 'rw2.png'
-        },
-        {
-            id: 'colonial', title: 'Colonial Pipeline (May 2021)',
-            summary: 'Compromised legacy VPN password lacking MFA. DarkSide affiliate. IT network encrypted; OT shut down preemptively causing fuel shortages. Mistakes: No MFA on remote access, poor IT/OT separation. Lessons: Enforce MFA everywhere, disable stale accounts, strict IT/OT segmentation.',
-            details: 'Attackers gained initial access using a single compromised password for a legacy VPN account that was no longer in use but not disabled. Crucially, the account did not have Multi-Factor Authentication (MFA) enabled. While the ransomware only encrypted the IT business network (billing), Colonial shut down the Operational Technology (OT) pipeline network as a precaution because they could not guarantee the two environments were sufficiently segmented.',
-            img: 'rw3.png'
-        },
-        {
-            id: 'samsam', title: 'City of Atlanta – SamSam (Mar 2018)',
-            summary: '"Hands-on" intrusion via exposed RDP/web vulns. Manual privilege escalation and deployment. Refused $51k ransom; incurred millions in recovery costs. Mistakes: Weak external attack surface, poor monitoring, untrusted offline backups. Lessons: Harden remote access, continuous logging/hunting, verified offline backups.',
-            details: 'Unlike worms, SamSam attackers were "hands-on-keyboard." They gained access by brute-forcing weak passwords on exposed Remote Desktop Protocol (RDP) servers or exploiting known web application vulnerabilities (like JBoss). Once inside, they manually moved laterally, escalated privileges to Domain Admin, and deployed ransomware strategically. The recovery took months and cost millions because offline backups were not readily available or verified.',
-            img: 'rw4.png'
-        },
-        {
-            id: 'kaseya', title: 'Kaseya VSA / REvil (July 2021)',
-            summary: '"Many-to-one" supply chain attack exploiting VSA zero-days to push malicious hotfix to MSPs and their clients. Mistakes: Concentrated privilege in management tool, implicit trust. Lessons: Secure remote management tools, layered defenses beyond patching.',
-            details: 'REvil affiliates exploited zero-day authentication bypass and SQL injection vulnerabilities in on-premise Kaseya VSA servers used by Managed Service Providers (MSPs). This allowed them to bypass authentication and use the legitimate VSA management channel to push a malicious payload (disguised as a "hotfix") to thousands of endpoint customers managed by those MSPs simultaneously. It highlighted the immense risk of centralized management tools holding elevated privileges.',
-            img: 'rw5.png'
-        }
-    ];
-
-    function initCaseStudies() {
-        const container = document.getElementById('case-study-container');
-        caseStudies.forEach(cs => {
-            const card = document.createElement('div');
-            card.className = 'card col-1-2';
-            // Button calls openCaseStudyModal to show specific infographic (rw1-rw5)
-            card.innerHTML = `<h3>${cs.title}</h3><p>${cs.summary}</p><button class="btn-primary" onclick="openCaseStudyModal('${cs.id}')">View Detailed Analysis</button>`;
-            container.appendChild(card);
-        });
-    }
-
-    /**
-     * Tab 3: Kill Chain Lab (Drag & Drop)
-     */
-    const kcPhases = ['Initial Access', 'Execution', 'Persistence', 'Privilege Escalation', 'Lateral Movement', 'Impact'];
-    // Define correct mappings based on core content
-    const kcEvents = [
-        { id: 'kc1', text: 'Compromised MeDoc update (Supply Chain)', correctZone: 'Initial Access', rationale: 'NotPetya used a compromised vendor update for entry.' },
-        { id: 'kc2', text: 'Worm-style exploiting SMBv1 via EternalBlue', correctZone: 'Execution', rationale: 'WannaCry executed the exploit code to run the payload.' },
-        { id: 'kc3', text: 'Manual privilege escalation (SamSam)', correctZone: 'Privilege Escalation', rationale: 'SamSam attackers manually gained higher rights.' },
-        { id: 'kc4', text: 'Lateral movement via EternalBlue/credentials', correctZone: 'Lateral Movement', rationale: 'NotPetya moved between systems using exploits and stolen creds.' },
-        { id: 'kc5', text: 'Acted as a wiper disguised as ransomware', correctZone: 'Impact', rationale: 'The final effect of NotPetya was data destruction (wiping).' },
-        { id: 'kc6', text: 'Compromised legacy VPN password', correctZone: 'Initial Access', rationale: 'Colonial Pipeline entry point was stolen creds.' },
-        { id: 'kc7', text: 'IT network encrypted; OT shut down', correctZone: 'Impact', rationale: 'The operational and business consequence of the Colonial attack.' }
-    ];
-
-    function initKillChain() {
-        // Init Zones
-        const zoneContainer = document.getElementById('kc-zones');
-        kcPhases.forEach(phase => {
-            const zone = document.createElement('div');
-            zone.className = 'kc-zone';
-            zone.id = 'zone-' + phase.replace(' ', '');
-            zone.innerHTML = `<h4>${phase}</h4>`;
-            zone.ondrop = (e) => drop(e);
-            zone.ondragover = (e) => allowDrop(e);
-            zoneContainer.appendChild(zone);
-        });
-
-        // Init Pool & Restore State
-        const pool = document.getElementById('kc-pool');
-        kcEvents.forEach(ev => {
-            const card = document.createElement('div');
-            card.className = 'kc-card';
-            card.id = ev.id;
-            card.draggable = true;
-            card.ondragstart = (e) => drag(e);
-            card.innerHTML = `<span>${ev.text}</span><button class="kc-move-btn" onclick="openMoveMenu('${ev.id}')" aria-label="Move card">Move</button><div class="kc-feedback"></div>`;
-            
-            const placedZoneId = labState.killChainMappings[ev.id];
-            if (placedZoneId && document.getElementById(placedZoneId)) {
-                document.getElementById(placedZoneId).appendChild(card);
-                validatePlacement(card, placedZoneId);
-            } else {
-                pool.appendChild(card);
-            }
-        });
-    }
-
-    function allowDrop(ev) { ev.preventDefault(); }
-    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-    function drop(ev) {
-        ev.preventDefault();
-        const data = ev.dataTransfer.getData("text");
-        const card = document.getElementById(data);
-        // Ensure drop target is a zone or the pool
-        let target = ev.target;
-        while(target && !target.classList.contains('kc-zone') && !target.classList.contains('kc-pool')) {
-            target = target.parentNode;
-        }
-        if (target) {
-            target.appendChild(card);
-            handleCardPlacement(card.id, target.id);
-        }
-    }
-
-    // Keyboard accessibility fallback
-    function openMoveMenu(cardId) {
-        const card = document.getElementById(cardId);
-        const targetId = prompt("Enter zone number to move to:\n0: Pool\n1: Initial Access\n2: Execution\n3: Persistence\n4: Privilege Escalation\n5: Lateral Movement\n6: Impact");
-        let dest = null;
-        if (targetId === '0') dest = document.getElementById('kc-pool');
-        else if (targetId > 0 && targetId <= 6) dest = document.getElementById('zone-' + kcPhases[parseInt(targetId)-1].replace(' ',''));
-        
-        if (dest) {
-            dest.appendChild(card);
-            handleCardPlacement(cardId, dest.id);
-        }
-    }
-
-    function handleCardPlacement(cardId, zoneId) {
-        labState.killChainMappings[cardId] = zoneId;
-        saveState();
-        validatePlacement(document.getElementById(cardId), zoneId);
-    }
-
-    function validatePlacement(card, zoneId) {
-        const eventData = kcEvents.find(e => e.id === card.id);
-        const feedback = card.querySelector('.kc-feedback');
-        card.classList.remove('correct', 'incorrect');
-        feedback.textContent = '';
-
-        if (zoneId === 'kc-pool') return;
-
-        // Get phase name from zone ID used for display
-        const zoneName = document.getElementById(zoneId).querySelector('h4').textContent;
-
-        if (zoneName === eventData.correctZone) {
-            card.classList.add('correct');
-            feedback.textContent = `✓ Correct. ${eventData.rationale}`;
-        } else {
-            card.classList.add('incorrect');
-            feedback.textContent = `✗ Incorrect. This typically belongs in ${eventData.correctZone}.`;
-        }
-    }
-
-    /**
-     * Tab 4: Controls Effectiveness Lab
-     */
-    const controlsExercises = [
-        { id: 'ce1', scenario: 'Worm spreading via SMBv1 unpatched vulnerability (WannaCry)', correct: 'Patching', rationale: 'Patching MS17-010 removes the underlying vulnerability exploited by EternalBlue.' },
-        { id: 'ce2', scenario: 'Attacker logging in via stolen VPN password (Colonial)', correct: 'MFA', rationale: 'MFA prevents access even if the password is compromised.' },
-        { id: 'ce3', scenario: 'Malicious hotfix distributed by compromised management tool (Kaseya)', correct: 'Network Segmentation', rationale: 'Since the update channel is trusted, patching doesn\'t help. Segmentation limits the blast radius of the malicious push.' }
-    ];
-    const controlOptions = ['Patching', 'MFA', 'Network Segmentation', 'Offline Backups', 'EDR'];
-
-    function initControlsLab() {
-        const container = document.getElementById('controls-lab-container');
-        controlsExercises.forEach(ex => {
-            const div = document.createElement('div');
-            div.className = 'card';
-            const savedData = labState.controlsSelections[ex.id] || {};
-            div.innerHTML = `
-                <p><strong>Attack Step:</strong> ${ex.scenario}</p>
-                <label>Select Primary Control: 
-                    <select id="sel-${ex.id}">
-                        <option value="">-- Select --</option>
-                        ${controlOptions.map(o => `<option value="${o}" ${savedData.selection === o ? 'selected' : ''}>${o}</option>`).join('')}
-                    </select>
-                </label>
-                <button class="btn-primary" onclick="checkControl('${ex.id}')">Check</button>
-                <div id="fb-${ex.id}" class="feedback-box ${savedData.correct !== undefined ? (savedData.correct ? 'success' : 'error') : ''}" style="display: ${savedData.selection ? 'block' : 'none'}">
-                    ${savedData.feedback || ''}
-                </div>
-            `;
-            container.appendChild(div);
-        });
-    }
-
-    function checkControl(exId) {
-        const selection = document.getElementById(`sel-${exId}`).value;
-        const exercise = controlsExercises.find(e => e.id === exId);
-        const fbBox = document.getElementById(`fb-${exId}`);
-        
-        if (!selection) return;
-
-        const isCorrect = selection === exercise.correct;
-        const feedbackText = isCorrect 
-            ? `Correct. ${exercise.rationale}` 
-            : `Incorrect. While beneficial, ${exercise.correct} is the primary defense here based on case lessons.`;
-
-        fbBox.textContent = feedbackText;
-        fbBox.className = 'feedback-box ' + (isCorrect ? 'success' : 'error');
-        fbBox.style.display = 'block';
-
-        labState.controlsSelections[exId] = { selection, correct: isCorrect, feedback: feedbackText };
-        saveState();
-    }
-
-    /**
-     * Tab 5: Network Sandbox Simulation
-     */
-    let simInterval;
-    let simNodes = [];
-
-    function initSandbox() {
-        const grid = document.getElementById('sandbox-grid');
-        grid.innerHTML = '';
-        simNodes = [];
-        for (let i = 0; i < 20; i++) {
-            const node = document.createElement('div');
-            node.className = 'node';
-            node.id = 'node-' + i;
-            // Visually represent 4 subnets (rows of 5)
-            node.dataset.subnet = Math.floor(i / 5);
-            node.innerHTML = '<i aria-hidden="true">💻</i>';
-            grid.appendChild(node);
-            simNodes.push({ id: i, state: 'healthy', subnet: Math.floor(i / 5) });
-        }
-        // Restore last state if exists
-        if (labState.simulationState) {
-            document.getElementById('sim-scenario').value = labState.simulationState.config.scenario;
-            document.getElementById('sim-patch').checked = labState.simulationState.config.patch;
-            document.getElementById('sim-mfa').checked = labState.simulationState.config.mfa;
-            document.getElementById('sim-segment').checked = labState.simulationState.config.segment;
-            document.getElementById('sim-backup').checked = labState.simulationState.config.backup;
-            simNodes = labState.simulationState.nodes;
-            updateGridVis();
-            logSim("Restored previous simulation state.");
-        }
-    }
-
-    function updateGridVis() {
-        simNodes.forEach(n => {
-            const el = document.getElementById('node-' + n.id);
-            el.className = 'node ' + (n.state !== 'healthy' ? n.state : '');
-            el.innerHTML = n.state === 'compromised' ? '🔒' : (n.state === 'infected' ? '🦠' : '💻');
-        });
-    }
-
-    function logSim(msg) {
-        const log = document.getElementById('sim-log');
-        log.innerHTML += `[T+${new Date().toLocaleTimeString().split(' ')[0]}] ${msg}<br>`;
-        log.scrollTop = log.scrollHeight;
-    }
-
-    function resetSimulation() {
-        clearInterval(simInterval);
-        simNodes.forEach(n => n.state = 'healthy');
-        updateGridVis();
-        document.getElementById('sim-log').innerHTML = 'Simulation reset.<br>';
-        labState.simulationState = null;
-        saveState();
-    }
-
-    function runSimulation() {
-        resetSimulation();
-        const config = {
-            scenario: document.getElementById('sim-scenario').value,
-            patch: document.getElementById('sim-patch').checked,
-            mfa: document.getElementById('sim-mfa').checked,
-            segment: document.getElementById('sim-segment').checked,
-            backup: document.getElementById('sim-backup').checked
+        // --- STATE MANAGEMENT ---
+        let state = {
+            dismissedNote: false,
+            currentTab: 'tab-overview',
+            kcPlacements: {}, // {cardId: phaseId}
+            controls: {}, // {scenarioId: {choice, correct}}
+            simData: { scenario: 'worm', patch: false, seg: false, mfa: false, backup: false, nodes: [] },
+            irResponses: {},
+            quizAnswers: {}
         };
-        
-        logSim(`Starting scenario: ${config.scenario.toUpperCase()}`);
 
-        // Initial Infection Logic
-        let patientZero = 0; // Fixed patient zero for determinism
-        if (config.scenario === 'credential' && config.mfa) {
-            logSim("Attack stopped at perimeter by MFA. No infection.");
-        } else {
-            simNodes[patientZero].state = 'infected';
-            logSim(`Node ${patientZero} infected (Patient Zero).`);
+        const STORAGE_KEY = 'ransomware_workshop_v1';
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
-        updateGridVis();
 
-        let tickCount = 0;
-        simInterval = setInterval(() => {
-            tickCount++;
-            let changed = false;
-            const currentInfected = simNodes.filter(n => n.state === 'infected');
+        function loadState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                state = { ...state, ...JSON.parse(saved) };
+            }
+            applyState();
+        }
+
+        function resetWorkshop() {
+            if(confirm("Are you sure? This will clear all progress.")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "ransomware_workshop_export.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function applyState() {
+            // Instructor Note
+            if (state.dismissedNote) document.getElementById('instructor-alert').classList.add('hidden');
             
-            // Progression: Infected -> Compromised (after 1 tick)
-            currentInfected.forEach(n => {
-                n.state = 'compromised';
-                changed = true;
+            // Tab
+            switchTab(state.currentTab);
+
+            // Kill Chain Re-render handled by renderLab1()
+            
+            // Lab 2 Controls
+            Object.keys(state.controls).forEach(sid => {
+                const sData = state.controls[sid];
+                const sel = document.getElementById(`sel-${sid}`);
+                if(sel) {
+                    sel.value = sData.choice;
+                    sel.disabled = true; // Lock after check
+                    const fb = document.getElementById(`fb-${sid}`);
+                    fb.innerHTML = sData.correct ? 
+                        `Correct! ${LAB2_SCENARIOS.find(x=>x.id===sid).rationale}` : 
+                        `Incorrect. Review the case details.`;
+                    fb.className = `feedback ${sData.correct ? 'success' : 'error'}`;
+                }
             });
 
-            // Spreading Logic based on scenario & controls
-            currentInfected.forEach(sourceNode => {
-                simNodes.forEach(targetNode => {
-                    if (targetNode.state !== 'healthy') return;
+            // IR Lab
+            Object.keys(state.irResponses).forEach(id => {
+                const inputs = state.irResponses[id].steps;
+                inputs.forEach((val, idx) => {
+                    const el = document.getElementById(`ir-${id}-${idx}`);
+                    if(el) el.value = val;
+                });
+                if(state.irResponses[id].submitted) checkIR(id, false);
+            });
+            
+            // Lab 3 Sim: Logic now handled in initSim via state.simData check
+        }
 
-                    let spreadChance = 0;
-                    const sameSubnet = sourceNode.subnet === targetNode.subnet;
+        // --- UI FUNCTIONS ---
+        function switchTab(tabId) {
+            // Update Nav
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
+            const btn = document.getElementById(tabId);
+            if(btn) {
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+            }
 
-                    if (config.scenario === 'worm') {
-                        // Worm spreads fast if unpatched. Segmentation slows cross-subnet.
-                        if (!config.patch) {
-                            spreadChance = sameSubnet ? 0.8 : (config.segment ? 0.1 : 0.6);
-                        } else {
-                             spreadChance = 0.01; // Patched but barely possible
-                        }
-                    } else if (config.scenario === 'supply') {
-                        // Jumps segments initially (trusted path), then spreads slower.
-                        if (tickCount === 1 && !sameSubnet) spreadChance = 0.5; // Initial trusted jump
-                        else spreadChance = sameSubnet ? 0.6 : (config.segment ? 0.05 : 0.4);
-                    } else if (config.scenario === 'credential') {
-                         // Slow manual spread.
-                         spreadChance = sameSubnet ? 0.2 : 0.05;
+            // Update Panels
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            const panelId = btn.getAttribute('aria-controls');
+            document.getElementById(panelId).classList.remove('hidden');
+
+            state.currentTab = tabId;
+            saveState();
+        }
+
+        // --- DOM GENERATION & INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initEvents();
+            renderCases();
+            renderLab1();
+            renderLab2();
+            renderLab4();
+            renderQuiz();
+            // Load state first, then init sim to capture persisted nodes
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                state = { ...state, ...JSON.parse(saved) };
+            }
+            initSim();
+            applyState();
+        });
+
+        function initEvents() {
+            // Nav
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.addEventListener('click', (e) => switchTab(e.target.id));
+            });
+
+            // Global buttons
+            document.getElementById('resetBtn').addEventListener('click', resetWorkshop);
+            document.getElementById('exportBtn').addEventListener('click', exportJSON);
+            document.getElementById('dismissAlertBtn').addEventListener('click', () => {
+                state.dismissedNote = true;
+                saveState();
+                document.getElementById('instructor-alert').classList.add('hidden');
+            });
+
+            // Modals
+            const modal = document.getElementById('image-modal');
+            const closeBtn = document.getElementById('modal-close-btn');
+            const kbDialog = document.getElementById('kb-move-dialog');
+            
+            closeBtn.addEventListener('click', () => modal.close());
+            document.getElementById('kb-move-cancel').addEventListener('click', () => kbDialog.close());
+        }
+
+        function openModal(imgSrc, title, desc) {
+            const m = document.getElementById('image-modal');
+            document.getElementById('modal-img').src = imgSrc;
+            document.getElementById('modal-img').alt = title;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            m.showModal();
+        }
+
+        // --- LAB 1: KILL CHAIN LOGIC ---
+        function renderLab1() {
+            const pool = document.getElementById('kc-pool');
+            // Clear pool just in case, though items might be moved
+            pool.innerHTML = ''; 
+
+            KC_EVENTS.forEach(ev => {
+                // Create Card
+                const card = document.createElement('div');
+                card.className = 'draggable-card';
+                card.draggable = true;
+                card.id = ev.id;
+                card.innerHTML = `
+                    <span>${ev.text}</span>
+                    <button class="btn btn-small btn-outline" aria-label="Move item" onclick="openKbMove('${ev.id}')">Move</button>
+                `;
+                
+                // Drag Events
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', ev.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                // Check saved state
+                if (state.kcPlacements[ev.id]) {
+                    // map phase data 'recon' to DOM ID 'phase-1' etc is needed if saved val is phase name
+                    // But our logic saves phase name. We need to find the DOM element with that data-phase.
+                    const destZone = document.querySelector(`[data-phase="${state.kcPlacements[ev.id]}"]`);
+                    if(destZone) {
+                        destZone.appendChild(card);
+                        validateCard(card, state.kcPlacements[ev.id]);
+                    } else {
+                        pool.appendChild(card);
                     }
+                } else {
+                    pool.appendChild(card);
+                }
+            });
 
-                    if (Math.random() < spreadChance) {
-                        targetNode.state = 'infected';
-                        changed = true;
-                        logSim(`Spread from Node ${sourceNode.id} to Node ${targetNode.id}.`);
+            // Drop Zones
+            document.querySelectorAll('.kc-phase').forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    zone.style.background = '#eef';
+                });
+                zone.addEventListener('dragleave', () => zone.style.background = 'white');
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.style.background = 'white';
+                    const id = e.dataTransfer.getData('text/plain');
+                    const card = document.getElementById(id);
+                    if(card) {
+                        zone.appendChild(card);
+                        const phase = zone.getAttribute('data-phase');
+                        handlePlacement(id, phase);
                     }
                 });
             });
-
-            updateGridVis();
-
-            if (!changed || tickCount > 10) {
-                clearInterval(simInterval);
-                const compCount = simNodes.filter(n => n.state === 'compromised').length;
-                logSim(`Simulation ended. Total compromised: ${compCount}.`);
-                if(compCount > 0 && config.backup) {
-                    logSim("Offline backups enabled: Recovery possible.");
-                }
-                // Save state
-                labState.simulationState = { config, nodes: simNodes };
-                saveState();
-            }
-        }, 1000);
-    }
-
-    /**
-     * Tab 6: Scenarios Lab
-     */
-    const requiredKeywords = ["isolate", "disconnect", "preserve logs", "backup", "notify", "forensic", "mfa", "rotate credentials", "segmentation"];
-
-    function initScenarios() {
-        if (labState.scenarioResponses[1]) restoreScenario(1);
-        if (labState.scenarioResponses[2]) restoreScenario(2);
-    }
-
-    function restoreScenario(id) {
-        document.getElementById(`scenario-resp-${id}`).value = labState.scenarioResponses[id].text;
-        const fb = document.getElementById(`scenario-feedback-${id}`);
-        fb.style.display = 'block';
-        fb.innerHTML = labState.scenarioResponses[id].feedback;
-        fb.className = 'feedback-box ' + (labState.scenarioResponses[id].score > 0 ? 'success' : 'error');
-    }
-
-    function submitScenario(id) {
-        const text = document.getElementById(`scenario-resp-${id}`).value.toLowerCase();
-        const foundKeys = requiredKeywords.filter(key => text.includes(key));
-        const score = foundKeys.length;
-        
-        let feedbackHtml = `<strong>Keywords found:</strong> ${foundKeys.length > 0 ? foundKeys.join(', ') : 'None'}.<br>`;
-        let fbClass = 'error';
-
-        if (score >= 3) {
-            feedbackHtml += "Excellent response covering key containment and recovery steps.";
-            fbClass = 'success';
-        } else if (score > 0) {
-            feedbackHtml += "Good start. Consider emphasizing containment (isolation) and data preservation further.";
-            fbClass = 'success'; // Partial success
-        } else {
-            feedbackHtml += "Critically missing key actions like isolation or backup verification. Review the lessons.";
         }
 
-        const fbBox = document.getElementById(`scenario-feedback-${id}`);
-        fbBox.innerHTML = feedbackHtml;
-        fbBox.className = 'feedback-box ' + fbClass;
-        fbBox.style.display = 'block';
+        function handlePlacement(cardId, phase) {
+            state.kcPlacements[cardId] = phase;
+            saveState();
+            const card = document.getElementById(cardId);
+            validateCard(card, phase);
+        }
 
-        labState.scenarioResponses[id] = { text: document.getElementById(`scenario-resp-${id}`).value, score, feedback: feedbackHtml };
-        saveState();
-    }
+        function validateCard(card, phase) {
+            const ev = KC_EVENTS.find(e => e.id === card.id);
+            if (ev.phase === phase) {
+                card.classList.add('correct');
+                card.classList.remove('incorrect');
+                card.setAttribute('aria-label', `${ev.text} - Correctly placed`);
+            } else {
+                card.classList.add('incorrect');
+                card.classList.remove('correct');
+                card.setAttribute('aria-label', `${ev.text} - Incorrectly placed`);
+            }
+        }
 
-    /**
-     * Tab 7: Quiz
-     */
-    const quizQuestions = [
-        { q: "Which attack primarily exploited the SMBv1 vulnerability (EternalBlue)?", options: ["NotPetya", "WannaCry", "Colonial Pipeline", "SamSam"], correct: 1 },
-        { q: "What was a critical failure in the Colonial Pipeline incident?", options: ["Zero-day exploit", "Insider threat", "Lack of MFA on legacy VPN", "Unpatched Windows servers"], correct: 2 },
-        { q: "How did NotPetya differ from typical ransomware?", options: ["It was a wiper disguised as ransomware", "It demanded an unusually high ransom", "It only targeted Linux systems", "It used phishing exclusively"], correct: 0 },
-        { q: "The Kaseya VSA attack is an example of:", options: ["A wormable exploit", "An IT/OT convergence failure", "A many-to-one supply chain attack", "Manual hands-on keyboard intrusion"], correct: 2 },
-        { q: "Which defense is crucial for recovering from a destructive wiper attack?", options: ["EDR", "Verified offline backups", "Patching", "MFA"], correct: 1 }
-    ];
-
-    function initQuiz() {
-        const container = document.getElementById('quiz-container');
-        quizQuestions.forEach((q, idx) => {
-            const qDiv = document.createElement('div');
-            qDiv.className = 'card';
-            let html = `<p><strong>Q${idx+1}: ${q.q}</strong></p>`;
-            q.options.forEach((opt, oIdx) => {
-                const isChecked = labState.quizAnswers[idx] === oIdx ? 'checked' : '';
-                html += `<label class="quiz-option"><input type="radio" name="q${idx}" value="${oIdx}" ${isChecked} ${labState.quizSubmitted ? 'disabled' : ''}> ${opt}</label>`;
+        function openKbMove(cardId) {
+            const d = document.getElementById('kb-move-dialog');
+            document.getElementById('kb-move-card-name').innerText = KC_EVENTS.find(e=>e.id===cardId).text;
+            const form = document.getElementById('kb-move-form');
+            form.innerHTML = '';
+            
+            ['recon', 'weaponization', 'delivery', 'exploitation', 'installation', 'c2', 'actions'].forEach(p => {
+                form.innerHTML += `<label><input type="radio" name="phase" value="${p}"> ${p.toUpperCase()}</label>`;
             });
-            qDiv.innerHTML = html;
-            container.appendChild(qDiv);
-        });
-        if (labState.quizSubmitted) gradeQuiz();
-    }
 
-    function submitQuiz() {
-        if(labState.quizSubmitted) return;
-        quizQuestions.forEach((_, idx) => {
-            const selected = document.querySelector(`input[name="q${idx}"]:checked`);
-            if (selected) {
-                labState.quizAnswers[idx] = parseInt(selected.value);
-            }
-        });
-        labState.quizSubmitted = true;
-        saveState();
-        gradeQuiz();
-    }
-
-    function gradeQuiz() {
-        let score = 0;
-        quizQuestions.forEach((q, idx) => {
-            const selectedVal = labState.quizAnswers[idx];
-            const inputs = document.querySelectorAll(`input[name="q${idx}"]`);
-            inputs.forEach(input => input.disabled = true); // Disable after submit
-
-            if (selectedVal !== undefined) {
-                if (selectedVal === q.correct) {
-                    score++;
-                    inputs[selectedVal].parentElement.style.color = 'var(--color-success)';
-                    inputs[selectedVal].parentElement.innerHTML += ' ✓';
-                } else {
-                    inputs[selectedVal].parentElement.style.color = 'var(--color-error)';
-                    inputs[selectedVal].parentElement.innerHTML += ' ✗';
-                    inputs[q.correct].parentElement.style.fontWeight = 'bold'; // Highlight correct
+            document.getElementById('kb-move-confirm').onclick = () => {
+                const sel = form.querySelector('input:checked');
+                if(sel) {
+                    const zone = document.querySelector(`[data-phase="${sel.value}"]`);
+                    zone.appendChild(document.getElementById(cardId));
+                    handlePlacement(cardId, sel.value);
+                    d.close();
                 }
+            };
+            d.showModal();
+        }
+
+        // --- LAB 2: CONTROLS ---
+        function renderLab2() {
+            const c = document.getElementById('controls-container');
+            LAB2_SCENARIOS.forEach(sc => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <p><strong>${sc.text}</strong></p>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <select id="sel-${sc.id}" class="form-select">
+                            <option value="">-- Select Primary Control --</option>
+                            <option value="patch">Patching Program</option>
+                            <option value="mfa">Multi-Factor Auth</option>
+                            <option value="seg">Network Segmentation</option>
+                            <option value="backup">Offline Backups</option>
+                            <option value="edr">EDR / Antivirus</option>
+                        </select>
+                        <button class="btn btn-small" onclick="checkControl('${sc.id}')">Check</button>
+                    </div>
+                    <div id="fb-${sc.id}" class="feedback hidden"></div>
+                `;
+                c.appendChild(div);
+            });
+        }
+
+        function checkControl(id) {
+            const val = document.getElementById(`sel-${id}`).value;
+            const scen = LAB2_SCENARIOS.find(x => x.id === id);
+            const isCorrect = (val === scen.correct);
+            
+            state.controls[id] = { choice: val, correct: isCorrect };
+            saveState();
+
+            const fb = document.getElementById(`fb-${id}`);
+            fb.classList.remove('hidden');
+            fb.innerHTML = isCorrect ? 
+                `Correct! ${scen.rationale}` : 
+                `Incorrect. Hint: Look at the root cause of the attack vector.`;
+            fb.className = `feedback ${isCorrect ? 'success' : 'error'}`;
+            document.getElementById(`sel-${id}`).disabled = true;
+        }
+
+        // --- CASES ---
+        function renderCases() {
+            const grid = document.querySelector('.case-grid');
+            CASES.forEach(c => {
+                const d = document.createElement('div');
+                d.className = 'card';
+                d.innerHTML = `
+                    <h3>${c.title} (${c.year})</h3>
+                    <p>${c.summary}</p>
+                    <button class="btn btn-small btn-outline" onclick="openModal('${c.img}', '${c.title} Analysis', '${c.details.replace(/'/g, "&apos;")}')">View Detailed Analysis</button>
+                `;
+                grid.appendChild(d);
+            });
+        }
+
+        // --- LAB 4: IR ---
+        function renderLab4() {
+            const scens = [
+                {id: 'ir1', text: "Helpdesk reports servers renamed with .LOCKED extension at 02:14. Ransom note present."},
+                {id: 'ir2', text: "MSP reports multiple client endpoints stopped responding after VSA update."}
+            ];
+            const div = document.getElementById('ir-container');
+            scens.forEach(s => {
+                div.innerHTML += `
+                    <div class="card">
+                        <p><strong>Scenario:</strong> ${s.text}</p>
+                        <input type="text" id="ir-${s.id}-0" placeholder="Step 1" style="width:100%; margin-bottom:5px;">
+                        <input type="text" id="ir-${s.id}-1" placeholder="Step 2" style="width:100%; margin-bottom:5px;">
+                        <input type="text" id="ir-${s.id}-2" placeholder="Step 3" style="width:100%; margin-bottom:5px;">
+                        <button class="btn btn-small" onclick="checkIR('${s.id}', true)">Submit Plan</button>
+                        <div id="ir-fb-${s.id}" class="feedback hidden"></div>
+                    </div>
+                `;
+            });
+        }
+
+        function checkIR(id, isSubmit) {
+            const keywords = ['isolate', 'disconnect', 'network', 'quarantine', 'backup', 'verify', 'log', 'evidence', 'mfa', 'reset', 'password'];
+            let score = 0;
+            const inputs = [
+                document.getElementById(`ir-${id}-0`).value.toLowerCase(),
+                document.getElementById(`ir-${id}-1`).value.toLowerCase(),
+                document.getElementById(`ir-${id}-2`).value.toLowerCase()
+            ];
+
+            inputs.forEach(txt => {
+                if (keywords.some(k => txt.includes(k))) score++;
+            });
+
+            if (isSubmit) {
+                state.irResponses[id] = { steps: inputs, submitted: true };
+                saveState();
             }
-        });
-        const resultBox = document.getElementById('quiz-result');
-        resultBox.textContent = `You scored ${score} out of ${quizQuestions.length}.`;
-        resultBox.className = 'feedback-box ' + (score === 5 ? 'success' : (score > 2 ? 'success' : 'error'));
-        resultBox.style.display = 'block';
-    }
 
+            const fb = document.getElementById(`ir-fb-${id}`);
+            fb.classList.remove('hidden');
+            fb.className = score > 1 ? 'feedback success' : 'feedback error';
+            fb.innerText = `Plan Analysis: Found relevant keywords in ${score}/3 steps. Key actions: Isolation, Evidence Preservation, Credential Rotation.`;
+        }
 
-    /**
-     * Initialization
-     */
-    window.addEventListener('DOMContentLoaded', () => {
-        loadState();
-        initCaseStudies();
-        initKillChain();
-        initControlsLab();
-        initSandbox();
-        initScenarios();
-        initQuiz();
-    });
+        // --- QUIZ ---
+        function renderQuiz() {
+            const qc = document.getElementById('quiz-container');
+            QUIZ.forEach((q, idx) => {
+                qc.innerHTML += `<div class="card">
+                    <p><strong>Q${idx+1}:</strong> ${q.q}</p>
+                    ${q.opts.map((o, oid) => `<label style="display:block;"><input type="radio" name="q${idx}" value="${oid}"> ${o}</label>`).join('')}
+                </div>`;
+            });
 
-</script>
+            document.getElementById('quiz-submit').addEventListener('click', () => {
+                let score = 0;
+                QUIZ.forEach((q, idx) => {
+                    const sel = document.querySelector(`input[name="q${idx}"]:checked`);
+                    if(sel && parseInt(sel.value) === q.a) score++;
+                });
+                const r = document.getElementById('quiz-result');
+                r.classList.remove('hidden');
+                r.innerHTML = `You scored ${score} / ${QUIZ.length}.`;
+                r.className = score > 3 ? 'feedback success' : 'feedback error';
+            });
+        }
+
+        // --- LAB 3: SIMULATION ENGINE ---
+        let simInterval = null;
+        let nodes = []; // { id, state: 'healthy'|'infected'|'compromised', subnet: 'A'|'B' }
+
+        function initSim() {
+            // Setup Grid
+            const grid = document.getElementById('sim-grid');
+            grid.innerHTML = '';
+            nodes = [];
+            
+            // Check if we have persisted nodes
+            const hasPersisted = state.simData && state.simData.nodes && state.simData.nodes.length === 20;
+
+            for(let i=0; i<20; i++) {
+                const subnet = i < 10 ? 'A' : 'B';
+                // Initialize default or restore from persistence
+                let nState = 'healthy';
+                let nTime = 0;
+                
+                if (hasPersisted) {
+                    nState = state.simData.nodes[i].state;
+                    nTime = state.simData.nodes[i].infectedTime;
+                }
+
+                nodes.push({ id: i, state: nState, subnet: subnet, infectedTime: nTime });
+
+                const n = document.createElement('div');
+                n.className = `node segment-${subnet.toLowerCase()} ${nState}`; // Apply persisted class
+                n.dataset.id = i;
+                n.id = `node-${i}`;
+                n.title = `Node ${i} (Subnet ${subnet})`;
+                n.innerHTML = `<span class="sr-only">Node ${i} ${nState}</span>`; 
+                grid.appendChild(n);
+            }
+
+            // Restore simulation checkboxes
+            if(state.simData) {
+                document.getElementById('sim-scenario').value = state.simData.scenario;
+                document.getElementById('sim-patch').checked = state.simData.patch;
+                document.getElementById('sim-seg').checked = state.simData.seg;
+                document.getElementById('sim-mfa').checked = state.simData.mfa;
+                document.getElementById('sim-backup').checked = state.simData.backup;
+            }
+
+            updateVis(); // Ensure UI stats match restored data
+            
+            const btn = document.getElementById('sim-start');
+            // Remove old listener to prevent duplicates if init called multiple times
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', toggleSim);
+            
+            document.getElementById('sim-reset').addEventListener('click', resetSim);
+        }
+
+        function toggleSim() {
+            const btn = document.getElementById('sim-start');
+            if (simInterval) {
+                // Pause
+                clearInterval(simInterval);
+                simInterval = null;
+                btn.innerText = "Resume Simulation";
+                btn.classList.remove('btn-outline');
+            } else {
+                // Start
+                btn.innerText = "Pause Simulation";
+                btn.classList.add('btn-outline');
+                runSimTick(); // run once immediately
+                simInterval = setInterval(runSimTick, 1500); // 1.5s per tick
+            }
+        }
+
+        function resetSim() {
+            if(simInterval) clearInterval(simInterval);
+            simInterval = null;
+            document.getElementById('sim-start').innerText = "Start Simulation";
+            document.getElementById('sim-start').classList.remove('btn-outline');
+            
+            // Clear internal and visual state
+            nodes.forEach(n => { n.state = 'healthy'; n.infectedTime = 0; });
+            
+            // Clear persisted sim state specifically
+            state.simData.nodes = nodes;
+            saveState();
+
+            updateVis();
+            log("Simulation reset.");
+        }
+
+        function log(msg) {
+            const c = document.getElementById('sim-console');
+            c.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            c.scrollTop = c.scrollHeight;
+        }
+
+        function updateVis() {
+            let inf = 0, comp = 0;
+            nodes.forEach(n => {
+                const el = document.getElementById(`node-${n.id}`);
+                el.className = `node segment-${n.subnet.toLowerCase()} ${n.state}`;
+                if(n.state !== 'healthy') inf++;
+                if(n.state === 'compromised') comp++;
+            });
+            document.getElementById('sim-stats').innerText = `Nodes: 20 | Infected: ${inf} | Compromised: ${comp}`;
+        }
+
+        function runSimTick() {
+            const config = {
+                scenario: document.getElementById('sim-scenario').value,
+                patch: document.getElementById('sim-patch').checked,
+                seg: document.getElementById('sim-seg').checked,
+                mfa: document.getElementById('sim-mfa').checked,
+                backup: document.getElementById('sim-backup').checked
+            };
+
+            // Seed if grid is entirely healthy
+            if(nodes.every(n => n.state === 'healthy')) {
+                log(`Starting ${config.scenario.toUpperCase()} scenario...`);
+                
+                if(config.scenario === 'supply') {
+                    // Seed in Subnet A (0) AND Subnet B (15) for realistic supply chain simulation
+                    nodes[0].state = 'infected'; 
+                    nodes[15].state = 'infected';
+                    log("Supply chain compromise initiated: Nodes 0 (Subnet A) and 15 (Subnet B) infected.");
+                } else {
+                    nodes[0].state = 'infected';
+                    log("Patient Zero infected at Node 0.");
+                }
+                updateVis();
+                return;
+            }
+
+            // Propagation Rules
+            let changes = [];
+            
+            nodes.forEach(n => {
+                if (n.state === 'infected') {
+                    // Progress to Compromised?
+                    n.infectedTime++;
+                    if(n.infectedTime > 2) changes.push({id: n.id, to: 'compromised'});
+
+                    // Spread Logic
+                    const neighbors = getNeighbors(n.id);
+                    neighbors.forEach(nid => {
+                        const neighbor = nodes[nid];
+                        if (neighbor.state === 'healthy') {
+                            let prob = 0;
+                            
+                            // Base Probabilities
+                            if (config.scenario === 'worm') prob = 0.8;
+                            if (config.scenario === 'supply') prob = 0.3; // slower lateral
+                            if (config.scenario === 'cred') prob = 0.6;
+
+                            // Controls Modifiers
+                            if (config.patch && config.scenario === 'worm') prob = 0.05; // Patching kills worm
+                            if (config.mfa && config.scenario === 'cred') prob = 0.0; // MFA stops cred movement
+                            
+                            // Segmentation Logic
+                            if (n.subnet !== neighbor.subnet) {
+                                if (config.seg) prob = prob * 0.1; // drastic reduction
+                            }
+
+                            if (Math.random() < prob) {
+                                changes.push({id: nid, to: 'infected'});
+                                log(`Node ${n.id} infected Node ${nid}`);
+                            }
+                        }
+                    });
+                }
+            });
+
+            if (changes.length > 0) {
+                changes.forEach(c => {
+                    nodes[c.id].state = c.to;
+                    if(c.to === 'infected') nodes[c.id].infectedTime = 0;
+                });
+            } else {
+                // If no changes and everyone infected/compromised, maybe stop?
+                // keeping running for now.
+            }
+
+            updateVis();
+            
+            // Save settings & nodes state
+            state.simData = { ...config, nodes: nodes };
+            saveState();
+        }
+
+        function getNeighbors(id) {
+            // Grid 5 columns (0-4, 5-9...)
+            // 20 nodes total: rows 0,1=SubnetA; rows 2,3=SubnetB
+            const neighbors = [];
+            const col = id % 5;
+            const row = Math.floor(id / 5);
+            
+            if (col > 0) neighbors.push(id - 1);
+            if (col < 4) neighbors.push(id + 1);
+            if (row > 0) neighbors.push(id - 5);
+            if (row < 3) neighbors.push(id + 5);
+            
+            return neighbors;
+        }
+
+    </script>
 </body>
 </html>
