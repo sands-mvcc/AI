@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Class: Timed History Reveal</title>
+    <title>AI Class: Team Challenge</title>
     <style>
         :root {
             --brand-green: #008000;
@@ -19,12 +19,19 @@
             padding: 20px;
         }
 
-        h1 { color: var(--brand-green); border-bottom: 3px solid var(--brand-black); margin-bottom: 10px; }
+        .header-container { text-align: center; margin-bottom: 10px; }
+        h1 { color: var(--brand-green); margin-bottom: 5px; }
 
-        #score-board {
-            font-size: 1.5rem;
+        .stats-bar {
+            display: flex;
+            gap: 40px;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            padding: 10px 30px;
+            border-radius: 8px;
+            border: 2px solid var(--brand-black);
         }
 
         #game-wrapper {
@@ -35,11 +42,7 @@
             background-color: #eee;
         }
 
-        #target-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        #target-image { width: 100%; height: 100%; object-fit: contain; }
 
         #grid-overlay {
             position: absolute;
@@ -52,43 +55,46 @@
 
         .tile {
             background-color: var(--brand-green);
-            border: 0.5px solid rgba(255,255,255,0.3);
+            border: 0.5px solid rgba(255,255,255,0.2);
             transition: opacity 0.8s;
         }
 
         .revealed { opacity: 0; }
 
-        .ui-panel {
-            margin-top: 20px;
-            text-align: center;
-            width: 600px;
-        }
+        .ui-panel { margin-top: 20px; text-align: center; width: 600px; }
 
         input[type="text"] {
             padding: 12px;
-            width: 70%;
+            width: 60%;
             border: 3px solid var(--brand-black);
             font-size: 1.2rem;
-            outline-color: var(--brand-green);
         }
 
-        #feedback { 
-            margin-top: 10px; 
-            font-weight: bold; 
-            height: 25px; 
-            font-size: 1.1rem;
+        .btn-group { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
+
+        button {
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid black;
         }
 
-        .answer-reveal {
-            color: var(--brand-green);
-            font-style: italic;
-        }
+        .btn-next { background-color: var(--brand-green); color: white; }
+        .btn-end { background-color: #cc0000; color: white; }
+
+        #feedback { margin-top: 10px; font-weight: bold; height: 30px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <h1>History Reveal Challenge</h1>
-    <div id="score-board">Points: 48</div>
+    <div class="header-container">
+        <h1>History Reveal Challenge</h1>
+    </div>
+
+    <div class="stats-bar">
+        <div>Current Reveal: <span id="current-points">48</span></div>
+        <div>Total Team Score: <span id="total-score">0</span></div>
+    </div>
     
     <div id="game-wrapper">
         <img id="target-image" src="" alt="Game Image">
@@ -97,11 +103,16 @@
 
     <div class="ui-panel">
         <div id="feedback"></div>
-        <input type="text" id="guessInput" placeholder="Who or what is this?" autocomplete="off">
+        <input type="text" id="guessInput" placeholder="Type answer & press Enter" autocomplete="off">
+        
+        <div class="btn-group">
+            <button class="btn-next" onclick="skipToNext()">Skip / Next Image</button>
+            <button class="btn-end" onclick="endGame()">End Session</button>
+        </div>
     </div>
 
     <script>
-        const gameData = [
+        const originalData = [
             { src: 'file01.jpg', answer: 'Cleopatra' },
             { src: 'file02.png', answer: 'Great Wall of China' },
             { src: 'file03.jpg', answer: 'Isaac Newton' },
@@ -120,36 +131,37 @@
             { src: 'file16.jpeg', answer: 'Genghis Khan' }
         ];
 
-        let currentLevel = 0;
+        let availableImages = [...originalData];
+        let currentItem = null;
         let tiles = [];
-        let score = 48;
+        let currentLevelPoints = 48;
+        let totalTeamScore = 0;
         let gameTimer;
 
-        const imageEl = document.getElementById('target-image');
-        const gridEl = document.getElementById('grid-overlay');
-        const guessInput = document.getElementById('guessInput');
-        const feedback = document.getElementById('feedback');
-        const scoreBoard = document.getElementById('score-board');
-
-        function initLevel() {
-            if (currentLevel >= gameData.length) {
-                feedback.innerHTML = "🏆 Course Completed!";
-                clearInterval(gameTimer);
+        function initRandomLevel() {
+            if (availableImages.length === 0) {
+                endGame();
                 return;
             }
-            
-            // Reset state
+
             clearInterval(gameTimer);
-            score = 48;
-            updateScoreBoard();
-            imageEl.src = gameData[currentLevel].src;
-            guessInput.value = '';
-            guessInput.disabled = false;
-            feedback.innerHTML = '';
+            
+            // Pick a random image
+            const randomIndex = Math.floor(Math.random() * availableImages.length);
+            currentItem = availableImages.splice(randomIndex, 1)[0];
+
+            // Reset UI
+            currentLevelPoints = 48;
+            updateStats();
+            document.getElementById('target-image').src = currentItem.src;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessInput').disabled = false;
+            document.getElementById('feedback').innerHTML = '';
+            
+            const gridEl = document.getElementById('grid-overlay');
             gridEl.innerHTML = '';
             tiles = [];
 
-            // Create 48 tiles
             for (let i = 0; i < 48; i++) {
                 const tile = document.createElement('div');
                 tile.classList.add('tile');
@@ -157,69 +169,70 @@
                 tiles.push(tile);
             }
 
-            // Start the 2-second timer
             gameTimer = setInterval(gameTick, 2000);
         }
 
         function gameTick() {
-            if (score > 0) {
+            if (currentLevelPoints > 0) {
                 revealRandomTile();
-                score -= 2;
-                updateScoreBoard();
+                currentLevelPoints -= 2;
+                updateStats();
             } else {
-                // Out of points
                 clearInterval(gameTimer);
-                revealAllTiles();
-                guessInput.disabled = true;
-                feedback.innerHTML = `Time's up! The answer was <span class="answer-reveal">${gameData[currentLevel].answer}</span>. Next in 4s...`;
-                setTimeout(nextLevel, 4000);
+                revealAll();
+                document.getElementById('feedback').innerHTML = `Time's up! It was <b>${currentItem.answer}</b>`;
+                document.getElementById('guessInput').disabled = true;
             }
         }
 
         function revealRandomTile() {
-            const hiddenTiles = tiles.filter(t => !t.classList.contains('revealed'));
-            if (hiddenTiles.length > 0) {
-                const rand = Math.floor(Math.random() * hiddenTiles.length);
-                hiddenTiles[rand].classList.add('revealed');
+            const hidden = tiles.filter(t => !t.classList.contains('revealed'));
+            if (hidden.length > 0) {
+                hidden[Math.floor(Math.random() * hidden.length)].classList.add('revealed');
             }
         }
 
-        function revealAllTiles() {
-            tiles.forEach(t => t.classList.add('revealed'));
-        }
+        function revealAll() { tiles.forEach(t => t.classList.add('revealed')); }
 
-        function updateScoreBoard() {
-            scoreBoard.textContent = `Points: ${score}`;
+        function updateStats() {
+            document.getElementById('current-points').textContent = currentLevelPoints;
+            document.getElementById('total-score').textContent = totalTeamScore;
         }
 
         function checkAnswer() {
-            const userGuess = guessInput.value.trim().toLowerCase();
-            const correctAnswer = gameData[currentLevel].answer.toLowerCase();
-
-            if (userGuess === correctAnswer) {
-                clearInterval(gameTimer); // Stop timer
-                revealAllTiles();
-                feedback.style.color = "green";
-                feedback.textContent = `Correct! Score: ${score}`;
-                setTimeout(nextLevel, 2000);
+            const guess = document.getElementById('guessInput').value.trim().toLowerCase();
+            if (guess === currentItem.answer.toLowerCase()) {
+                clearInterval(gameTimer);
+                revealAll();
+                totalTeamScore += currentLevelPoints;
+                updateStats();
+                document.getElementById('feedback').style.color = "green";
+                document.getElementById('feedback').textContent = `CORRECT! +${currentLevelPoints} Points`;
+                document.getElementById('guessInput').disabled = true;
+                setTimeout(initRandomLevel, 2500);
             } else {
-                feedback.style.color = "red";
-                feedback.textContent = "Incorrect, keep watching...";
-                setTimeout(() => { feedback.textContent = ''; }, 1000);
+                document.getElementById('feedback').style.color = "red";
+                document.getElementById('feedback').textContent = "Try again!";
+                setTimeout(() => { document.getElementById('feedback').textContent = ''; }, 800);
             }
         }
 
-        function nextLevel() {
-            currentLevel++;
-            initLevel();
-            guessInput.focus();
+        function skipToNext() { initRandomLevel(); }
+
+        function endGame() {
+            clearInterval(gameTimer);
+            revealAll();
+            const container = document.querySelector('.ui-panel');
+            container.innerHTML = `<h2 style="color:var(--brand-green)">Final Team Score: ${totalTeamScore}</h2>
+                                   <button onclick="location.reload()">Restart Game</button>`;
+            document.getElementById('feedback').textContent = "Game Over - Session Ended.";
         }
 
-        guessInput.addEventListener("keypress", (e) => {
+        document.getElementById('guessInput').addEventListener("keypress", (e) => {
             if (e.key === "Enter") checkAnswer();
         });
 
-        initLevel();
+        initRandomLevel();
     </script>
 </body>
 </html>
