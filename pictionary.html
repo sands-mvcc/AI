@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Pictionary for Teachers</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0; /* Light grey background */
+            color: #333;
+        }
+
+        #game-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 900px;
+            width: 90%;
+            transition: all 0.3s ease-in-out;
+            border: 2px solid #ddd;
+        }
+
+        h1 {
+            color: #0056b3;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        #canvas-area {
+            position: relative;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures drawing stays within bounds */
+        }
+
+        canvas {
+            border: 2px solid #a0a0a0;
+            background-color: white; /* Explicit white background for canvas */
+            cursor: default;
+            display: block; /* Remove extra space below canvas */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        #controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #guess-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        #guess-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #guess-input:focus {
+            border-color: #007bff;
+        }
+
+        #message-area {
+            min-height: 40px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+            white-space: pre-wrap; /* Allows multiline messages */
+        }
+
+        #timer-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #dc3545; /* Red for timer */
+            margin-bottom: 15px;
+            background-color: #ffebeb;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #dc3545;
+        }
+
+        #score-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #28a745; /* Green for score */
+            margin-top: 15px;
+            background-color: #ebffeb;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #28a745;
+        }
+
+        .correct-guess {
+            color: #28a745 !important; /* Green for correct message */
+        }
+
+        .incorrect-guess {
+            color: #dc3545 !important; /* Red for incorrect message */
+        }
+
+        .info-message {
+            color: #007bff !important; /* Blue for info messages */
+        }
+
+        .highlight-text {
+            color: #ffc107; /* Yellow for specific text */
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>History Pictionary Challenge</h1>
+        <div id="canvas-area">
+            <canvas id="drawingCanvas" width="600" height="400"></canvas>
+        </div>
+        <div id="timer-display">Time: 60</div>
+        <div id="message-area">Click "Start Game" to begin!</div>
+        <div id="controls">
+            <button id="startGameBtn">Start Game</button>
+            <button id="clearCanvasBtn" disabled>Clear Drawing</button>
+            <button id="giveUpBtn" disabled>Give Up (Reveal Answer)</button>
+        </div>
+        <div id="guess-section">
+            <input type="text" id="guess-input" placeholder="What am I drawing?" disabled>
+            <button id="submitGuessBtn" disabled>Submit Guess</button>
+        </div>
+        <div id="score-display">Score: 0</div>
+    </div>
+
+    <script>
+        // --- Game Data ---
+        const historyDrawings = [
+            {
+                answer: "Pyramids of Giza",
+                drawing: [
+                    // Coordinates for a pyramid (simplified)
+                    {x: 100, y: 350, type: 'start'}, {x: 300, y: 150, type: 'draw'}, {x: 500, y: 350, type: 'draw'}, {x: 100, y: 350, type: 'draw'}, // Base pyramid
+                    {x: 150, y: 350, type: 'start'}, {x: 300, y: 180, type: 'draw'}, // Inner line 1
+                    {x: 200, y: 350, type: 'start'}, {x: 300, y: 200, type: 'draw'}, // Inner line 2
+                ]
+            },
+            {
+                answer: "Great Wall of China",
+                drawing: [
+                    {x: 50, y: 300, type: 'start'}, {x: 150, y: 250, type: 'draw'}, {x: 250, y: 280, type: 'draw'}, {x: 350, y: 230, type: 'draw'}, {x: 450, y: 260, type: 'draw'}, {x: 550, y: 200, type: 'draw'},
+                    {x: 50, y: 310, type: 'start'}, {x: 150, y: 260, type: 'draw'}, {x: 250, y: 290, type: 'draw'}, {x: 350, y: 240, type: 'draw'}, {x: 450, y: 270, type: 'draw'}, {x: 550, y: 210, type: 'draw'},
+                    {x: 100, y: 280, type: 'start'}, {x: 100, y: 290, type: 'draw'}, {x: 100, y: 280, type: 'start', skip: true}, // tower line
+                    {x: 200, y: 260, type: 'start'}, {x: 200, y: 270, type: 'draw'}, {x: 200, y: 260, type: 'start', skip: true}, // tower line
+                ]
+            },
+            {
+                answer: "Roman Colosseum",
+                drawing: [
+                    {x: 150, y: 300, type: 'start'}, {x: 450, y: 300, type: 'draw'}, // Base arc bottom
+                    {x: 150, y: 150, type: 'start'}, {x: 450, y: 150, type: 'draw'}, // Base arc top
+                    {x: 150, y: 300, type: 'start'}, {x: 150, y: 150, type: 'draw'}, // Left side
+                    {x: 450, y: 300, type: 'start'}, {x: 450, y: 150, type: 'draw'}, // Right side
+
+                    // Arches (simplified)
+                    {x: 170, y: 290, type: 'start'}, {x: 170, y: 160, type: 'draw'}, // Left arch 1
+                    {x: 220, y: 290, type: 'start'}, {x: 220, y: 160, type: 'draw'},
+                    {x: 270, y: 290, type: 'start'}, {x: 270, y: 160, type: 'draw'},
+                    {x: 320, y: 290, type: 'start'}, {x: 320, y: 160, type: 'draw'},
+                    {x: 370, y: 290, type: 'start'}, {x: 370, y: 160, type: 'draw'},
+                    {x: 420, y: 290, type: 'start'}, {x: 420, y: 160, type: 'draw'},
+                ]
+            },
+            {
+                answer: "Liberty Bell",
+                drawing: [
+                    {x: 250, y: 150, type: 'start'}, {x: 350, y: 150, type: 'draw'}, // Top line
+                    {x: 200, y: 200, type: 'start'}, {x: 400, y: 200, type: 'draw'}, // Mid line
+                    {x: 180, y: 250, type: 'start'}, {x: 420, y: 250, type: 'draw'}, // Lower line
+                    {x: 170, y: 300, type: 'start'}, {x: 430, y: 300, type: 'draw'}, // Bottom line
+
+                    {x: 250, y: 150, type: 'start'}, {x: 200, y: 200, type: 'draw'}, {x: 180, y: 250, type: 'draw'}, {x: 170, y: 300, type: 'draw'}, // Left side
+                    {x: 350, y: 150, type: 'start'}, {x: 400, y: 200, type: 'draw'}, {x: 420, y: 250, type: 'draw'}, {x: 430, y: 300, type: 'draw'}, // Right side
+
+                    // Crack
+                    {x: 300, y: 200, type: 'start'}, {x: 305, y: 220, type: 'draw'}, {x: 300, y: 240, type: 'draw'}, {x: 305, y: 260, type: 'draw'}, {x: 300, y: 280, type: 'draw'},
+                ]
+            },
+            {
+                answer: "Apollo 11 Moon Landing",
+                drawing: [
+                    // Moon surface
+                    {x: 50, y: 350, type: 'start'}, {x: 550, y: 350, type: 'draw'}, // Horizon
+                    {x: 100, y: 350, type: 'start'}, {x: 120, y: 370, type: 'draw'}, {x: 150, y: 360, type: 'draw'}, // Craters
+                    {x: 400, y: 350, type: 'start'}, {x: 420, y: 365, type: 'draw'}, {x: 450, y: 355, type: 'draw'},
+
+                    // Lunar Module base
+                    {x: 250, y: 300, type: 'start'}, {x: 350, y: 300, type: 'draw'}, {x: 380, y: 330, type: 'draw'}, {x: 220, y: 330, type: 'draw'}, {x: 250, y: 300, type: 'draw'},
+                    // Module body
+                    {x: 280, y: 250, type: 'start'}, {x: 320, y: 250, type: 'draw'}, {x: 320, y: 300, type: 'draw'}, {x: 280, y: 300, type: 'draw'}, {x: 280, y: 250, type: 'draw'},
+                    // Legs
+                    {x: 260, y: 300, type: 'start'}, {x: 240, y: 340, type: 'draw'},
+                    {x: 340, y: 300, type: 'start'}, {x: 360, y: 340, type: 'draw'},
+                ]
+            },
+             {
+                answer: "The Renaissance",
+                drawing: [
+                    // Outline of a classical archway (representing rebirth/classical influence)
+                    {x: 200, y: 350, type: 'start'}, {x: 200, y: 200, type: 'draw'},
+                    {x: 400, y: 350, type: 'start'}, {x: 400, y: 200, type: 'draw'},
+                    {x: 200, y: 200, type: 'start'}, {x: 300, y: 150, type: 'draw'}, {x: 400, y: 200, type: 'draw'}, // Arch top
+
+                    // Simplified 'Mona Lisa' smile or eye
+                    {x: 300, y: 250, type: 'start', color: '#8B4513', thickness: 3}, {x: 320, y: 255, type: 'draw'}, {x: 340, y: 250, type: 'draw'}, // Smile
+                    {x: 300, y: 220, type: 'start', color: '#8B4513', thickness: 2}, {x: 310, y: 225, type: 'draw'}, {x: 320, y: 220, type: 'draw'}, // Eye
+                    {x: 300, y: 250, type: 'start', color: 'black', thickness: 2}, // Reset to default
+                ]
+            },
+            {
+                answer: "World War II",
+                drawing: [
+                    // Bomb/Explosion Cloud
+                    {x: 250, y: 200, type: 'start'}, {x: 270, y: 180, type: 'draw'}, {x: 300, y: 190, type: 'draw'}, {x: 330, y: 180, type: 'draw'}, {x: 350, y: 200, type: 'draw'},
+                    {x: 350, y: 220, type: 'draw'}, {x: 330, y: 240, type: 'draw'}, {x: 300, y: 230, type: 'draw'}, {x: 270, y: 240, type: 'draw'}, {x: 250, y: 220, type: 'draw'}, {x: 250, y: 200, type: 'draw'},
+                    // Small plane shape
+                    {x: 100, y: 100, type: 'start'}, {x: 150, y: 100, type: 'draw'}, {x: 140, y: 110, type: 'draw'}, {x: 110, y: 110, type: 'draw'}, {x: 100, y: 100, type: 'draw'},
+                    {x: 150, y: 100, type: 'start'}, {x: 170, y: 95, type: 'draw'}, // Tail fin
+                    {x: 110, y: 110, type: 'start'}, {x: 120, y: 125, type: 'draw'}, {x: 100, y: 120, type: 'draw'}, // Wing
+                ]
+            }
+        ];
+
+        // --- Canvas Setup ---
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+
+        // --- Game State Variables ---
+        let currentDrawingIndex = -1;
+        let currentDrawingData = [];
+        let drawingInterval;
+        let gameTimer;
+        let timeLeft = 60;
+        let score = 0;
+        let gameActive = false;
+        let drawingInProgress = false;
+
+        // --- DOM Elements ---
+        const startGameBtn = document.getElementById('startGameBtn');
+        const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+        const giveUpBtn = document.getElementById('giveUpBtn');
+        const guessInput = document.getElementById('guess-input');
+        const submitGuessBtn = document.getElementById('submitGuessBtn');
+        const messageArea = document.getElementById('message-area');
+        const timerDisplay = document.getElementById('timer-display');
+        const scoreDisplay = document.getElementById('score-display');
+
+        // --- Functions ---
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath(); // Reset path after clearing
+        }
+
+        function displayMessage(msg, type = 'info') {
+            messageArea.textContent = msg;
+            messageArea.className = ''; // Clear previous classes
+            if (type === 'correct') {
+                messageArea.classList.add('correct-guess');
+            } else if (type === 'incorrect') {
+                messageArea.classList.add('incorrect-guess');
+            } else {
+                messageArea.classList.add('info-message');
+            }
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = `Time: ${timeLeft}`;
+        }
+
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        function resetGame() {
+            clearInterval(drawingInterval);
+            clearInterval(gameTimer);
+            clearCanvas();
+            currentDrawingIndex = -1;
+            currentDrawingData = [];
+            timeLeft = 60;
+            score = 0;
+            gameActive = false;
+            drawingInProgress = false;
+            displayMessage('Click "Start Game" to begin!');
+            updateTimerDisplay();
+            updateScoreDisplay();
+            guessInput.value = '';
+            toggleControls(false);
+        }
+
+        function toggleControls(gameOn) {
+            startGameBtn.disabled = gameOn;
+            clearCanvasBtn.disabled = !gameOn;
+            giveUpBtn.disabled = !gameOn;
+            guessInput.disabled = !gameOn;
+            submitGuessBtn.disabled = !gameOn;
+        }
+
+        function startGame() {
+            resetGame(); // Ensure clean slate
+            gameActive = true;
+            toggleControls(true);
+            startGameBtn.textContent = "Next Round"; // Change button text after first start
+
+            displayMessage('A new drawing is starting...', 'info');
+            clearCanvas();
+            currentDrawingIndex = Math.floor(Math.random() * historyDrawings.length);
+            currentDrawingData = historyDrawings[currentDrawingIndex].drawing;
+            drawingInProgress = true;
+
+            let pathIndex = 0;
+            const drawSpeed = 50; // Milliseconds between drawing segments
+
+            drawingInterval = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(drawingInterval);
+                    return;
+                }
+
+                if (pathIndex >= currentDrawingData.length) {
+                    clearInterval(drawingInterval);
+                    displayMessage('Drawing complete! Time to guess!', 'info');
+                    drawingInProgress = false;
+                    startTimer();
+                    return;
+                }
+
+                const segment = currentDrawingData[pathIndex];
+                const prevSegment = currentDrawingData[pathIndex - 1];
+
+                // Override drawing style if specified in data
+                ctx.strokeStyle = segment.color || 'black';
+                ctx.lineWidth = segment.thickness || 4;
+
+
+                if (segment.type === 'start' || (prevSegment && prevSegment.type === 'start')) {
+                    if (!segment.skip) { // Allows "skip" to just set context without drawing a dot
+                        ctx.beginPath();
+                        ctx.moveTo(segment.x, segment.y);
+                        // Draw a dot for the start point if not skipping, makes it visible
+                        ctx.arc(segment.x, segment.y, ctx.lineWidth / 2, 0, Math.PI * 2, true);
+                        ctx.fill();
+                    } else {
+                         ctx.beginPath(); // Just start a new path
+                         ctx.moveTo(segment.x, segment.y);
+                    }
+                } else if (segment.type === 'draw') {
+                    ctx.lineTo(segment.x, segment.y);
+                    ctx.stroke();
+                }
+
+                pathIndex++;
+            }, drawSpeed);
+        }
+
+        function startTimer() {
+            timeLeft = 60; // Reset timer for each round
+            updateTimerDisplay();
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimer);
+                    endRound(false); // Player ran out of time
+                }
+            }, 1000);
+        }
+
+        function submitGuess() {
+            if (!gameActive || drawingInProgress) {
+                displayMessage("Wait for the drawing to finish!", 'info');
+                return;
+            }
+
+            const playerGuess = guessInput.value.trim().toLowerCase();
+            const correctAnswer = historyDrawings[currentDrawingIndex].answer.toLowerCase();
+
+            if (playerGuess === correctAnswer) {
+                score += timeLeft; // Award points based on time left
+                updateScoreDisplay();
+                displayMessage(`Correct! You guessed "${historyDrawings[currentDrawingIndex].answer}"! Score: +${timeLeft}`, 'correct');
+                endRound(true);
+            } else {
+                displayMessage(`Incorrect guess: "${playerGuess}". Try again!`, 'incorrect');
+                guessInput.value = ''; // Clear input for another guess
+            }
+        }
+
+        function giveUp() {
+            endRound(false); // Player gave up
+        }
+
+        function endRound(guessedCorrectly) {
+            clearInterval(drawingInterval);
+            clearInterval(gameTimer);
+            gameActive = false;
+            drawingInProgress = false;
+            toggleControls(false); // Disable controls until next round starts
+
+            if (!guessedCorrectly) {
+                displayMessage(`Time's up! Or you gave up! The answer was: "${historyDrawings[currentDrawingIndex].answer}"`, 'incorrect');
+            }
+
+            startGameBtn.disabled = false; // Allow starting next round
+            startGameBtn.textContent = "Next Round";
+            guessInput.value = ''; // Clear input field
+        }
+
+        // --- Event Listeners ---
+        startGameBtn.addEventListener('click', startGame);
+        clearCanvasBtn.addEventListener('click', clearCanvas);
+        giveUpBtn.addEventListener('click', giveUp);
+        submitGuessBtn.addEventListener('click', submitGuess);
+        guessInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                submitGuess();
+            }
+        });
+
+        // Initial setup
+        resetGame();
+        displayMessage('Welcome to History Pictionary! Press "Start Game" to draw the first historical event or figure. Guess correctly for points!', 'info');
+
+        // Initial image generation (example, this is where a real AI would draw)
+        // For now, we'll just have the instructions.
+    </script>
+</body>
+</html>
