@@ -3,29 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History Reveal Challenge</title>
+    <title>AI Class: Timed History Reveal</title>
     <style>
         :root {
             --brand-green: #008000;
+            --brand-black: #000000;
         }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: white;
-            color: black;
+            color: var(--brand-black);
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
         }
 
-        h1 { color: var(--brand-green); border-bottom: 3px solid black; }
+        h1 { color: var(--brand-green); border-bottom: 3px solid var(--brand-black); margin-bottom: 10px; }
+
+        #score-board {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
         #game-wrapper {
             position: relative;
             width: 600px;
             height: 400px;
-            border: 4px solid black;
-            background-color: #000;
+            border: 4px solid var(--brand-black);
+            background-color: #eee;
         }
 
         #target-image {
@@ -45,8 +52,8 @@
 
         .tile {
             background-color: var(--brand-green);
-            border: 1px solid black;
-            transition: opacity 0.4s;
+            border: 0.5px solid rgba(255,255,255,0.3);
+            transition: opacity 0.8s;
         }
 
         .revealed { opacity: 0; }
@@ -58,29 +65,30 @@
         }
 
         input[type="text"] {
-            padding: 10px;
-            width: 60%;
-            border: 2px solid black;
+            padding: 12px;
+            width: 70%;
+            border: 3px solid var(--brand-black);
+            font-size: 1.2rem;
+            outline-color: var(--brand-green);
+        }
+
+        #feedback { 
+            margin-top: 10px; 
+            font-weight: bold; 
+            height: 25px; 
             font-size: 1.1rem;
         }
 
-        button {
-            padding: 10px 20px;
-            background-color: black;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
+        .answer-reveal {
+            color: var(--brand-green);
+            font-style: italic;
         }
-
-        button:hover { background-color: var(--brand-green); }
-
-        #feedback { margin-top: 10px; font-weight: bold; height: 20px; }
     </style>
 </head>
 <body>
 
-    <h1>History Reveal Game</h1>
+    <h1>History Reveal Challenge</h1>
+    <div id="score-board">Points: 48</div>
     
     <div id="game-wrapper">
         <img id="target-image" src="" alt="Game Image">
@@ -89,15 +97,10 @@
 
     <div class="ui-panel">
         <div id="feedback"></div>
-        <p>Type your guess below:</p>
-        <input type="text" id="guessInput" placeholder="Who or what is this?">
-        <br><br>
-        <button onclick="revealRandomTile()">Reveal More</button>
-        <button onclick="checkAnswer()">Submit Guess</button>
+        <input type="text" id="guessInput" placeholder="Who or what is this?" autocomplete="off">
     </div>
 
     <script>
-        // Your data list
         const gameData = [
             { src: 'file01.jpg', answer: 'Cleopatra' },
             { src: 'file02.png', answer: 'Great Wall of China' },
@@ -119,31 +122,57 @@
 
         let currentLevel = 0;
         let tiles = [];
+        let score = 48;
+        let gameTimer;
 
         const imageEl = document.getElementById('target-image');
         const gridEl = document.getElementById('grid-overlay');
         const guessInput = document.getElementById('guessInput');
         const feedback = document.getElementById('feedback');
+        const scoreBoard = document.getElementById('score-board');
 
         function initLevel() {
             if (currentLevel >= gameData.length) {
-                alert("You've completed all levels!");
+                feedback.innerHTML = "🏆 Course Completed!";
+                clearInterval(gameTimer);
                 return;
             }
             
-            // Set image and clear input
+            // Reset state
+            clearInterval(gameTimer);
+            score = 48;
+            updateScoreBoard();
             imageEl.src = gameData[currentLevel].src;
             guessInput.value = '';
-            feedback.textContent = '';
+            guessInput.disabled = false;
+            feedback.innerHTML = '';
             gridEl.innerHTML = '';
             tiles = [];
 
-            // Create 48 tiles (8x6 grid)
+            // Create 48 tiles
             for (let i = 0; i < 48; i++) {
                 const tile = document.createElement('div');
                 tile.classList.add('tile');
                 gridEl.appendChild(tile);
                 tiles.push(tile);
+            }
+
+            // Start the 2-second timer
+            gameTimer = setInterval(gameTick, 2000);
+        }
+
+        function gameTick() {
+            if (score > 0) {
+                revealRandomTile();
+                score -= 2;
+                updateScoreBoard();
+            } else {
+                // Out of points
+                clearInterval(gameTimer);
+                revealAllTiles();
+                guessInput.disabled = true;
+                feedback.innerHTML = `Time's up! The answer was <span class="answer-reveal">${gameData[currentLevel].answer}</span>. Next in 4s...`;
+                setTimeout(nextLevel, 4000);
             }
         }
 
@@ -155,31 +184,41 @@
             }
         }
 
+        function revealAllTiles() {
+            tiles.forEach(t => t.classList.add('revealed'));
+        }
+
+        function updateScoreBoard() {
+            scoreBoard.textContent = `Points: ${score}`;
+        }
+
         function checkAnswer() {
             const userGuess = guessInput.value.trim().toLowerCase();
             const correctAnswer = gameData[currentLevel].answer.toLowerCase();
 
             if (userGuess === correctAnswer) {
+                clearInterval(gameTimer); // Stop timer
+                revealAllTiles();
                 feedback.style.color = "green";
-                feedback.textContent = "Correct! Loading next...";
-                setTimeout(() => {
-                    currentLevel++;
-                    initLevel();
-                }, 1500);
+                feedback.textContent = `Correct! Score: ${score}`;
+                setTimeout(nextLevel, 2000);
             } else {
                 feedback.style.color = "red";
-                feedback.textContent = "Not quite. Try again or reveal more!";
+                feedback.textContent = "Incorrect, keep watching...";
+                setTimeout(() => { feedback.textContent = ''; }, 1000);
             }
         }
 
-        // Allow "Enter" key to submit
-        guessInput.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                checkAnswer();
-            }
+        function nextLevel() {
+            currentLevel++;
+            initLevel();
+            guessInput.focus();
+        }
+
+        guessInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") checkAnswer();
         });
 
-        // Start the game
         initLevel();
     </script>
 </body>
