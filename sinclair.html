@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCYTE Externship Program Dashboard</title>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --accent-black: #1a1a1a;
+            --bg-white: #ffffff;
+            --light-gray: #f4f4f4;
+            --text-gray: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-white);
+            color: var(--accent-black);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--accent-black);
+            color: var(--bg-white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-green);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Dashboard Overview Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            border: 2px solid var(--primary-green);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--light-gray);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            display: block;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--accent-black);
+            margin-bottom: 20px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            padding: 15px 25px;
+            border: none;
+            background: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: #333;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-green);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-top: none;
+            background: white;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Content Styling */
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .takeaway-item {
+            border-left: 4px solid var(--primary-green);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .success-story {
+            background: var(--light-gray);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .list-container {
+            column-count: 2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>NCYTE Externship Program Dashboard</h1>
+    [cite_start]<p>National Cybersecurity Training & Education Center [cite: 2]</p>
+</header>
+
+<div class="container">
+    <section id="overview">
+        <h2 style="border-bottom: 2px solid var(--primary-green); padding-bottom: 10px;">Program Overview</h2>
+        [cite_start]<p>The Externship Program connects educational institutions and industry partners to provide hands-on, real-world experiences[cite: 5]. [cite_start]It fosters workforce readiness and builds critical relationships between education and industry[cite: 6].</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">39</span>
+                [cite_start]<span>Total Applicants [cite: 9]</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">10</span>
+                [cite_start]<span>Participants [cite: 10]</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">17</span>
+                [cite_start]<span>States (Applicants) [cite: 11]</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">7</span>
+                [cite_start]<span>States (Participants) [cite: 12]</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'takeaways')">Key Takeaways</button>
+        <button class="tab-btn" onclick="openTab(event, 'success')">Participant Success</button>
+        <button class="tab-btn" onclick="openTab(event, 'reach')">Geographic Reach</button>
+        <button class="tab-btn" onclick="openTab(event, 'schools')">Schools</button>
+        <button class="tab-btn" onclick="openTab(event, 'companies')">Companies</button>
+    </div>
+
+    <div id="takeaways" class="tab-content active">
+        <div class="takeaway-grid">
+            <div class="takeaway-item">
+                <h3>Workforce Readiness</h3>
+                [cite_start]<p>Blending technical learning with reasoning and ethical judgment[cite: 15]. [cite_start]Students apply concepts in real-world scenarios[cite: 16].</p>
+            </div>
+            <div class="takeaway-item">
+                <h3>Emerging Technologies</h3>
+                [cite_start]<p>Integrating AI-driven, automation, and cloud systems to ensure coursework reflects industry tools[cite: 19].</p>
+            </div>
+            <div class="takeaway-item">
+                <h3>Communication</h3>
+                [cite_start]<p>Highlighting that success depends on more than technical expertise, focusing on documentation and clear communication[cite: 21].</p>
+            </div>
+            <div class="takeaway-item">
+                <h3>Collaboration</h3>
+                [cite_start]<p>Building partnerships through guest lectures, mentors, and site visits[cite: 24, 25].</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="success" class="tab-content">
+        <div class="success-story">
+            <h3>Diego Tibaquira (Miami Dade College)</h3>
+            [cite_start]<p>Collaborated with <strong>Telefónica Tech Americas</strong> to bridge the gap between classroom and global operations[cite: 32, 33]. [cite_start]Developed a Canvas course focusing on professional skills and real-world certification outcomes[cite: 36].</p>
+        </div>
+        <div class="success-story">
+            <h3>Tony Hills (Northwest State Community College)</h3>
+            [cite_start]<p>Externed with <strong>North Star BlueScope Steel</strong>[cite: 40]. [cite_start]Gained experience in IT/OT integration and upgraded fault-tolerant fiber-optic communication systems in a steel mill environment[cite: 41, 43].</p>
+        </div>
+    </div>
+
+    <div id="reach" class="tab-content">
+        [cite_start]<h3>Participants and Partners represent 7 States[cite: 48]:</h3>
+        <ul style="column-count: 2;">
+            <li>Florida</li>
+            <li>Indiana</li>
+            <li>Louisiana</li>
+            <li>North Carolina</li>
+            <li>Ohio</li>
+            <li>Texas</li>
+            <li>Washington</li>
+        </ul>
+    </div>
+
+    <div id="schools" class="tab-content">
+        [cite_start]<h3>Participating Institutions [cite: 50-57]:</h3>
+        <div class="list-container">
+            <ul>
+                <li>Northwest Technical Community College</li>
+                <li>Forsyth Technical Community College</li>
+                <li>Ivy Tech Community College</li>
+                <li>Houston Community College</li>
+                <li>South Puget Sound Community College</li>
+                <li>Miami Dade College</li>
+                <li>Xavier University of Louisiana</li>
+                <li>Ohio Northern University</li>
+                <li>Sinclair Community College</li>
+                <li>Prince George's Community College</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="companies" class="tab-content">
+        [cite_start]<h3>Industry Partners [cite: 59-68]:</h3>
+        <div class="list-container">
+            <ul>
+                <li>Intelligent Technical Solutions</li>
+                <li>Telefonica Tech</li>
+                <li>Tenet3</li>
+                <li>Business Technology Management Group, USA</li>
+                <li>Idaho National Laboratory</li>
+                <li>NOCDOC</li>
+                <li>North Star BlueScope Steel</li>
+                <li>Cyber Point Advisory, LLC</li>
+                <li>Digital Global Hub</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer>
+    [cite_start]NCYTE Center Externship Fast Facts 2025 [cite: 3]
+</footer>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabContent, tabBtns;
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].classList.remove("active");
+        }
+        tabBtns = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+
+</body>
+</html>
