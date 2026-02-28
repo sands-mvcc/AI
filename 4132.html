@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybersecurity Education Innovation - Impact Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Cybersecurity Education Innovation - Regional Impact Dashboard</title>
     <style>
         :root {
             --primary-green: #2e7d32;
-            --accent-green: #4caf50;
             --dark-bg: #000000;
             --light-bg: #ffffff;
-            --gray-text: #555555;
             --border-color: #e0e0e0;
             --hover-green: #f1f8f1;
         }
@@ -40,61 +37,66 @@
             position: sticky; top: 10px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .state-btn, .dropbtn, .tab-btn {
-            padding: 0.7rem 1rem; border: 2px solid var(--primary-green);
+        .state-btn, .dropbtn {
+            padding: 0.7rem 1.2rem; border: 2px solid var(--primary-green);
             background: white; color: var(--primary-green); border-radius: 6px;
             cursor: pointer; font-weight: 700; transition: all 0.25s ease;
-            font-size: 0.9rem; text-decoration: none;
+            font-size: 0.9rem;
         }
 
-        .state-btn:hover, .dropdown:hover .dropbtn, .tab-btn:hover {
+        .aggregate-btn { background: var(--primary-green); color: white; }
+
+        .state-btn:hover, .dropdown:hover .dropbtn {
             background-color: var(--hover-green); transform: translateY(-2px);
         }
 
-        .state-btn.active, .tab-btn.active { background-color: var(--primary-green); color: white; }
+        .state-btn.active { background-color: var(--primary-green); color: white; }
 
+        /* Dropdown Menu */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             display: none; position: absolute; background-color: white;
             min-width: 250px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1; border: 1px solid var(--border-color); border-radius: 6px;
+            z-index: 1001; border: 1px solid var(--border-color); border-radius: 6px;
         }
         .dropdown-content a {
             color: var(--dark-bg); padding: 12px 16px; text-decoration: none;
-            display: block; border-bottom: 1px solid #eee;
+            display: block; font-weight: 500; border-bottom: 1px solid #eee;
         }
         .dropdown-content a:hover { background-color: var(--hover-green); color: var(--primary-green); }
         .dropdown:hover .dropdown-content { display: block; }
 
-        .main-display {
+        /* Main Content Area */
+        .state-display {
             background: #fff; border: 1px solid var(--border-color);
             border-radius: 15px; padding: 2.5rem; min-height: 500px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        .chart-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; }
-        .chart-container { position: relative; height: 400px; width: 100%; }
-        
         .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
         .stat-box { background: #f9f9f9; border: 1px solid #eee; padding: 1.5rem; border-radius: 10px; text-align: center; border-top: 4px solid var(--primary-green); }
-        .stat-box span { display: block; font-size: 2rem; font-weight: 900; color: var(--dark-bg); }
+        .stat-box span { display: block; font-size: 2rem; font-weight: 900; color: var(--dark-bg); margin-bottom: 0.2rem; }
+        .stat-box label { font-size: 0.8rem; color: var(--gray-text); text-transform: uppercase; font-weight: 600; }
+
+        .lead-section { background-color: #fcfcfc; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; }
+        .lead-item { margin-bottom: 12px; border-bottom: 1px dashed #ddd; padding-bottom: 8px; }
+        .lead-item strong { color: var(--primary-green); display: block; }
 
         .hidden { display: none; }
-        .section-title { color: var(--primary-green); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        #placeholder { text-align: center; padding: 8rem 0; color: #bbb; }
+        h2, h3 { color: var(--primary-green); border-bottom: 2px solid #eee; padding-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Cybersecurity Education Innovation</h1>
-    <p>Midwest Regional Impact & Analytics | PI: Dr. John Sands</p>
+    <p>Midwest Regional Impact Portal | PI: Dr. John Sands</p>
 </header>
 
 <div class="container">
     <div class="nav-wrapper">
-        <button class="tab-btn active" onclick="switchTab('data')">STATE DATA</button>
-        <button class="tab-btn" onclick="switchTab('charts')">VISUAL ANALYTICS</button>
-        <div style="border-left: 2px solid #eee; height: 30px; margin: 0 10px;"></div>
+        <button class="state-btn aggregate-btn" onclick="showAggregate(this)">AGGREGATE IMPACT</button>
         <div id="stateBtns" style="display:contents;"></div>
         <div class="dropdown">
             <button class="dropbtn">K12 RESOURCES ▾</button>
@@ -106,146 +108,165 @@
         </div>
     </div>
 
-    <div class="main-display">
-        <div id="dataView">
-            <div id="placeholder" style="text-align:center; padding: 5rem;">
-                <h2>Select a state to view detailed regional impact</h2>
-            </div>
-            <div id="stateContent" class="hidden">
-                <h2 id="stName" class="section-title">State</h2>
-                <div class="metric-row">
-                    <div class="stat-box"><label>Schools Reporting</label><span id="stSchools">-</span></div>
-                    <div class="stat-box"><label>Primary Code</label><span id="stCode">-</span></div>
-                    <div class="stat-box"><label>Enrollment Trend</label><span id="stEnrollment">-</span></div>
-                </div>
-                <div id="stLeads"></div>
-            </div>
-        </div>
-
-        <div id="chartView" class="hidden">
-            <h2 class="section-title">Midwest Regional Impact Analytics</h2>
-            
-            <div class="chart-grid">
-                <div>
-                    <h3>Institutional Reach (Number of Schools/Centers Reporting)</h3>
-                    <div class="chart-container"><canvas id="instChart"></canvas></div>
-                </div>
-
-                <div>
-                    <h3>Student Pathway Impact (Workforce & Joint Enrollment)</h3>
-                    <div class="chart-container"><canvas id="studentChart"></canvas></div>
-                </div>
-
-                <div>
-                    <h3>Year-over-Year Growth & Enrollment Trends (%)</h3>
-                    <div class="chart-container"><canvas id="growthChart"></canvas></div>
-                </div>
+    <div class="state-display" id="mainDisplay">
+        <div id="placeholder"><h2>Select a state or aggregate button to explore impact</h2></div>
+        
+        <div id="content" class="hidden">
+            <h2 id="stName">Display Name</h2>
+            <div class="metric-row" id="metricContainer"></div>
+            <div id="stDetails"></div>
+            <div id="stLeadership" class="lead-section">
+                <h3>Leading Regions & Institutions</h3>
+                <div id="leadContent"></div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const stateData = {
-        "Illinois": { schools: "142", code: "10011A001", enrollment: "Increasing", hubs: "TCD, CPS Runway 606, LIFT Central IL" },
-        "Indiana": { schools: "200", code: "5245", enrollment: "Statewide Focus", hubs: "J. Everett Light, SICTC, Carmel HS" },
-        "Iowa": { schools: "Statewide", code: "10020", enrollment: "+5% increase", hubs: "Des Moines ISD, Waukee APEX, DMACC" },
-        "Kansas": { schools: "84", code: "10020", enrollment: "Expanding", hubs: "Olathe West, Blue Valley CAPS, WSU Tech" },
-        "Michigan": { schools: "84", code: "11.1003", enrollment: "Cluster Growth", hubs: "Oakland Schools, Kent CTC, Wayne RESA" },
-        "Minnesota": { schools: "48", code: "10020", enrollment: "+18% YoY", hubs: "Minneapolis PS, ISD 917, Wright Tech" },
-        "Missouri": { schools: "ACC Hubs", code: "034402", enrollment: "Rapid Expansion", hubs: "Cape Girardeau CTC, Springfield R-XII" },
-        "Nebraska": { schools: "34", code: "270707", enrollment: "+25% YoY", hubs: "Omaha PS, Lincoln Career Academy" },
-        "Ohio": { schools: "210", code: "146005", enrollment: "+10% Statewide", hubs: "Butler Tech, Greene County, Columbus PS" },
-        "Wisconsin": { schools: "160", code: "10020", enrollment: "Certified Growth", hubs: "Milwaukee PS, Madison Metro, Green Bay" }
+    const aggregateData = {
+        name: "Midwest Region Aggregate Impact (10 States)",
+        metrics: [
+            { label: "Total Schools & Centers", val: "1,150+" },
+            { label: "Est. Student Reach", val: "450,000+" },
+            { label: "Interactive Resources", val: "143+" }
+        ],
+        details: `<p>The project established a sustainable network across <strong>10 Midwest states</strong>, engaging over <strong>100 CAE institutions</strong>. Key deliverables include 143+ EMATES activities and 3D Virtual Career Exploration environments [cite: 752-762].</p>`,
+        leads: "Collective leadership includes state coordinators from Rock Valley College (IL), Ivy Tech (IN), Iowa State (IA), and others across the region [cite: 613-633]."
     };
 
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        if(tab === 'data') {
-            document.getElementById('dataView').classList.remove('hidden');
-            document.getElementById('chartView').classList.add('hidden');
-        } else {
-            document.getElementById('dataView').classList.add('hidden');
-            document.getElementById('chartView').classList.remove('hidden');
-            setTimeout(initCharts, 100); // Small delay to ensure canvas visibility
+    const stateData = {
+        "Illinois": { 
+            schools: "142", code: "10011A001", trend: "Expanding", coord: "Stephanie Wascher",
+            leads: [
+                { r: "Northern IL", e: "Technology Center of DuPage (TCD), Lake County Tech Campus, Chicago Public Schools (CPS) [cite: 114]" },
+                { r: "Central IL", e: "Capital Area Career Center (CACC), Bloomington Area Career Center, LIFT Central Illinois [cite: 114, 125]" },
+                { r: "Southern IL", e: "Collinsville Area Vocational Center, Southern IL Career Prep Center [cite: 114]" }
+            ]
+        },
+        "Indiana": { 
+            schools: "200+", code: "5245", trend: "Statewide NLPS", coord: "Jiri Jirik / Pam Schmelz",
+            leads: [
+                { r: "Indianapolis Area", e: "J. Everett Light Career Center, Walker Career Center, Ben Davis HS [cite: 153, 155]" },
+                { r: "Northwest/South Bend", e: "A.K. Smith Career Center, Elkhart Area Career Center " },
+                { r: "Evansville/Lafayette", e: "Southern Indiana CTC (SICTC), Greater Lafayette Career Academy " }
+            ]
+        },
+        "Iowa": { 
+            schools: "Statewide", code: "10020", trend: "42,896 Students", coord: "Doug Jacobson",
+            leads: [
+                { r: "Central/Suburban", e: "Des Moines ISD (Central Campus), Waukee APEX [cite: 166-167]" },
+                { r: "Eastern/Southern", e: "Cedar Rapids Community SD, Burlington Community SD [cite: 166-167]" },
+                { r: "Regional Partnerships", e: "DMACC Cyber Hub, Kirkwood Regional Centers [cite: 168]" }
+            ]
+        },
+        "Kansas": { 
+            schools: "84", code: "10020", trend: "Technical Strand", coord: "Andrew Lutz",
+            leads: [
+                { r: "Johnson County", e: "Olathe West HS Academy, Blue Valley Schools (CAPS) [cite: 188-189]" },
+                { r: "Wichita/Kansas City", e: "Wichita Public Schools (WSU Tech), KCKPS Diploma+ centers [cite: 191, 193]" },
+                { r: "Signature Programs", e: "Shawnee Mission Broadmoor Center [cite: 192]" }
+            ]
+        },
+        "Michigan": { 
+            schools: "84 Programs", code: "CIP 11.1003", trend: "6,948 Students", coord: "Marrci Conner",
+            leads: [
+                { r: "Southeast/Oakland", e: "Oakland Schools Technical Campuses (OSTC), Washtenaw ISD [cite: 211]" },
+                { r: "Wayne/Detroit", e: "Downriver Career Tech Consortium, Henry Ford College M-Tech [cite: 211]" },
+                { r: "West/North MI", e: "Kent Career Technical Center (KCTC), Northwest Ed Career Tech [cite: 211]" }
+            ]
+        },
+        "Minnesota": { 
+            schools: "48", code: "10020", trend: "+18% Increase", coord: "Faisal Kaleem",
+            leads: [
+                { r: "Twin Cities Metro", e: "Minneapolis & Saint Paul Public Schools, Intermediate District 917 [cite: 219]" },
+                { r: "Suburban Districts", e: "Anoka-Hennepin (ISD 11), Rosemount-Apple Valley-Eagan [cite: 219]" },
+                { r: "Technical Partners", e: "Dakota County & Hennepin Technical Colleges [cite: 219]" }
+            ]
+        },
+        "Missouri": { 
+            schools: "ACC Network", code: "034402", trend: "310,087 Students", coord: "Mario Garcia",
+            leads: [
+                { r: "Cape Girardeau", e: "Cape Girardeau Career & Technology Center " },
+                { r: "Springfield", e: "Springfield R-XII (SPS) " },
+                { r: "Higher Ed Partners", e: "NW Missouri State (Early College), State Technical College of MO " }
+            ]
+        },
+        "Nebraska": { 
+            schools: "34", code: "270707", trend: "+25% Increase", coord: "Doug Rausch",
+            leads: [
+                { r: "Omaha/Lincoln", e: "Omaha Public Schools, Lincoln Career Academy (TCA) [cite: 254]" },
+                { r: "Suburban/Regional", e: "Millard Public Schools, Grand Island Career Pathways Institute [cite: 254]" },
+                { r: "Dual Enrollment", e: "Metropolitan Community College (Omaha) [cite: 254]" }
+            ]
+        },
+        "Ohio": { 
+            schools: "210", code: "146005", trend: "91,000+ Students", coord: "Kyle Jones / Eric Renegar",
+            leads: [
+                { r: "Dayton/Greene Co", e: "Greene County Career Center (Ohio Cyber Range), Butler Tech [cite: 267, 269]" },
+                { r: "Central/Southwest", e: "Columbus City Schools (Fort Hayes), Great Oaks Career Campuses [cite: 270-271]" },
+                { r: "Regional Hubs", e: "Eastland-Fairfield Career & Technical Schools [cite: 272]" }
+            ]
+        },
+        "Wisconsin": { 
+            schools: "160", code: "10020", trend: "Certified Snapshot", coord: "Ken McCullough",
+            leads: [
+                { r: "Southeast/Central", e: "Milwaukee Public Schools, Madison Metropolitan SD [cite: 287]" },
+                { r: "Northeast/Fox", e: "Green Bay Area & Appleton Area Public Schools [cite: 287]" },
+                { r: "Northwest", e: "Eau Claire Area School District [cite: 287]" }
+            ]
         }
-    }
+    };
 
     const nav = document.getElementById('stateBtns');
+    const content = document.getElementById('content');
+    const placeholder = document.getElementById('placeholder');
+    const leadContent = document.getElementById('leadContent');
+
     Object.keys(stateData).forEach(state => {
         const btn = document.createElement('button');
         btn.className = 'state-btn';
         btn.textContent = state;
         btn.onclick = () => {
-            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+            clearActive();
             btn.classList.add('active');
             updateDisplay(state);
         };
         nav.appendChild(btn);
     });
 
-    function updateDisplay(state) {
-        const d = stateData[state];
-        document.getElementById('placeholder').classList.add('hidden');
-        document.getElementById('stateContent').classList.remove('hidden');
-        document.getElementById('stName').textContent = state + " Impact Summary";
-        document.getElementById('stSchools').textContent = d.schools;
-        document.getElementById('stCode').textContent = d.code;
-        document.getElementById('stEnrollment').textContent = d.enrollment;
-        document.getElementById('stLeads').innerHTML = `<h4>Leading Regional Hubs</h4><p>${d.hubs}</p>`;
+    function clearActive() {
+        document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
     }
 
-    let charts = {};
-    function initCharts() {
-        // Destroy existing charts if they exist to prevent overlap
-        Object.values(charts).forEach(chart => chart.destroy());
+    function showAggregate(btn) {
+        clearActive();
+        btn.classList.add('active');
+        placeholder.classList.add('hidden');
+        content.classList.remove('hidden');
+        document.getElementById('stName').textContent = aggregateData.name;
+        document.getElementById('metricContainer').innerHTML = aggregateData.metrics.map(m => `
+            <div class="stat-box"><label>${m.label}</label><span>${m.val}</span></div>
+        `).join('');
+        document.getElementById('stDetails').innerHTML = aggregateData.details;
+        leadContent.innerHTML = `<div class="lead-item">${aggregateData.leads}</div>`;
+    }
 
-        const commonOptions = { responsive: true, maintainAspectRatio: false };
-
-        charts.inst = new Chart(document.getElementById('instChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(stateData),
-                datasets: [{
-                    label: 'Schools/Centers Reporting',
-                    data: [142, 200, 100, 84, 84, 48, 50, 34, 210, 160],
-                    backgroundColor: '#2e7d32'
-                }]
-            },
-            options: commonOptions
-        });
-
-        charts.student = new Chart(document.getElementById('studentChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Ohio (Workforce)', 'Iowa (Joint)', 'Missouri (Total CTE)', 'Michigan (IT Cluster)'],
-                datasets: [{
-                    label: 'Enrollment Count',
-                    data: [91000, 42896, 310087, 6948],
-                    backgroundColor: '#000000'
-                }]
-            },
-            options: commonOptions
-        });
-
-        charts.growth = new Chart(document.getElementById('growthChart'), {
-            type: 'line',
-            data: {
-                labels: ['Nebraska', 'Minnesota', 'Ohio', 'Iowa'],
-                datasets: [{
-                    label: 'Year-over-Year Growth (%)',
-                    data: [25, 18, 10, 5],
-                    borderColor: '#2e7d32',
-                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 6,
-                    pointBackgroundColor: '#000000'
-                }]
-            },
-            options: commonOptions
-        });
+    function updateDisplay(state) {
+        const d = stateData[state];
+        placeholder.classList.add('hidden');
+        content.classList.remove('hidden');
+        document.getElementById('stName').textContent = state + " Impact Summary";
+        document.getElementById('metricContainer').innerHTML = `
+            <div class="stat-box"><label>Schools/Centers</label><span>${d.schools}</span></div>
+            <div class="stat-box"><label>Primary Code</label><span>${d.code}</span></div>
+            <div class="stat-box"><label>Enrollment Detail</label><span>${d.trend}</span></div>
+        `;
+        document.getElementById('stDetails').innerHTML = `<p><strong>State Coordinator:</strong> ${d.coord}</p>`;
+        
+        leadContent.innerHTML = d.leads.map(l => `
+            <div class="lead-item"><strong>${l.r}</strong> ${l.e}</div>
+        `).join('');
     }
 </script>
 
