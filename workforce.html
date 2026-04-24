@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Workforce Demand Prompt Builder — Role-Driven Curriculum Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1714;
+    --ink-soft: #3d362f;
+    --ink-mute: #6b6359;
+    --paper: #f4efe6;
+    --paper-warm: #ede6d8;
+    --paper-deep: #e2d9c6;
+    --rule: #c9bfa7;
+    --accent: #9c2b1f;        /* deep oxblood */
+    --accent-hot: #c04030;
+    --accent-soft: #f3e4e0;
+    --ok: #4a6b3a;
+    --ok-soft: #e5ebd9;
+    --shadow: 0 1px 0 rgba(26,23,20,.06), 0 10px 30px -12px rgba(26,23,20,.18);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 15px;
+    background-image:
+      radial-gradient(1200px 600px at 90% -10%, rgba(156,43,31,.04), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(74,107,58,.05), transparent 60%);
+    min-height: 100vh;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: 28px 40px 20px;
+    background: var(--paper);
+    position: relative;
+  }
+  .masthead::before {
+    content: "";
+    position: absolute;
+    left: 40px; right: 40px; bottom: 8px;
+    height: 1px; background: var(--ink);
+  }
+  .masthead-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .title {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-variation-settings: "opsz" 144;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 6px 0 4px;
+  }
+  .title em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+  .issue-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    text-align: right;
+    color: var(--ink-mute);
+    line-height: 1.8;
+  }
+  .issue-meta strong { color: var(--ink); }
+
+  /* ---------- Layout ---------- */
+  .page {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 0;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  @media (max-width: 980px) {
+    .page { grid-template-columns: 1fr; }
+    .masthead { padding: 20px; }
+    .masthead::before { left: 20px; right: 20px; }
+  }
+
+  .col-form {
+    padding: 32px 40px;
+    border-right: 1px solid var(--rule);
+  }
+  .col-output {
+    padding: 32px 40px;
+    background: var(--paper-warm);
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  @media (max-width: 980px) {
+    .col-form, .col-output { padding: 24px 20px; }
+    .col-form { border-right: none; border-bottom: 1px solid var(--rule); }
+    .col-output { position: static; height: auto; }
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 28px;
+  }
+  .tab {
+    flex: 1;
+    padding: 14px 12px;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--rule);
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--ink-mute);
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s, color .15s;
+    line-height: 1.2;
+  }
+  .tab:last-child { border-right: none; }
+  .tab-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    display: block;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+  }
+  .tab:hover { background: var(--paper-warm); color: var(--ink); }
+  .tab.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab.active .tab-num { color: var(--paper-deep); }
+
+  /* ---------- Form ---------- */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-head {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-head::before {
+    content: "§";
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .section-head::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .field { margin-bottom: 14px; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+
+  label {
+    display: block;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+  label .req { color: var(--accent); font-weight: 700; }
+  label .hint {
+    font-weight: 400;
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    border-radius: 2px;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 56px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  select { cursor: pointer; }
+
+  /* checkbox grid */
+  .checkgrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 14px;
+  }
+  @media (max-width: 600px) { .checkgrid { grid-template-columns: 1fr; } }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background .15s;
+  }
+  .check:hover { background: var(--paper-deep); }
+  .check input { accent-color: var(--accent); }
+
+  /* chips (AI roles) */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    padding: 6px 12px;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all .15s;
+    user-select: none;
+  }
+  .chip:hover { background: var(--paper); border-color: var(--ink-mute); }
+  .chip.on {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* primary action */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+  }
+  .btn {
+    padding: 12px 22px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 15px;
+    border: 2px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+    letter-spacing: 0.01em;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-ghost {
+    background: none;
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Output panel ---------- */
+  .output-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .output-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: -0.015em;
+    line-height: 1;
+  }
+  .output-title em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .output-actions { display: flex; gap: 8px; }
+
+  .prompt-box {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 20px 22px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 400px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    border-radius: 2px;
+    position: relative;
+  }
+  .prompt-box::-webkit-scrollbar { width: 8px; }
+  .prompt-box::-webkit-scrollbar-track { background: var(--paper-deep); }
+  .prompt-box::-webkit-scrollbar-thumb { background: var(--ink-mute); border-radius: 4px; }
+
+  .placeholder {
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .placeholder strong {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .copied-flash {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--ok);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 2px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .copied-flash.show { opacity: 1; }
+
+  .meta-strip {
+    display: flex;
+    gap: 20px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .meta-strip span strong { color: var(--ink); font-weight: 600; }
+
+  /* footer note */
+  .footnote {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.6;
+  }
+  .footnote strong {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: normal;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= MASTHEAD ================= -->
+<header class="masthead">
+  <div class="masthead-row">
+    <div>
+      <div class="kicker">Role-Driven Curriculum Intelligence · Vol. I</div>
+      <h1 class="title">The Workforce <em>Demand</em> Builder</h1>
+      <p class="subtitle">Start with the job. Work backward to the curriculum. A prompt-construction tool for labor-market-first academic program design.</p>
+    </div>
+    <div class="issue-meta">
+      <div><strong>Companion tool to</strong></div>
+      <div>MVCC · AI in Action</div>
+      <div>CSSIA · NCyTE · Cyber-Illinois RAMPS</div>
+      <div style="margin-top:6px;"><strong>No API required</strong></div>
+      <div>Copy → paste into any AI</div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<div class="page">
+
+  <!-- ===== LEFT: FORM COLUMN ===== -->
+  <section class="col-form">
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="role" role="tab" aria-selected="true">
+        <span class="tab-num">I · Single Role</span>
+        Occupational Demand Analysis
+      </button>
+      <button class="tab" data-tab="program" role="tab">
+        <span class="tab-num">II · Multi-Role</span>
+        Program Feasibility Study
+      </button>
+      <button class="tab" data-tab="custom" role="tab">
+        <span class="tab-num">III · Custom</span>
+        Free-Form Builder
+      </button>
+    </nav>
+
+    <!-- ============ PANEL 1: SINGLE ROLE ============ -->
+    <div class="panel active" data-panel="role">
+
+      <div class="section">
+        <div class="section-head">Target Role</div>
+
+        <div class="field">
+          <label>Primary Job Title <span class="req">*</span></label>
+          <input type="text" id="r_title" placeholder="e.g., Cybersecurity Analyst" />
+        </div>
+
+        <div class="field">
+          <label>Alternate Titles / Variants <span class="hint">— comma-separated</span></label>
+          <textarea id="r_alts" rows="2" placeholder="SOC Analyst, Information Security Analyst, Security Operations Analyst"></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Suspected SOC Code <span class="hint">— optional</span></label>
+            <input type="text" id="r_soc" placeholder="e.g., 15-1212" />
+          </div>
+          <div class="field">
+            <label>Suspected O*NET-SOC <span class="hint">— optional</span></label>
+            <input type="text" id="r_onet" placeholder="e.g., 15-1212.00" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Career Level</label>
+            <select id="r_level">
+              <option>Entry-level</option>
+              <option>Technician / Associate</option>
+              <option>Mid-career</option>
+              <option>Senior / Advanced</option>
+              <option>All levels</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Industry Sector</label>
+            <select id="r_sector">
+              <option>Cybersecurity</option>
+              <option>Information Technology</option>
+              <option>Artificial Intelligence / Data</option>
+              <option>Advanced Manufacturing</option>
+              <option>Healthcare</option>
+              <option>Energy / Utilities</option>
+              <option>Finance / Insurance</option>
+              <option>Education</option>
+              <option>Defense / Aerospace</option>
+              <option>Cross-sector / All industries</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Key Skills or Tools Associated <span class="hint">— optional; guides the AI</span></label>
+          <textarea id="r_skills" rows="2" placeholder="SIEM, incident response, NIST 800-171, Splunk, Python"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Geography</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Institution <span class="req">*</span></label>
+            <input type="text" id="r_inst" placeholder="e.g., Moraine Valley Community College" value="Moraine Valley Community College" />
+          </div>
+          <div class="field">
+            <label>City / County <span class="req">*</span></label>
+            <input type="text" id="r_loc" placeholder="e.g., Palos Hills, Cook County, IL" value="Palos Hills, IL" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Labor Market Scope</label>
+            <select id="r_scope">
+              <option>Local (50-mile radius)</option>
+              <option>Regional (100-mile radius)</option>
+              <option selected>Metropolitan (MSA)</option>
+              <option>State-wide</option>
+              <option>Multi-state regional</option>
+              <option>National</option>
+              <option>National + Remote</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Time Horizon</label>
+            <select id="r_horizon">
+              <option>Current (latest BLS data)</option>
+              <option selected>5-year outlook</option>
+              <option>10-year projections</option>
+              <option>Historical + 10-year forward</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Curriculum Translation</div>
+
+        <div class="field">
+          <label>Existing Program Context <span class="hint">— optional</span></label>
+          <textarea id="r_existing" rows="2" placeholder="Current AAS in Cybersecurity, CompTIA Security+ track"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Credential Level to Explore</label>
+          <select id="r_credential">
+            <option>Single course / module</option>
+            <option>Certificate of completion</option>
+            <option>Credit certificate</option>
+            <option>AAS degree</option>
+            <option>Stackable pathway (cert → AAS → BS transfer)</option>
+            <option>Non-credit workforce training</option>
+            <option>Apprenticeship / earn-and-learn</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Report Sections to Include</div>
+        <div class="checkgrid" id="r_sections">
+          <label class="check"><input type="checkbox" value="Executive Summary & Go/No-Go Verdict" checked /> Executive Summary & Verdict</label>
+          <label class="check"><input type="checkbox" value="SOC/O*NET Occupational Profile" checked /> SOC/O*NET Profile</label>
+          <label class="check"><input type="checkbox" value="Employment Levels & BLS Projections" checked /> Employment & Projections</label>
+          <label class="check"><input type="checkbox" value="Wage Analysis (entry, median, experienced)" checked /> Wage Analysis</label>
+          <label class="check"><input type="checkbox" value="Regional Job Posting Volume & Trends" checked /> Job Posting Trends</label>
+          <label class="check"><input type="checkbox" value="Top Hiring Employers" checked /> Top Hiring Employers</label>
+          <label class="check"><input type="checkbox" value="Skills, Tools, and Certifications Demanded" checked /> Skills & Certifications</label>
+          <label class="check"><input type="checkbox" value="Adjacent & Career-Lattice Roles" /> Adjacent Roles</label>
+          <label class="check"><input type="checkbox" value="Supply-Side Analysis (competing programs)" /> Supply Gap Analysis</label>
+          <label class="check"><input type="checkbox" value="Equity & Underrepresentation Data" /> Equity Data</label>
+          <label class="check"><input type="checkbox" value="Recommended Course/Credential Structure" checked /> Curriculum Recommendation</label>
+          <label class="check"><input type="checkbox" value="Data Sources & Methodological Notes" checked /> Data Sources Cited</label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Audience & Voice</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Primary Audience</label>
+            <select id="r_audience">
+              <option>Curriculum Committee / Faculty</option>
+              <option>College Leadership (VPAA, President)</option>
+              <option>Workforce Development Board</option>
+              <option>NSF / Grant Reviewers (ATE, Perkins)</option>
+              <option>Industry Advisory Board</option>
+              <option>Accreditation Reviewers (HLC, ABET)</option>
+              <option>All of the above</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tone</label>
+            <select id="r_tone">
+              <option>Analytical / Evidence-first</option>
+              <option>Executive brief</option>
+              <option>Academic / Detailed</option>
+              <option>Advocacy (grant-ready)</option>
+              <option>Plain language</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Additional Context <span class="hint">— optional; anything the AI should know</span></label>
+          <textarea id="r_extra" rows="2" placeholder="Part of NSF ATE proposal; must connect to existing Cyber-Illinois RAMPS pathway"></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn" onclick="buildRole()">✎ Build the Prompt</button>
+        <button class="btn btn-ghost btn-small" onclick="clearOutput()">Clear Output</button>
+      </div>
+    </div>
+
+    <!-- ============ PANEL 2: PROGRAM (MULTI-ROLE) ============ -->
+    <div class="panel" data-panel="program">
+
+      <div class="section">
+        <div class="section-head">Occupational Cluster</div>
+
+        <div class="field">
+          <label>Cluster / Pathway Name <span class="req">*</span></label>
+          <input type="text" id="p_name" placeholder="e.g., AI & Automation Technician Pathway" />
+        </div>
+
+        <div class="field">
+          <label>Key Occupations to Analyze <span class="req">*</span> <span class="hint">— comma-separated job titles or SOC codes</span></label>
+          <textarea id="p_roles" rows="3" placeholder="Machine Learning Engineer, Data Analyst (15-2051), AI Prompt Engineer, MLOps Technician, Computer Vision Specialist"></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Anchor Industry Sector</label>
+            <select id="p_sector">
+              <option>Cybersecurity</option>
+              <option selected>Information Technology / AI</option>
+              <option>Advanced Manufacturing</option>
+              <option>Healthcare</option>
+              <option>Energy / Utilities</option>
+              <option>Finance / Insurance</option>
+              <option>Logistics / Supply Chain</option>
+              <option>Defense / Aerospace</option>
+              <option>Cross-sector</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Credential Structure</label>
+            <select id="p_credential">
+              <option>Certificate + AAS (stackable)</option>
+              <option>AAS only</option>
+              <option>Certificate only</option>
+              <option>Apprenticeship pathway</option>
+              <option>Non-credit to credit bridge</option>
+              <option>AAS with BS transfer articulation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Related Certifications <span class="hint">— optional</span></label>
+          <textarea id="p_certs" rows="2" placeholder="CompTIA Security+, CySA+, AWS AI Practitioner, Google Cloud ML"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Geography & Scope</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Institution <span class="req">*</span></label>
+            <input type="text" id="p_inst" value="Moraine Valley Community College" />
+          </div>
+          <div class="field">
+            <label>County / City <span class="req">*</span></label>
+            <input type="text" id="p_loc" value="Palos Hills, Cook County, IL" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Primary State</label>
+            <input type="text" id="p_state" value="Illinois" />
+          </div>
+          <div class="field">
+            <label>Regional States to Include <span class="hint">— commuting distance</span></label>
+            <input type="text" id="p_states" value="Indiana, Wisconsin" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Employer Search Radius</label>
+          <select id="p_radius">
+            <option>75 miles</option>
+            <option selected>100 miles</option>
+            <option>150 miles</option>
+            <option>200 miles</option>
+            <option>State-wide</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Report Sections</div>
+        <div class="checkgrid" id="p_sections">
+          <label class="check"><input type="checkbox" value="Executive Summary" checked /> Executive Summary</label>
+          <label class="check"><input type="checkbox" value="Occupational Cluster Analysis (SOC crosswalk)" checked /> Occupational Cluster Analysis</label>
+          <label class="check"><input type="checkbox" value="Aggregate Demand Forecast" checked /> Aggregate Demand Forecast</label>
+          <label class="check"><input type="checkbox" value="Industry Landscape & Employer Mix" checked /> Industry Landscape</label>
+          <label class="check"><input type="checkbox" value="Skill Commonalities Across Roles" checked /> Common Skills Matrix</label>
+          <label class="check"><input type="checkbox" value="Wage Ladder / Career Lattice" checked /> Wage Ladder</label>
+          <label class="check"><input type="checkbox" value="Supply Gap (regional program inventory)" checked /> Supply-Demand Gap</label>
+          <label class="check"><input type="checkbox" value="Training Pipeline Recommendations" checked /> Training Pipeline</label>
+          <label class="check"><input type="checkbox" value="Stackable Credential Design" checked /> Credential Design</label>
+          <label class="check"><input type="checkbox" value="Employer Partnership Targets (Top 25)" /> Top 25 Employers</label>
+          <label class="check"><input type="checkbox" value="Equity & Access Analysis" /> Equity Analysis</label>
+          <label class="check"><input type="checkbox" value="Economic & ROI Impact" /> Economic Impact</label>
+          <label class="check"><input type="checkbox" value="Risk Factors & Market Volatility" /> Risk Factors</label>
+          <label class="check"><input type="checkbox" value="Final Recommendation" checked /> Final Recommendation</label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Audience & Voice</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Audience</label>
+            <select id="p_audience">
+              <option selected>All (Leadership, Boards, Grant Reviewers)</option>
+              <option>College Leadership</option>
+              <option>NSF ATE / Grant Reviewers</option>
+              <option>Workforce Boards</option>
+              <option>Industry Advisory</option>
+              <option>Accreditors</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tone</label>
+            <select id="p_tone">
+              <option>Professional / Institutional</option>
+              <option selected>Evidence-first Analytical</option>
+              <option>Grant-Ready (persuasive)</option>
+              <option>Executive Brief</option>
+              <option>Academic / Detailed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Additional Context <span class="hint">— optional</span></label>
+          <textarea id="p_extra" rows="2" placeholder="NSF ATE proposal; align to Cyber-Illinois RAMPS and CSSIA regional network"></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn" onclick="buildProgram()">✎ Build the Prompt</button>
+        <button class="btn btn-ghost btn-small" onclick="clearOutput()">Clear Output</button>
+      </div>
+    </div>
+
+    <!-- ============ PANEL 3: CUSTOM ============ -->
+    <div class="panel" data-panel="custom">
+
+      <div class="section">
+        <div class="section-head">AI Role — select or type</div>
+        <div class="chips" id="c_chips">
+          <div class="chip" data-role="Labor Market Economist">📊 Labor Market Economist</div>
+          <div class="chip" data-role="Workforce Strategist">🏗️ Workforce Strategist</div>
+          <div class="chip" data-role="Industry Analyst">🔍 Industry Analyst</div>
+          <div class="chip" data-role="Occupational Analyst">👷 Occupational Analyst</div>
+          <div class="chip" data-role="Curriculum Designer">🎓 Curriculum Designer</div>
+          <div class="chip" data-role="Instructional Designer">📐 Instructional Designer</div>
+          <div class="chip" data-role="Faculty Developer">👩‍🏫 Faculty Developer</div>
+          <div class="chip" data-role="Institutional Researcher">🔬 Institutional Researcher</div>
+          <div class="chip" data-role="Grant Writer">💰 Grant Writer</div>
+          <div class="chip" data-role="NSF ATE Reviewer">📜 NSF ATE Reviewer</div>
+          <div class="chip" data-role="HR / Talent Analyst">👥 HR / Talent Analyst</div>
+          <div class="chip" data-role="Policy Analyst">📋 Policy Analyst</div>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label>Custom Role <span class="hint">— overrides chips if filled</span></label>
+          <input type="text" id="c_role" placeholder="e.g., Regional Workforce Planning Consultant" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Job Roles / Occupations in Scope</div>
+        <div class="field">
+          <label>Job Titles or SOC Codes <span class="req">*</span> <span class="hint">— one per line or comma-separated</span></label>
+          <textarea id="c_roles" rows="3" placeholder="Penetration Tester (15-1212.01)&#10;Cybersecurity Analyst&#10;Cloud Security Engineer"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">The Task</div>
+        <div class="field">
+          <label>Task Category</label>
+          <select id="c_category" onchange="loadTemplate()">
+            <option value="">— select a template —</option>
+            <option value="demand">Workforce Demand Analysis</option>
+            <option value="gap">Supply–Demand Gap Analysis</option>
+            <option value="skills">Skills & Competency Mapping</option>
+            <option value="pathway">Career Pathway / Lattice Design</option>
+            <option value="curriculum">Role → Curriculum Translation</option>
+            <option value="employer">Employer Partnership Strategy</option>
+            <option value="grant">Grant Narrative (ATE / Perkins)</option>
+            <option value="equity">Equity & Access Analysis</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Task Description <span class="req">*</span></label>
+          <textarea id="c_task" rows="4" placeholder="Templates pre-fill this box. Edit freely."></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Context Variables</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Institution</label>
+            <input type="text" id="c_inst" value="Moraine Valley Community College" />
+          </div>
+          <div class="field">
+            <label>Location / Region</label>
+            <input type="text" id="c_loc" value="Chicago MSA / Cook County, IL" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Industry / Sector</label>
+            <input type="text" id="c_sector" placeholder="e.g., Cybersecurity" />
+          </div>
+          <div class="field">
+            <label>Time Horizon</label>
+            <input type="text" id="c_horizon" placeholder="e.g., 10-year BLS projections" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Additional Variable</label>
+          <input type="text" id="c_var3" placeholder="e.g., Align to NSF ATE theme" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">Required Sections & Format</div>
+        <div class="field">
+          <label>Required Sections <span class="hint">— one per line</span></label>
+          <textarea id="c_sections" rows="5">Executive Summary
+Occupational Analysis
+Labor Market Data
+Skills & Credentials
+Recommendations
+Data Sources</textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Tone</label>
+            <select id="c_tone">
+              <option>Professional / Institutional</option>
+              <option>Evidence-first Analytical</option>
+              <option>Executive Brief</option>
+              <option>Grant-Ready</option>
+              <option>Academic / Detailed</option>
+              <option>Plain Language</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Format</label>
+            <select id="c_format">
+              <option>Headings + Tables + Bullets</option>
+              <option>Numbered Sections</option>
+              <option>Executive Brief (1-page)</option>
+              <option>Prose Paragraphs</option>
+              <option>Structured JSON-like</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Special Instructions <span class="hint">— optional</span></label>
+          <textarea id="c_special" rows="2" placeholder="Cite BLS OEWS latest release; flag any data older than 24 months"></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn" onclick="buildCustom()">✎ Build the Prompt</button>
+        <button class="btn btn-ghost btn-small" onclick="clearOutput()">Clear Output</button>
+      </div>
+    </div>
+
+    <div class="footnote">
+      <strong>How it works:</strong> This tool is a <em>prompt construction assistant</em>. It builds a carefully structured instruction for a general-purpose AI (Claude, ChatGPT, Gemini, Perplexity). The AI then performs the workforce analysis using its own tools and training. Always verify labor-market figures against primary sources: <strong>BLS OEWS</strong>, <strong>BLS Employment Projections</strong>, <strong>O*NET OnLine</strong>, <strong>CareerOneStop</strong>, and state-level LMI (in Illinois: <strong>IDES Workforce Info</strong>).
+    </div>
+  </section>
+
+  <!-- ===== RIGHT: OUTPUT COLUMN ===== -->
+  <aside class="col-output">
+    <div class="output-head">
+      <div class="output-title">The <em>Prompt</em></div>
+      <div class="output-actions">
+        <button class="btn btn-ghost btn-small" onclick="copyPrompt()">⧉ Copy</button>
+        <button class="btn btn-ghost btn-small" onclick="downloadPrompt()">↓ .txt</button>
+      </div>
+    </div>
+
+    <div class="prompt-box" id="promptBox">
+      <div class="placeholder">
+        <strong>Awaiting Input</strong>
+        Select a tab, enter one or more <em>job titles or SOC occupation codes</em>, configure geography and report sections, then press <strong>Build the Prompt</strong>. The generated instruction will appear here — ready to copy into any AI assistant.
+        <br><br>
+        <em>This tool inverts the usual curriculum-planning question. Rather than asking “does demand exist for what we already teach?”, it asks: “what should we teach, given where the demand actually is?”</em>
+      </div>
+      <div class="copied-flash" id="flash">Copied</div>
+    </div>
+
+    <div class="meta-strip">
+      <span><strong>Tab:</strong> <span id="metaTab">—</span></span>
+      <span><strong>Roles:</strong> <span id="metaRoles">0</span></span>
+      <span><strong>Length:</strong> <span id="metaLen">0</span> chars</span>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // ============ TAB SWITCHING ============
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
+    panels.forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    t.setAttribute('aria-selected','true');
+    document.querySelector(`.panel[data-panel="${t.dataset.tab}"]`).classList.add('active');
+  }));
+
+  // ============ CHIP TOGGLE ============
+  document.querySelectorAll('#c_chips .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('on'));
+  });
+
+  // ============ TEMPLATE LOADER (Custom tab) ============
+  const templates = {
+    demand: "Conduct a workforce demand analysis for the listed occupations in the specified region. Provide employment levels, 10-year projections, wages, top employers, and trend indicators. Identify whether regional demand justifies new or expanded academic programming.",
+    gap: "Perform a supply-demand gap analysis. Compare annual regional job openings for the listed occupations against annual program completions from IPEDS and state data for related CIP codes. Quantify the gap and assess implications for new program development.",
+    skills: "Map the skills, tools, and certifications demanded for the listed occupations. Cross-reference O*NET knowledge/skills/abilities, job-posting analytics, and industry certification bodies. Produce a weighted competency matrix suitable for curriculum mapping.",
+    pathway: "Design a career pathway / career lattice connecting the listed occupations. Identify on-ramps (entry-level), progression roles, and exit or transfer points. Include wage ladder, typical credential at each tier, and lateral adjacent roles.",
+    curriculum: "Translate the listed occupations into a recommended course and credential structure. Identify which competencies map to which course-level learning outcomes. Recommend a stackable credential sequence aligned to employer hiring signals.",
+    employer: "Identify the top 25 regional employers hiring for the listed occupations. For each, note typical role volume, hiring patterns, known workforce partnerships, and recommended engagement approach (advisory board, internship pipeline, apprenticeship, custom training).",
+    grant: "Produce a workforce-need narrative suitable for an NSF ATE or Perkins grant proposal. Establish regional and national demand for the listed occupations, justify the programmatic response, and connect to equity, rural/urban access, and economic mobility goals.",
+    equity: "Analyze equity dimensions for the listed occupations: current demographic composition (race/ethnicity, gender, veteran status), wage gaps within the occupation, and geographic access. Recommend program-design interventions to widen participation."
+  };
+
+  function loadTemplate() {
+    const v = document.getElementById('c_category').value;
+    if (!v) return;
+    document.getElementById('c_task').value = templates[v];
+  }
+
+  // ============ HELPERS ============
+  const q = id => document.getElementById(id).value.trim();
+  const checkedVals = id => Array.from(document.querySelectorAll(`#${id} input:checked`)).map(i => i.value);
+  const bullet = arr => arr.map(v => `  • ${v}`).join('\n');
+
+  function splitList(str) {
+    if (!str) return [];
+    return str.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+  }
+
+  // ============ BUILD: SINGLE ROLE ============
+  function buildRole() {
+    const title = q('r_title');
+    if (!title) { alert('Primary Job Title is required.'); return; }
+    const inst = q('r_inst'), loc = q('r_loc');
+    if (!inst || !loc) { alert('Institution and Location are required.'); return; }
+
+    const alts = splitList(q('r_alts'));
+    const soc = q('r_soc'), onet = q('r_onet');
+    const level = q('r_level'), sector = q('r_sector');
+    const skills = q('r_skills'), existing = q('r_existing');
+    const scope = q('r_scope'), horizon = q('r_horizon');
+    const credential = q('r_credential');
+    const sections = checkedVals('r_sections');
+    const audience = q('r_audience'), tone = q('r_tone');
+    const extra = q('r_extra');
+
+    let p = '';
+    p += `# WORKFORCE DEMAND ANALYSIS — OCCUPATIONAL DEEP-DIVE\n`;
+    p += `## Role: ${title}\n\n`;
+
+    p += `You are acting as a Labor Market Economist and Workforce Strategist advising a community college on whether regional workforce demand justifies new academic programming for a specific occupation.\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `TARGET OCCUPATION\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Primary title:   ${title}\n`;
+    if (alts.length) p += `Variants:        ${alts.join('; ')}\n`;
+    if (soc)  p += `SOC code:        ${soc}\n`;
+    if (onet) p += `O*NET-SOC:       ${onet}\n`;
+    p += `Career level:    ${level}\n`;
+    p += `Industry:        ${sector}\n`;
+    if (skills) p += `Associated KSAs: ${skills}\n`;
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `GEOGRAPHY & TIME\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Requesting institution: ${inst}\n`;
+    p += `Home location:          ${loc}\n`;
+    p += `Labor market scope:     ${scope}\n`;
+    p += `Time horizon:           ${horizon}\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `CURRICULUM CONTEXT\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Credential under consideration: ${credential}\n`;
+    if (existing) p += `Existing program context:       ${existing}\n`;
+    if (extra)    p += `Additional context:             ${extra}\n`;
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `ANALYSIS TASK\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Conduct a rigorous, evidence-based occupational demand analysis for the role above. Work backward from the job — establish whether the labor market supports the proposed credential, then recommend what should be taught.\n\n`;
+
+    p += `Draw primarily from:\n`;
+    p += `  • U.S. Bureau of Labor Statistics — OEWS (wages, employment levels, location quotients)\n`;
+    p += `  • BLS Employment Projections Program (10-year occupation growth)\n`;
+    p += `  • O*NET OnLine (tasks, tools, technology, KSAs, related occupations)\n`;
+    p += `  • CareerOneStop and state LMI portals (for Illinois: IDES)\n`;
+    p += `  • Current job-posting analytics (Lightcast/Burning Glass, Indeed, LinkedIn trends) where available\n`;
+    p += `  • NCES IPEDS completions data for supply-side comparison\n\n`;
+
+    p += `Flag any figure older than 24 months. Where data is uncertain, say so explicitly rather than inferring.\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `REQUIRED REPORT SECTIONS\n`;
+    p += `═══════════════════════════════════════\n`;
+    sections.forEach((s, i) => { p += `${i + 1}. ${s}\n`; });
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `OUTPUT SPECIFICATIONS\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Primary audience: ${audience}\n`;
+    p += `Tone:             ${tone}\n`;
+    p += `Format:           Use clear headings for each section. Use tables for wage and employment figures. Cite every data point with source and vintage (e.g., "BLS OEWS, May 2024 release"). Finish with a plain-English Go / No-Go / Conditional verdict and a one-paragraph rationale the college president could read in 30 seconds.\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `CRITICAL\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `• If you cannot verify a figure, state "unverified" rather than estimate.\n`;
+    p += `• Distinguish between national, state, and local data at every turn.\n`;
+    p += `• Treat job-posting volume as demand signal, not ground truth.\n`;
+    p += `• The curriculum recommendation must be traceable to specific skill/KSA demand evidence from the analysis above — do not recommend content the data doesn't support.\n`;
+
+    renderPrompt(p, 'Single Role', 1);
+  }
+
+  // ============ BUILD: PROGRAM (MULTI-ROLE) ============
+  function buildProgram() {
+    const name = q('p_name');
+    const rolesStr = q('p_roles');
+    if (!name || !rolesStr) { alert('Cluster name and at least one role are required.'); return; }
+    const inst = q('p_inst'), loc = q('p_loc');
+    if (!inst || !loc) { alert('Institution and Location are required.'); return; }
+
+    const roles = splitList(rolesStr);
+    const sector = q('p_sector'), credential = q('p_credential');
+    const certs = q('p_certs');
+    const state = q('p_state'), states = q('p_states'), radius = q('p_radius');
+    const sections = checkedVals('p_sections');
+    const audience = q('p_audience'), tone = q('p_tone'), extra = q('p_extra');
+
+    let p = '';
+    p += `# PROGRAM FEASIBILITY STUDY — OCCUPATIONAL CLUSTER ANALYSIS\n`;
+    p += `## Pathway: ${name}\n\n`;
+
+    p += `You are a Workforce Strategist and Institutional Researcher advising a community college on whether an occupational cluster constitutes a viable target for a new or redesigned program of study.\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `OCCUPATIONAL CLUSTER\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Cluster name: ${name}\n`;
+    p += `Anchor sector: ${sector}\n`;
+    p += `Credential structure under consideration: ${credential}\n`;
+    p += `\nRoles in scope (${roles.length}):\n`;
+    roles.forEach((r, i) => { p += `  ${String(i + 1).padStart(2, '0')}. ${r}\n`; });
+    if (certs) p += `\nRelated certifications: ${certs}\n`;
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `GEOGRAPHY\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Institution:          ${inst}\n`;
+    p += `Home location:        ${loc}\n`;
+    p += `Primary state:        ${state}\n`;
+    if (states) p += `Regional states:      ${states}\n`;
+    p += `Employer radius:      ${radius}\n`;
+    if (extra) p += `Additional context:   ${extra}\n`;
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `ANALYSIS TASK\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Treat the listed occupations as a single labor-market cluster. For each role, crosswalk to SOC/O*NET, pull demand indicators, then AGGREGATE the cluster-level picture. The central questions are:\n\n`;
+    p += `  1. Does regional demand across this cluster exceed regional program supply?\n`;
+    p += `  2. Is there enough skill commonality to build a coherent stackable credential?\n`;
+    p += `  3. Are wage outcomes strong enough to justify student time and institutional investment?\n`;
+    p += `  4. Which employers should be partnership priorities?\n\n`;
+
+    p += `Draw on:\n`;
+    p += `  • BLS OEWS & Employment Projections (per-role and aggregated)\n`;
+    p += `  • O*NET (task/skill/tool overlap matrix across the roles)\n`;
+    p += `  • NCES IPEDS completions (regional program supply, matched CIP codes)\n`;
+    p += `  • State LMI (IDES for Illinois; equivalent state agencies for cross-border analysis)\n`;
+    p += `  • Current job-posting analytics where available\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `REQUIRED REPORT SECTIONS\n`;
+    p += `═══════════════════════════════════════\n`;
+    sections.forEach((s, i) => { p += `${i + 1}. ${s}\n`; });
+    p += `\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `OUTPUT SPECIFICATIONS\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `Audience: ${audience}\n`;
+    p += `Tone:     ${tone}\n`;
+    p += `Format:   Institutional report style. Open with a 1-paragraph executive verdict. Use tables comparing the roles side-by-side (employment, growth, median wage, typical entry credential). Include a skills overlap matrix. End with a clear recommendation: Build / Modify Existing / Partner / Do Not Pursue, with rationale.\n\n`;
+
+    p += `═══════════════════════════════════════\n`;
+    p += `CRITICAL\n`;
+    p += `═══════════════════════════════════════\n`;
+    p += `• Always cite source + vintage for every data point.\n`;
+    p += `• Flag roles where labor-market data is thin or volatile.\n`;
+    p += `• The credential design must be traceable to the skills-overlap evidence. Do not propose courses that the cluster analysis does not support.\n`;
+    p += `• If the data suggests the cluster does NOT justify the proposed credential, say so plainly. The purpose is decision support, not advocacy.\n`;
+
+    renderPrompt(p, 'Program Feasibility', roles.length);
+  }
+
+  // ============ BUILD: CUSTOM ============
+  function buildCustom() {
+    const rolesStr = q('c_roles');
+    const task = q('c_task');
+    if (!rolesStr) { alert('At least one job title or SOC code is required.'); return; }
+    if (!task) { alert('Task description is required.'); return; }
+
+    const roles = splitList(rolesStr);
+    const customRole = q('c_role');
+    const chipRoles = Array.from(document.querySelectorAll('#c_chips .chip.on')).map(c => c.dataset.role);
+    const aiRole = customRole || (chipRoles.length ? chipRoles.join(' + ') : 'Workforce Analyst');
+
+    const inst = q('c_inst'), loc = q('c_loc'), sector = q('c_sector');
+    const horizon = q('c_horizon'), v3 = q('c_var3');
+    const sections = q('c_sections').split('\n').map(s => s.trim()).filter(Boolean);
+    const tone = q('c_tone'), format = q('c_format'), special = q('c_special');
+
+    let p = '';
+    p += `# WORKFORCE ANALYSIS — CUSTOM REQUEST\n\n`;
+    p += `ROLE YOU ARE PLAYING\n`;
+    p += `────────────────────\n`;
+    p += `${aiRole}\n\n`;
+
+    p += `OCCUPATIONS IN SCOPE (${roles.length})\n`;
+    p += `────────────────────\n`;
+    roles.forEach((r, i) => { p += `  ${i + 1}. ${r}\n`; });
+    p += `\n`;
+
+    p += `TASK\n`;
+    p += `────────────────────\n`;
+    p += `${task}\n\n`;
+
+    p += `CONTEXT\n`;
+    p += `────────────────────\n`;
+    if (inst)    p += `Institution:     ${inst}\n`;
+    if (loc)     p += `Region:          ${loc}\n`;
+    if (sector)  p += `Industry:        ${sector}\n`;
+    if (horizon) p += `Time horizon:    ${horizon}\n`;
+    if (v3)      p += `Additional:      ${v3}\n`;
+    p += `\n`;
+
+    p += `REQUIRED SECTIONS\n`;
+    p += `────────────────────\n`;
+    sections.forEach((s, i) => { p += `  ${i + 1}. ${s}\n`; });
+    p += `\n`;
+
+    p += `OUTPUT\n`;
+    p += `────────────────────\n`;
+    p += `Tone:    ${tone}\n`;
+    p += `Format:  ${format}\n`;
+    if (special) p += `Special: ${special}\n`;
+    p += `\n`;
+
+    p += `DATA STANDARDS\n`;
+    p += `────────────────────\n`;
+    p += `• Cite primary sources (BLS OEWS, BLS Projections, O*NET, IPEDS, state LMI) with vintage.\n`;
+    p += `• Distinguish national / state / local data at each use.\n`;
+    p += `• Flag any figure older than 24 months.\n`;
+    p += `• Mark uncertainty as "unverified" rather than interpolating.\n`;
+
+    renderPrompt(p, 'Custom', roles.length);
+  }
+
+  // ============ RENDER ============
+  function renderPrompt(text, tabName, roleCount) {
+    const box = document.getElementById('promptBox');
+    box.innerHTML = '';
+    const pre = document.createElement('div');
+    pre.textContent = text;
+    pre.style.whiteSpace = 'pre-wrap';
+    box.appendChild(pre);
+    const flash = document.createElement('div');
+    flash.className = 'copied-flash';
+    flash.id = 'flash';
+    flash.textContent = 'Copied';
+    box.appendChild(flash);
+
+    document.getElementById('metaTab').textContent = tabName;
+    document.getElementById('metaRoles').textContent = roleCount;
+    document.getElementById('metaLen').textContent = text.length.toLocaleString();
+
+    window._currentPrompt = text;
+    box.scrollTop = 0;
+  }
+
+  function clearOutput() {
+    const box = document.getElementById('promptBox');
+    box.innerHTML = `<div class="placeholder">
+      <strong>Awaiting Input</strong>
+      Select a tab, enter one or more <em>job titles or SOC occupation codes</em>, configure geography and report sections, then press <strong>Build the Prompt</strong>. The generated instruction will appear here — ready to copy into any AI assistant.
+      <br><br>
+      <em>This tool inverts the usual curriculum-planning question. Rather than asking "does demand exist for what we already teach?", it asks: "what should we teach, given where the demand actually is?"</em>
+    </div>
+    <div class="copied-flash" id="flash">Copied</div>`;
+    document.getElementById('metaTab').textContent = '—';
+    document.getElementById('metaRoles').textContent = '0';
+    document.getElementById('metaLen').textContent = '0';
+    window._currentPrompt = null;
+  }
+
+  // ============ COPY / DOWNLOAD ============
+  function copyPrompt() {
+    if (!window._currentPrompt) { alert('Build a prompt first.'); return; }
+    navigator.clipboard.writeText(window._currentPrompt).then(() => {
+      const flash = document.getElementById('flash');
+      flash.classList.add('show');
+      setTimeout(() => flash.classList.remove('show'), 1400);
+    });
+  }
+
+  function downloadPrompt() {
+    if (!window._currentPrompt) { alert('Build a prompt first.'); return; }
+    const blob = new Blob([window._currentPrompt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `workforce-prompt-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
