@@ -1,256 +1,842 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Repository Index - Dr. John Sands </title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        header {
-            background: linear-gradient(135deg, #007a3d 0%, #005a2d 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .content {
-            padding: 40px;
-        }
-        .category {
-            margin-bottom: 40px;
-            border-left: 5px solid #007a3d;
-            padding-left: 20px;
-        }
-        .category h2 {
-            color: #007a3d;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .category h2::before {
-            content: "📁";
-            margin-right: 10px;
-            font-size: 1.2em;
-        }
-        .category p {
-            color: #666;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-        .file-list {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 10px;
-        }
-        .file-list li {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            border-left: 3px solid #007a3d;
-        }
-        .file-list li:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .file-list a {
-            color: #007a3d;
-            text-decoration: none;
-            font-weight: 500;
-            display: block;
-        }
-        .file-list a:hover {
-            color: #005a2d;
-        }
-        .file-list a::before {
-            content: "📄 ";
-            margin-right: 5px;
-        }
-        footer {
-            background: #f8f9fa;
-            padding: 20px 40px;
-            text-align: center;
-            color: #666;
-            border-top: 1px solid #dee2e6;
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-        .stat-item {
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 2.5em;
-            color: #007a3d;
-            font-weight: bold;
-        }
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
-        @media (max-width: 768px) {
-            .file-list {
-                grid-template-columns: 1fr;
-            }
-            header h1 {
-                font-size: 1.8em;
-            }
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Repository Index — Faculty Development · Dr. John Sands · MVCC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Design tokens ---------- */
+  :root {
+    /* Light theme — soft cream / editorial */
+    --bg:            #f7f3ec;
+    --bg-elev:       #fdfaf3;
+    --panel:         #ffffff;
+    --ink:           #1f2933;
+    --ink-soft:      #4a5560;
+    --ink-mute:      #7a8693;
+    --line:          #e6dfd1;
+    --line-soft:     #efe9dc;
+    --accent:        #0f766e;   /* deep teal */
+    --accent-soft:   #d4eae6;
+    --accent-ink:    #064e48;
+    --amber:         #b45309;
+    --amber-soft:    #fef3c7;
+    --rose:          #be123c;
+    --rose-soft:     #fce7ec;
+    --indigo:        #3730a3;
+    --indigo-soft:   #e0e7ff;
+    --slate:         #334155;
+    --slate-soft:    #e2e8f0;
+    --green:         #166534;
+    --green-soft:    #dcfce7;
+    --violet:        #6b21a8;
+    --violet-soft:   #f3e8ff;
+    --orange:        #c2410c;
+    --orange-soft:   #ffedd5;
+
+    --radius-lg:     18px;
+    --radius-md:     12px;
+    --radius-sm:     8px;
+
+    --shadow-sm:     0 1px 2px rgba(40,30,15,.04), 0 1px 1px rgba(40,30,15,.03);
+    --shadow-md:     0 4px 12px rgba(40,30,15,.05), 0 2px 4px rgba(40,30,15,.04);
+    --shadow-lg:     0 10px 30px rgba(40,30,15,.08), 0 4px 10px rgba(40,30,15,.04);
+  }
+
+  [data-theme="dark"] {
+    --bg:            #14181f;
+    --bg-elev:       #1b212b;
+    --panel:         #232a36;
+    --ink:           #f1ede4;
+    --ink-soft:      #c2c7d0;
+    --ink-mute:      #8b94a3;
+    --line:          #2d3441;
+    --line-soft:     #262d39;
+    --accent:        #5eead4;
+    --accent-soft:   #14302d;
+    --accent-ink:    #99f6e4;
+    --amber-soft:    #3b2d11;
+    --rose-soft:     #3a1822;
+    --indigo-soft:   #1f1e44;
+    --slate-soft:    #2a3140;
+    --green-soft:    #14321f;
+    --violet-soft:   #281a3b;
+    --orange-soft:   #3a2114;
+    --shadow-sm:     0 1px 2px rgba(0,0,0,.4);
+    --shadow-md:     0 4px 12px rgba(0,0,0,.4);
+    --shadow-lg:     0 10px 30px rgba(0,0,0,.45);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .25s ease, color .25s ease;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Skip link ---------- */
+  .skip-link {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--accent); color: #fff; padding: 10px 16px;
+    border-radius: 0 0 8px 0; font-weight: 600; z-index: 100;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* ---------- Header ---------- */
+  .site-header {
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(8px);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .brand-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-soft);
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .brand-text { flex: 1; min-width: 0; }
+  .brand-title {
+    font-size: 17px; font-weight: 700; color: var(--ink);
+    margin: 0; letter-spacing: -.01em;
+  }
+  .brand-sub {
+    font-size: 13px; color: var(--ink-mute);
+    margin: 2px 0 0; font-weight: 500;
+  }
+  .theme-toggle {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all .15s ease;
+  }
+  .theme-toggle:hover { border-color: var(--ink-mute); color: var(--ink); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    max-width: 1200px; margin: 0 auto;
+    padding: 56px 28px 24px;
+  }
+  .hero h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(2.1rem, 4.2vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .hero h1 .em {
+    font-style: italic; color: var(--accent);
+  }
+  .hero-lede {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 680px;
+    margin: 0 0 36px;
+  }
+
+  /* Stats strip */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 0 0 8px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-num {
+    font-family: 'Lora', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -.02em;
+  }
+  .stat-label {
+    font-size: 13px; color: var(--ink-mute);
+    margin-top: 6px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+
+  /* ---------- Main content ---------- */
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 28px 80px; }
+
+  /* ---------- Section header ---------- */
+  .section { margin: 56px 0 0; }
+  .section:first-child { margin-top: 32px; }
+
+  .section-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  /* Per-section accent backgrounds for the icons */
+  .section[data-accent="teal"]    .section-icon { background: var(--accent-soft); }
+  .section[data-accent="amber"]   .section-icon { background: var(--amber-soft); }
+  .section[data-accent="rose"]    .section-icon { background: var(--rose-soft); }
+  .section[data-accent="indigo"]  .section-icon { background: var(--indigo-soft); }
+  .section[data-accent="slate"]   .section-icon { background: var(--slate-soft); }
+  .section[data-accent="green"]   .section-icon { background: var(--green-soft); }
+  .section[data-accent="violet"]  .section-icon { background: var(--violet-soft); }
+  .section[data-accent="orange"]  .section-icon { background: var(--orange-soft); }
+
+  .section-titles { flex: 1; min-width: 0; }
+  .section-titles h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -.01em;
+    color: var(--ink);
+  }
+  .section-titles p {
+    margin: 4px 0 0;
+    color: var(--ink-soft);
+    font-size: .98rem;
+  }
+  .section-count {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Card grid ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    opacity: 0; transition: opacity .18s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+  .card:hover::before { opacity: 1; }
+
+  /* Per-section card accent bar */
+  .section[data-accent="amber"]  .card::before { background: var(--amber); }
+  .section[data-accent="rose"]   .card::before { background: var(--rose); }
+  .section[data-accent="indigo"] .card::before { background: var(--indigo); }
+  .section[data-accent="slate"]  .card::before { background: var(--slate); }
+  .section[data-accent="green"]  .card::before { background: var(--green); }
+  .section[data-accent="violet"] .card::before { background: var(--violet); }
+  .section[data-accent="orange"] .card::before { background: var(--orange); }
+
+  .card-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 0 0 8px;
+  }
+  .card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 10px;
+    color: var(--ink);
+    letter-spacing: -.005em;
+  }
+  .card-desc {
+    font-size: .89rem;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+    flex: 1;
+  }
+  .card-cta {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: auto;
+  }
+  .card-cta .arrow {
+    transition: transform .18s ease;
+  }
+  .card:hover .card-cta .arrow { transform: translateX(3px); }
+
+  /* ---------- Footer ---------- */
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: var(--bg-elev);
+    padding: 32px 0;
+    margin-top: 60px;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 28px;
+    display: flex; justify-content: space-between; flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px; color: var(--ink-mute);
+  }
+  .footer-inner strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 640px) {
+    .hero { padding: 36px 20px 16px; }
+    main { padding: 16px 20px 60px; }
+    .header-inner { padding: 0 20px; }
+    .section-header { gap: 12px; }
+    .section-icon { width: 40px; height: 40px; font-size: 20px; }
+    .section-titles h2 { font-size: 1.35rem; }
+    .brand-sub { display: none; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>AI Repository Index</h1>
-            <p>Faculty Development Content - Artificial Intelligence Resources</p>
-        </header>
 
-        <div class="content">
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Resources</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">7</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">AI-Focused</div>
-                </div>
-            </div>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
-            <!-- AI Teaching & Pedagogy -->
-            <div class="category">
-                <h2>AI Teaching & Pedagogy Lessons</h2>
-                <p>Rationale for Learning and Teaching Artificial Intelligence</p>
-                <ul class="file-list">
-                    <li><a href="rationale.html">Rationale for AI Integration</a></li>
-                    <li><a href="ethics.html">Academic Integrity in the Age of AI</a></li>
-                    <li><a href="crutch.html">AI as Crutch vs Tool - Discussion</a></li> 
-                    <li><a href="better.html">AI Teaching Practices</a></li>
-                    <li><a href="airesistant.html">AI Resistant Assignments</a></li>
-                    <li><a href="humanizer.html">AI Humanizer Tools</a></li>
-                   <li><a href="burst.html">AI Burst Innovation</a></li>
-                    <li><a href="transform.html">AI Transformation in Education</a></li>
-                    <li><a href="policy.html">AI Policy Development</a></li>
-                </ul>
-            </div>
-
-            <!-- AI Tools & Concepts -->
-            <div class="category">
-                <h2>AI Fundamentals & Concepts</h2>
-                <p>Understanding AI Technologies, Tools, and Applications</p>
-                <ul class="file-list">
-                    <li><a href="types.html">Types of AI Systems</a></li>
-                    <li><a href="llm.html">Large Language Models (LLM) Basics</a></li>
-                    <li><a href="llms.html">LLM Comparison and Analysis</a></li>
-                    <li><a href="prompt.html">Prompt Engineering Basics</a></li>
-                    <li><a href="prompts.html">Education Content Prompt Builder</a></li><li><a href="workforce.html">AI Workforce Research Prompt Builder</a></li>
-                    <li><a href="disciplines.html">Survey of AI Tools</a></li>
-                    <li><a href="leaders.html">AI Industry Leaders</a></li>
-                    <li><a href="philosophers.html">AI Ethics and Philosophy</a></li>
-                </ul>
-            </div>
-
-            <!-- Student Resources -->
-            <div class="category">
-                <h2>Student Resources</h2>
-                <p>Guides and tutorials for students using AI tools effectively</p>
-                <ul class="file-list">
-                    <li><a href="chatgtpstudents.html">ChatGPT Tips for Students - Interactive Tutorial</a></li>
-                    <li><a href="bio.html">Creating AI-Enhanced Biographies</a></li>
-                    <li><a href="short.html">Short Guide to AI Usage</a></li>
-                    <li><a href="studyguide.html">AI Study Guide Generator</a></li
-                </ul>
-            </div>
-
-            <!-- Interactive Activities & Exercises -->
-            <div class="category">
-                <h2>Interactive Activities & Exercises - EXAMPLES</h2>
-                <p>Hands-on learning activities and interactive demonstrations</p>
-                <ul class="file-list">
-                    <li><a href="rsa.html">Interactive Generation of RSA Key Pairs (Asymetrical Encryption) </a></li>
-                    <li><a href="periodic.html">AI Generated Periodic Table Flashcards</a></li   
-                    <li><a href="plotting.html">Interactive X-Y Coordinate Plotting</a></li>
-                    <li><a href="punnett.html">Interactive Punnett Table Activity</a></li>
-                    <li><a href="numbersystems.html">Interactive Number Systems Game</a></li>
-                    <li><a href="hamlet.html">Interactive Hamlet Activity</a></li>
-                    <li><a href="hash.html">Interactive Hashing Activity</a></li>
-                    <li><a href="modulus.html">Interactive Modulus Math Activity</a></li>
-                    <li><a href="binary.html">Learning Binary Number Systems</a></li>
-                    <li><a href="a-to-d.html">Analog to Digital Converter Exercise</a></li>
-                    <li><a href="moduluscounter.html">Modulus Couter Exercise</a></li>
-                    <li><a href="passwordtester.html">Password Security Tester</a></li>
-                    <li><a href="flow-of-income.html">Micro Economics Circular Flow of Income Activity</a></li>
-                    <li><a href="itenerary.html">AI-Assisted Itinerary Planning</a></li>
-                    <li><a href="pid.html">PID Graphing</a></li>
-                </ul>
-            </div>
-
-            <!-- Specialized Topics -->
-            <div class="category">
-                <h2>Instructional Content Development Tools</h2>
-                <p>Specific applications and advanced concepts in AI and education</p>
-                <ul class="file-list">
-                   <li><a href="graphic.html">AI Graphic Design Tools</a></li>
-                    <li><a href="activity.html">College Learning Activity Types</a></li>
-                    <li><a href="ms700.html">Microsoft 700 Certification</a></li>
-                    <li><a href="outline.html">Course Outline Generator</a></li>
-                    <li><a href="graphics.html">Instructional Graphics Generator</a></li>               
-                    <li><a href="outlinesample.html">Sample Course Outline</a></li>
-                    <li><a href="syllabus.html">Syllabus Template</a></li>
-                    <li><a href="syllabus2.html">Alternative Syllabus Format</a></li>
-                    <li><a href="syllabus_down.html">Downloadable Syllabus</a></li>
-                </ul>
-            </div>
-
-        </div>
-
-        <footer>
-            <p><strong>Dr. John Sands - Repository</strong></p>
-            <p>AI Repository - Updated May 2026</p>
-            <p>This repository contains educational resources for teaching and learning with AI</p>
-        </footer>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand-icon" aria-hidden="true">🤖</div>
+    <div class="brand-text">
+      <p class="brand-title">AI Repository Index</p>
+      <p class="brand-sub">Faculty Development · Dr. John Sands · MVCC</p>
     </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <span id="themeIcon">🌙</span><span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Educational resources for <span class="em">teaching and learning</span> with AI.</h1>
+  <p class="hero-lede">A curated collection of pedagogy, fundamentals, student guides, interactive activities, and instructional tools — built for community college faculty and students navigating the age of generative AI.</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Resources</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">AI-Focused</div>
+    </div>
+  </div>
+</section>
+
+<main id="main-content">
+
+  <!-- ============ SECTION 1 ============ -->
+  <section class="section" data-accent="teal">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🎓</div>
+      <div class="section-titles">
+        <h2>AI Teaching &amp; Pedagogy Lessons</h2>
+        <p>Rationale, ethics, and practices for learning and teaching with artificial intelligence.</p>
+      </div>
+      <span class="section-count">9 items</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/rationale.html">
+        <p class="card-tag">Foundation</p>
+        <h3 class="card-title">Rationale for AI Integration</h3>
+        <p class="card-desc">Why AI belongs in higher-education classrooms — and how to make the case to colleagues and administrators.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/ethics.html">
+        <p class="card-tag">Ethics</p>
+        <h3 class="card-title">Academic Integrity in the Age of AI</h3>
+        <p class="card-desc">Rethinking honor codes, attribution, and authorship when generative tools are universally available.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/crutch.html">
+        <p class="card-tag">Discussion</p>
+        <h3 class="card-title">AI as Crutch vs. Tool</h3>
+        <p class="card-desc">A facilitated conversation guide for the most common faculty concern about student AI use.</p>
+        <span class="card-cta">Open discussion <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/better.html">
+        <p class="card-tag">Practice</p>
+        <h3 class="card-title">AI Teaching Practices</h3>
+        <p class="card-desc">Concrete classroom strategies that work with — rather than against — generative AI.</p>
+        <span class="card-cta">Open practices <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/airesistant.html">
+        <p class="card-tag">Assignment design</p>
+        <h3 class="card-title">AI-Resistant Assignments</h3>
+        <p class="card-desc">Design patterns for assessments that emphasize the human work AI can't easily replace.</p>
+        <span class="card-cta">Open guide <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/humanizer.html">
+        <p class="card-tag">Tools</p>
+        <h3 class="card-title">AI Humanizer Tools</h3>
+        <p class="card-desc">An examination of tools that claim to make AI text undetectable — and what that means for detection policy.</p>
+        <span class="card-cta">Open analysis <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/burst.html">
+        <p class="card-tag">Innovation</p>
+        <h3 class="card-title">AI Burst Innovation</h3>
+        <p class="card-desc">Rapid prototyping techniques to bring AI into a course over a single semester.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/transform.html">
+        <p class="card-tag">Strategy</p>
+        <h3 class="card-title">AI Transformation in Education</h3>
+        <p class="card-desc">A wider-lens view of how AI is restructuring teaching, curriculum, and the future of work.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/policy.html">
+        <p class="card-tag">Policy</p>
+        <h3 class="card-title">AI Policy Development</h3>
+        <p class="card-desc">Frameworks for drafting course, department, and institutional AI policies that age well.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section class="section" data-accent="indigo">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🧠</div>
+      <div class="section-titles">
+        <h2>AI Fundamentals &amp; Concepts</h2>
+        <p>Understanding the technologies, tools, and applications shaping generative AI.</p>
+      </div>
+      <span class="section-count">9 items</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/types.html">
+        <p class="card-tag">Overview</p>
+        <h3 class="card-title">Types of AI Systems</h3>
+        <p class="card-desc">A taxonomy of AI — from rule-based systems to large language models — with examples relevant to teaching.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/llm.html">
+        <p class="card-tag">LLMs</p>
+        <h3 class="card-title">Large Language Model Basics</h3>
+        <p class="card-desc">How LLMs are trained, how they generate text, and what that means for their strengths and limits.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/llms.html">
+        <p class="card-tag">Comparison</p>
+        <h3 class="card-title">LLM Comparison &amp; Analysis</h3>
+        <p class="card-desc">Side-by-side look at major LLMs — capabilities, costs, classroom suitability, and trade-offs.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/prompt.html">
+        <p class="card-tag">Skills</p>
+        <h3 class="card-title">Prompt Engineering Basics</h3>
+        <p class="card-desc">Foundational prompting strategies: clarity, context, examples, constraints, and iteration.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/prompts.html">
+        <p class="card-tag">Builder</p>
+        <h3 class="card-title">Education Content Prompt Builder</h3>
+        <p class="card-desc">Interactive builder for generating effective prompts tailored to educational content creation.</p>
+        <span class="card-cta">Open builder <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/workforce.html">
+        <p class="card-tag">Builder</p>
+        <h3 class="card-title">AI Workforce Research Prompt Builder</h3>
+        <p class="card-desc">Prompts oriented around SOC/O*NET codes for labor-market-driven curriculum design.</p>
+        <span class="card-cta">Open builder <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/disciplines.html">
+        <p class="card-tag">Tools</p>
+        <h3 class="card-title">Survey of AI Tools</h3>
+        <p class="card-desc">A discipline-spanning inventory of AI tools relevant to community college faculty.</p>
+        <span class="card-cta">Open survey <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/leaders.html">
+        <p class="card-tag">Industry</p>
+        <h3 class="card-title">AI Industry Leaders</h3>
+        <p class="card-desc">Profiles of the companies, labs, and individuals shaping the trajectory of AI today.</p>
+        <span class="card-cta">Open profiles <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/philosophers.html">
+        <p class="card-tag">Philosophy</p>
+        <h3 class="card-title">AI Ethics &amp; Philosophy</h3>
+        <p class="card-desc">The thinkers and arguments framing the ethical questions every educator should encounter.</p>
+        <span class="card-cta">Open lesson <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section class="section" data-accent="green">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">📚</div>
+      <div class="section-titles">
+        <h2>Student Resources</h2>
+        <p>Guides and tutorials for students using AI tools effectively and ethically.</p>
+      </div>
+      <span class="section-count">4 items</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/chatgtpstudents.html">
+        <p class="card-tag">Tutorial</p>
+        <h3 class="card-title">ChatGPT Tips for Students</h3>
+        <p class="card-desc">Interactive tutorial covering the prompting techniques students most need on day one.</p>
+        <span class="card-cta">Open tutorial <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/bio.html">
+        <p class="card-tag">Activity</p>
+        <h3 class="card-title">Creating AI-Enhanced Biographies</h3>
+        <p class="card-desc">A student-friendly project that teaches research, prompting, and source verification together.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/short.html">
+        <p class="card-tag">Quick reference</p>
+        <h3 class="card-title">Short Guide to AI Usage</h3>
+        <p class="card-desc">A one-page primer for students new to AI — what it is, when to use it, and when not to.</p>
+        <span class="card-cta">Open guide <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/studyguide.html">
+        <p class="card-tag">Tool</p>
+        <h3 class="card-title">AI Study Guide Generator</h3>
+        <p class="card-desc">A simple tool that turns student notes or readings into a structured study guide.</p>
+        <span class="card-cta">Open tool <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section class="section" data-accent="amber">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🧪</div>
+      <div class="section-titles">
+        <h2>Interactive Activities &amp; Exercises</h2>
+        <p>Hands-on learning activities and interactive demonstrations — examples ready to adapt.</p>
+      </div>
+      <span class="section-count">14 items</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/rsa.html">
+        <p class="card-tag">Cybersecurity</p>
+        <h3 class="card-title">RSA Key Pair Generation</h3>
+        <p class="card-desc">Interactive walkthrough of asymmetrical encryption with live key generation.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/periodic.html">
+        <p class="card-tag">Chemistry</p>
+        <h3 class="card-title">Periodic Table Flashcards</h3>
+        <p class="card-desc">AI-generated flashcards for studying the periodic table with spaced recall.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/plotting.html">
+        <p class="card-tag">Math</p>
+        <h3 class="card-title">X-Y Coordinate Plotting</h3>
+        <p class="card-desc">Interactive practice plotting coordinates with instant visual feedback.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/punnett.html">
+        <p class="card-tag">Biology</p>
+        <h3 class="card-title">Punnett Table Activity</h3>
+        <p class="card-desc">Genetics practice with interactive Punnett squares for monohybrid crosses.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/numbersystems.html">
+        <p class="card-tag">Computer science</p>
+        <h3 class="card-title">Number Systems Game</h3>
+        <p class="card-desc">Gamified conversion practice across binary, octal, decimal, and hexadecimal.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/hamlet.html">
+        <p class="card-tag">Literature</p>
+        <h3 class="card-title">Hamlet Interactive Activity</h3>
+        <p class="card-desc">Close-reading and character-analysis exercises for Shakespeare's tragedy.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/hash.html">
+        <p class="card-tag">Cybersecurity</p>
+        <h3 class="card-title">Hashing Activity</h3>
+        <p class="card-desc">Interactive demonstration of how hashing functions transform input data.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/modulus.html">
+        <p class="card-tag">Math</p>
+        <h3 class="card-title">Modulus Math Activity</h3>
+        <p class="card-desc">Modular arithmetic practice with live computation and worked examples.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/binary.html">
+        <p class="card-tag">Computer science</p>
+        <h3 class="card-title">Learning Binary Number Systems</h3>
+        <p class="card-desc">Step-by-step introduction to binary with interactive conversion exercises.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/a-to-d.html">
+        <p class="card-tag">Electronics</p>
+        <h3 class="card-title">Analog-to-Digital Converter</h3>
+        <p class="card-desc">Visualize sampling and quantization in an interactive ADC simulator.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/moduluscounter.html">
+        <p class="card-tag">Electronics</p>
+        <h3 class="card-title">Modulus Counter Exercise</h3>
+        <p class="card-desc">Build intuition for digital counters with adjustable modulus values.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/passwordtester.html">
+        <p class="card-tag">Cybersecurity</p>
+        <h3 class="card-title">Password Security Tester</h3>
+        <p class="card-desc">Test password strength against modern attack assumptions with live feedback.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/flow-of-income.html">
+        <p class="card-tag">Economics</p>
+        <h3 class="card-title">Circular Flow of Income</h3>
+        <p class="card-desc">Microeconomics activity visualizing the flow of money between sectors.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/itenerary.html">
+        <p class="card-tag">Applied</p>
+        <h3 class="card-title">AI-Assisted Itinerary Planning</h3>
+        <p class="card-desc">A practical exercise for using AI to plan complex multi-stop trips.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/pid.html">
+        <p class="card-tag">Engineering</p>
+        <h3 class="card-title">PID Graphing</h3>
+        <p class="card-desc">Interactive visualization of proportional, integral, and derivative control.</p>
+        <span class="card-cta">Open activity <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section class="section" data-accent="violet">
+    <div class="section-header">
+      <div class="section-icon" aria-hidden="true">🛠️</div>
+      <div class="section-titles">
+        <h2>Instructional Content Development Tools</h2>
+        <p>Applications and templates for designing courses, syllabi, and instructional materials.</p>
+      </div>
+      <span class="section-count">9 items</span>
+    </div>
+    <div class="card-grid">
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/graphic.html">
+        <p class="card-tag">Design</p>
+        <h3 class="card-title">AI Graphic Design Tools</h3>
+        <p class="card-desc">A guided tour of AI image and design tools for instructional materials.</p>
+        <span class="card-cta">Open guide <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/activity.html">
+        <p class="card-tag">Pedagogy</p>
+        <h3 class="card-title">College Learning Activity Types</h3>
+        <p class="card-desc">A typology of learning activities to vary engagement across a course.</p>
+        <span class="card-cta">Open reference <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/ms700.html">
+        <p class="card-tag">Certification</p>
+        <h3 class="card-title">Microsoft 700 Certification</h3>
+        <p class="card-desc">Preparation resources for the MS-700 certification exam.</p>
+        <span class="card-cta">Open resource <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/outline.html">
+        <p class="card-tag">Builder</p>
+        <h3 class="card-title">Course Outline Generator</h3>
+        <p class="card-desc">Generate structured course outlines aligned to learning outcomes.</p>
+        <span class="card-cta">Open builder <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/graphics.html">
+        <p class="card-tag">Builder</p>
+        <h3 class="card-title">Instructional Graphics Generator</h3>
+        <p class="card-desc">Create instructional visuals — diagrams, infographics, and concept maps.</p>
+        <span class="card-cta">Open builder <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/outlinesample.html">
+        <p class="card-tag">Example</p>
+        <h3 class="card-title">Sample Course Outline</h3>
+        <p class="card-desc">A reference course outline showing structure, sequencing, and assessment alignment.</p>
+        <span class="card-cta">Open sample <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/syllabus.html">
+        <p class="card-tag">Template</p>
+        <h3 class="card-title">Syllabus Template</h3>
+        <p class="card-desc">A standard syllabus template ready to customize for any course.</p>
+        <span class="card-cta">Open template <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/syllabus2.html">
+        <p class="card-tag">Template</p>
+        <h3 class="card-title">Alternative Syllabus Format</h3>
+        <p class="card-desc">A second syllabus format for instructors who prefer a different structure.</p>
+        <span class="card-cta">Open template <span class="arrow">→</span></span>
+      </a>
+
+      <a class="card" href="https://sands-mvcc.github.io/AI/syllabus_down.html">
+        <p class="card-tag">Download</p>
+        <h3 class="card-title">Downloadable Syllabus</h3>
+        <p class="card-desc">Download-ready syllabus file for offline editing and distribution.</p>
+        <span class="card-cta">Open download <span class="arrow">→</span></span>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong>Dr. John Sands</strong> · Repository · Updated May 2026
+    </div>
+    <div>
+      Educational resources for teaching and learning with AI
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle with localStorage persistence
+  (function() {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+
+    // Load saved preference, fall back to system preference
+    var saved = null;
+    try { saved = localStorage.getItem('sands-ai-theme'); } catch(e) {}
+    var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var initial = saved || (systemDark ? 'dark' : 'light');
+    applyTheme(initial);
+
+    btn.addEventListener('click', function() {
+      var current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      try { localStorage.setItem('sands-ai-theme', next); } catch(e) {}
+    });
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        icon.textContent = '☀️';
+        label.textContent = 'Light';
+      } else {
+        root.removeAttribute('data-theme');
+        icon.textContent = '🌙';
+        label.textContent = 'Dark';
+      }
+    }
+  })();
+</script>
+
 </body>
 </html>
