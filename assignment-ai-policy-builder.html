@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment AI Policy Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.82rem + 0.25vw, 1rem);
+      --text-base: clamp(1rem, 0.96rem + 0.22vw, 1.1rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.55vw, 1.4rem);
+      --text-xl: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+      --radius-sm: 0.4rem; --radius-md: 0.75rem; --radius-lg: 1rem; --radius-full: 9999px;
+      --shadow-sm: 0 2px 10px rgba(19, 33, 28, 0.06);
+      --shadow-md: 0 12px 30px rgba(19, 33, 28, 0.1);
+      --font-body: 'Source Sans 3', Arial, sans-serif;
+      --font-display: 'Merriweather', Georgia, serif;
+    }
+    :root, [data-theme="light"] {
+      --color-bg: #f6f5f1;
+      --color-surface: #ffffff;
+      --color-surface-2: #f2efe9;
+      --color-border: #d7d1c7;
+      --color-text: #1f2522;
+      --color-text-muted: #5f675f;
+      --color-primary: #0f6a70;
+      --color-primary-hover: #0b4f54;
+      --color-accent: #d9ebe8;
+      --color-red: #b33a2e;
+      --color-red-soft: #f8dfdb;
+      --color-yellow: #b88010;
+      --color-yellow-soft: #f8edd0;
+      --color-green: #2f7d32;
+      --color-green-soft: #ddeedb;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171917;
+      --color-surface: #1f2320;
+      --color-surface-2: #262b27;
+      --color-border: #414740;
+      --color-text: #eef1ec;
+      --color-text-muted: #bcc5bb;
+      --color-primary: #62a7b0;
+      --color-primary-hover: #84bec6;
+      --color-accent: #22393a;
+      --color-red: #f08f84;
+      --color-red-soft: #472925;
+      --color-yellow: #f0c66f;
+      --color-yellow-soft: #43371f;
+      --color-green: #86cb89;
+      --color-green-soft: #243b25;
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.25);
+      --shadow-md: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.55;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+    button, input, select, textarea { font: inherit; }
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-10);
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: 700;
+    }
+    .logo {
+      width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--color-red-soft), var(--color-yellow-soft), var(--color-green-soft));
+      border: 1px solid var(--color-border);
+    }
+    .theme-toggle {
+      min-width: 44px; min-height: 44px; border-radius: var(--radius-full); border: 1px solid var(--color-border);
+      background: var(--color-surface); color: var(--color-text); cursor: pointer;
+    }
+    .hero, .panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .hero {
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      margin-bottom: var(--space-6);
+      background: linear-gradient(180deg, var(--color-surface), var(--color-surface-2));
+    }
+    h1, h2, h3 { margin: 0; line-height: 1.15; }
+    h1 { font-family: var(--font-display); font-size: var(--text-xl); margin-bottom: var(--space-3); }
+    h2 { font-size: var(--text-lg); margin-bottom: var(--space-4); }
+    p { margin: 0; color: var(--color-text-muted); }
+    .hero p { max-width: 74ch; }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .panel { padding: var(--space-5); }
+    .controls { display: grid; gap: var(--space-5); }
+    .field { display: grid; gap: var(--space-2); }
+    label { font-weight: 700; }
+    input[type="text"], input[type="number"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-radius: var(--radius-md);
+      padding: 0.8rem 0.9rem;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    .hint { font-size: var(--text-sm); color: var(--color-text-muted); }
+    .button-row, .mini-actions {
+      display: flex; flex-wrap: wrap; gap: var(--space-3);
+    }
+    .btn {
+      min-height: 44px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn-primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+    .legend {
+      display: grid; gap: var(--space-2);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .legend-card {
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      border: 1px solid var(--color-border);
+      font-size: var(--text-sm);
+    }
+    .red { background: var(--color-red-soft); }
+    .yellow { background: var(--color-yellow-soft); }
+    .green { background: var(--color-green-soft); }
+    .assignment-list { display: grid; gap: var(--space-4); }
+    .assignment-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      background: var(--color-surface);
+    }
+    .assignment-head {
+      display: flex; justify-content: space-between; align-items: center; gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .assignment-num {
+      display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 700;
+      background: var(--color-surface-2); border-radius: var(--radius-full); padding: 0.35rem 0.8rem;
+    }
+    .stoplights {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); margin-bottom: var(--space-4);
+    }
+    .stoplights input { position: absolute; opacity: 0; pointer-events: none; }
+    .stoplight {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 0.8rem;
+      cursor: pointer;
+      display: grid; gap: 0.25rem;
+      min-height: 76px;
+    }
+    .stoplight strong { display: flex; align-items: center; gap: 0.45rem; }
+    .dot { width: 0.85rem; height: 0.85rem; border-radius: 50%; display: inline-block; }
+    .dot.red { background: var(--color-red); }
+    .dot.yellow { background: var(--color-yellow); }
+    .dot.green { background: var(--color-green); }
+    .stoplight small { color: var(--color-text-muted); }
+    .stoplights input:checked + .stoplight {
+      box-shadow: inset 0 0 0 2px var(--color-primary);
+      border-color: var(--color-primary);
+      background: var(--color-accent);
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    .check {
+      display: flex; align-items: start; gap: 0.6rem; padding: 0.55rem 0.65rem;
+      border-radius: var(--radius-md); background: var(--color-surface-2);
+    }
+    .check input { margin-top: 0.2rem; }
+    .outputs { display: grid; gap: var(--space-5); }
+    .output-box {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-2);
+      padding: var(--space-4);
+    }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
+    pre, .rendered-table {
+      margin: 0; white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.92rem;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid var(--color-border); padding: 0.75rem; text-align: left; vertical-align: top; }
+    th { background: var(--color-surface); }
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.4rem; border-radius: var(--radius-full); padding: 0.25rem 0.65rem;
+      font-size: var(--text-sm); font-weight: 700;
+    }
+    .tag.red { background: var(--color-red-soft); color: var(--color-red); }
+    .tag.yellow { background: var(--color-yellow-soft); color: var(--color-yellow); }
+    .tag.green { background: var(--color-green-soft); color: var(--color-green); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) {
+      .legend, .stoplights, .checkbox-grid { grid-template-columns: 1fr; }
+      .assignment-head, .toolbar, .topbar { align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <path d="M24 6v11"></path>
+            <path d="M24 20v11"></path>
+            <path d="M24 34v8"></path>
+            <circle cx="24" cy="12" r="4" fill="#b33a2e" stroke="none"></circle>
+            <circle cx="24" cy="24" r="4" fill="#b88010" stroke="none"></circle>
+            <circle cx="24" cy="36" r="4" fill="#2f7d32" stroke="none"></circle>
+          </svg>
+        </div>
+        <div>
+          <div>Assignment AI Policy Builder</div>
+          <div class="hint">Create a stoplight table for assignments 2-20.</div>
+        </div>
+      </div>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+    </div>
+
+    <section class="hero">
+      <h1>Build an assignment-by-assignment AI policy table.</h1>
+      <p>Enter course details, add assignment titles, choose a stoplight level for each assignment, and generate both a teacher prompt and a syllabus-ready table. The tool is intentionally compact so instructors can finish in a few minutes.</p>
+    </section>
+
+    <div class="grid">
+      <section class="panel controls" aria-label="Builder controls">
+        <div class="field">
+          <label for="courseName">Course or syllabus heading</label>
+          <input id="courseName" type="text" placeholder="Example: ENG 102 - Writing with Research" />
+        </div>
+
+        <div class="field">
+          <label for="count">Number of assignments</label>
+          <input id="count" type="number" min="2" max="20" value="5" />
+          <div class="hint">This tool labels assignments starting at 2 and continues through your selected count.</div>
+        </div>
+
+        <div class="legend" aria-label="Stoplight legend">
+          <div class="legend-card red"><strong>Red</strong><br>No generative AI use allowed.</div>
+          <div class="legend-card yellow"><strong>Yellow</strong><br>Limited AI use or instructor-defined conditions.</div>
+          <div class="legend-card green"><strong>Green</strong><br>AI use is allowed or encouraged with disclosure.</div>
+        </div>
+
+        <div class="field">
+          <label for="globalNote">Optional course-wide note</label>
+          <textarea id="globalNote" placeholder="Example: Students must document any AI use and remain responsible for the accuracy of submitted work."></textarea>
+        </div>
+
+        <div class="button-row">
+          <button class="btn btn-primary" type="button" id="buildRows">Create assignment rows</button>
+          <button class="btn" type="button" id="fillExamples">Load sample data</button>
+        </div>
+
+        <div class="hint">Tip: Each assignment requires a title. Policy checkboxes create a short written rule automatically, and you can edit the custom note for exceptions.</div>
+      </section>
+
+      <section class="panel outputs">
+        <div>
+          <h2>Assignments</h2>
+          <div id="assignmentList" class="assignment-list"></div>
+          <div class="button-row" style="margin-top: 1rem;">
+            <button class="btn btn-primary" type="button" id="generateBtn">Generate prompt and table</button>
+            <button class="btn" type="button" id="resetBtn">Reset all</button>
+          </div>
+        </div>
+
+        <div class="output-box">
+          <div class="toolbar">
+            <h3>Generated prompt</h3>
+            <button class="btn" type="button" data-copy="promptOutput">Copy prompt</button>
+          </div>
+          <pre id="promptOutput">Your generated prompt will appear here.</pre>
+        </div>
+
+        <div class="output-box">
+          <div class="toolbar">
+            <h3>Markdown table</h3>
+            <button class="btn" type="button" data-copy="markdownOutput">Copy markdown</button>
+          </div>
+          <pre id="markdownOutput">Your markdown table will appear here.</pre>
+        </div>
+
+        <div class="output-box">
+          <div class="toolbar">
+            <h3>Rendered table preview</h3>
+            <button class="btn" type="button" id="copyHtmlBtn">Copy HTML table</button>
+          </div>
+          <div id="tablePreview" class="rendered-table">Your preview will appear here.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <template id="assignmentTemplate">
+    <article class="assignment-card">
+      <div class="assignment-head">
+        <div class="assignment-num"></div>
+        <div class="hint">Choose one stoplight level and add policy details.</div>
+      </div>
+      <div class="field">
+        <label>Assignment title</label>
+        <input type="text" class="assignment-title" placeholder="Example: Annotated Bibliography" />
+      </div>
+      <div class="stoplights">
+        <label>
+          <input type="radio" value="Red" class="policy-level" name="">
+          <span class="stoplight"><strong><span class="dot red"></span>Red</strong><small>No AI use allowed.</small></span>
+        </label>
+        <label>
+          <input type="radio" value="Yellow" class="policy-level" name="">
+          <span class="stoplight"><strong><span class="dot yellow"></span>Yellow</strong><small>Limited use with conditions.</small></span>
+        </label>
+        <label>
+          <input type="radio" value="Green" class="policy-level" name="">
+          <span class="stoplight"><strong><span class="dot green"></span>Green</strong><small>AI allowed or encouraged.</small></span>
+        </label>
+      </div>
+      <div class="checkbox-grid">
+        <label class="check"><input type="checkbox" value="AI may be used for brainstorming or idea generation only" class="rule-box"> <span>Brainstorming only</span></label>
+        <label class="check"><input type="checkbox" value="AI may be used for outlining or planning" class="rule-box"> <span>Outlining allowed</span></label>
+        <label class="check"><input type="checkbox" value="AI may be used for grammar, clarity, or proofreading support" class="rule-box"> <span>Editing support allowed</span></label>
+        <label class="check"><input type="checkbox" value="Students must disclose any AI use in their submission" class="rule-box"> <span>Disclosure required</span></label>
+        <label class="check"><input type="checkbox" value="Students must cite the AI tool and prompt used" class="rule-box"> <span>Citation required</span></label>
+        <label class="check"><input type="checkbox" value="Instructor approval is required before any AI use" class="rule-box"> <span>Instructor approval required</span></label>
+      </div>
+      <div class="field">
+        <label>Custom policy note</label>
+        <textarea class="custom-note" placeholder="Example: No AI-generated thesis statements or paragraph drafts."></textarea>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    const countInput = document.getElementById('count');
+    const assignmentList = document.getElementById('assignmentList');
+    const buildRowsBtn = document.getElementById('buildRows');
+    const generateBtn = document.getElementById('generateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const fillExamplesBtn = document.getElementById('fillExamples');
+    const promptOutput = document.getElementById('promptOutput');
+    const markdownOutput = document.getElementById('markdownOutput');
+    const tablePreview = document.getElementById('tablePreview');
+    const template = document.getElementById('assignmentTemplate');
+    const themeToggle = document.getElementById('themeToggle');
+    const courseName = document.getElementById('courseName');
+    const globalNote = document.getElementById('globalNote');
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    function clampCount() {
+      const raw = Number(countInput.value) || 2;
+      const clamped = Math.min(20, Math.max(2, raw));
+      countInput.value = clamped;
+      return clamped;
+    }
+
+    function createRows() {
+      const count = clampCount();
+      assignmentList.innerHTML = '';
+      for (let assignmentNumber = 2; assignmentNumber < 2 + count; assignmentNumber++) {
+        const fragment = template.content.cloneNode(true);
+        const card = fragment.querySelector('.assignment-card');
+        const num = fragment.querySelector('.assignment-num');
+        num.textContent = `Assignment ${assignmentNumber}`;
+        const radios = fragment.querySelectorAll('.policy-level');
+        radios.forEach((radio, index) => {
+          radio.name = `policy-${assignmentNumber}`;
+          if (index === 1) radio.checked = true;
+        });
+        assignmentList.appendChild(fragment);
+      }
+    }
+
+    function getLevelClass(level) {
+      return level.toLowerCase();
+    }
+
+    function buildPolicyText(card, level) {
+      const checkedRules = [...card.querySelectorAll('.rule-box:checked')].map(box => box.value.trim());
+      const custom = card.querySelector('.custom-note').value.trim();
+      const pieces = [];
+
+      if (level === 'Red' && checkedRules.length === 0 && !custom) {
+        pieces.push('No generative AI use is permitted for this assignment.');
+      }
+      if (level === 'Yellow' && checkedRules.length === 0 && !custom) {
+        pieces.push('AI use is limited to instructor-defined purposes and conditions.');
+      }
+      if (level === 'Green' && checkedRules.length === 0 && !custom) {
+        pieces.push('AI use is allowed for this assignment, provided students follow course expectations.');
+      }
+
+      checkedRules.forEach(rule => pieces.push(rule.endsWith('.') ? rule : rule + '.'));
+      if (custom) pieces.push(custom.endsWith('.') ? custom : custom + '.');
+      return pieces.join(' ');
+    }
+
+    function collectAssignments() {
+      const cards = [...document.querySelectorAll('.assignment-card')];
+      return cards.map((card, idx) => {
+        const assignmentNumber = idx + 2;
+        const title = card.querySelector('.assignment-title').value.trim();
+        const checked = card.querySelector('.policy-level:checked');
+        const level = checked ? checked.value : 'Yellow';
+        const policy = buildPolicyText(card, level);
+        return { assignmentNumber, title, level, policy };
+      });
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function generateOutputs() {
+      const course = courseName.value.trim() || 'Course AI Policy Table';
+      const note = globalNote.value.trim();
+      const assignments = collectAssignments();
+      const missing = assignments.filter(item => !item.title);
+      if (missing.length) {
+        alert('Please enter a title for every assignment before generating the table.');
+        return;
+      }
+
+      const prompt = [
+        `Create a clean syllabus-ready table for ${course}.`,
+        'Use four columns: Assignment, Title, AI Level, and AI Policy.',
+        'Use a stoplight approach where Red means no AI use, Yellow means limited or conditional AI use, and Green means allowed or encouraged AI use.',
+        note ? `Include this course-wide note above or below the table: ${note}` : '',
+        'Assignments:',
+        ...assignments.map(item => `- Assignment ${item.assignmentNumber}: ${item.title} | ${item.level} | ${item.policy}`)
+      ].filter(Boolean).join('\n');
+
+      const markdown = [
+        note ? `**Course note:** ${note}` : '',
+        '| Assignment | Title | AI Level | AI Policy |',
+        '|---|---|---|---|',
+        ...assignments.map(item => `| ${item.assignmentNumber} | ${item.title.replace(/\|/g, '\\|')} | ${item.level} | ${item.policy.replace(/\|/g, '\\|')} |`)
+      ].filter(Boolean).join('\n');
+
+      const html = `
+        ${note ? `<p><strong>Course note:</strong> ${escapeHtml(note)}</p>` : ''}
+        <table>
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th>Title</th>
+              <th>AI Level</th>
+              <th>AI Policy</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${assignments.map(item => `
+              <tr>
+                <td>${item.assignmentNumber}</td>
+                <td>${escapeHtml(item.title)}</td>
+                <td><span class="tag ${getLevelClass(item.level)}"><span class="dot ${getLevelClass(item.level)}"></span>${escapeHtml(item.level)}</span></td>
+                <td>${escapeHtml(item.policy)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      promptOutput.textContent = prompt;
+      markdownOutput.textContent = markdown;
+      tablePreview.innerHTML = html;
+      tablePreview.dataset.html = html;
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement('textarea');
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+      }
+    }
+
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-copy');
+        copyText(document.getElementById(id).textContent);
+      });
+    });
+
+    document.getElementById('copyHtmlBtn').addEventListener('click', () => {
+      copyText(tablePreview.dataset.html || '');
+    });
+
+    buildRowsBtn.addEventListener('click', createRows);
+    generateBtn.addEventListener('click', generateOutputs);
+    resetBtn.addEventListener('click', () => {
+      courseName.value = '';
+      globalNote.value = '';
+      countInput.value = 5;
+      promptOutput.textContent = 'Your generated prompt will appear here.';
+      markdownOutput.textContent = 'Your markdown table will appear here.';
+      tablePreview.textContent = 'Your preview will appear here.';
+      tablePreview.dataset.html = '';
+      createRows();
+    });
+
+    fillExamplesBtn.addEventListener('click', () => {
+      courseName.value = 'ENG 102 - Writing with Research';
+      globalNote.value = 'Students remain responsible for the accuracy, originality, and documentation of any work they submit.';
+      countInput.value = 5;
+      createRows();
+      const sample = [
+        ['Literacy Narrative', 'Yellow', [0,3], 'AI may help with brainstorming, but students must write all drafted paragraphs themselves.'],
+        ['Source Evaluation', 'Red', [], 'No AI tools may be used to evaluate or summarize sources for this assignment.'],
+        ['Annotated Bibliography', 'Yellow', [1,2,3,4], 'Students may use AI to plan or revise language, but annotations must reflect their own reading and judgment.'],
+        ['Research Proposal', 'Green', [0,1,3,4], 'AI may support ideation and planning if all uses are disclosed and critically reviewed by the student.'],
+        ['Argument Essay', 'Red', [], 'No AI-generated thesis statements, outlines, drafts, or paragraph rewrites are allowed.']
+      ];
+      [...document.querySelectorAll('.assignment-card')].forEach((card, i) => {
+        const [title, level, checks, note] = sample[i];
+        card.querySelector('.assignment-title').value = title;
+        const radio = [...card.querySelectorAll('.policy-level')].find(r => r.value === level);
+        if (radio) radio.checked = true;
+        [...card.querySelectorAll('.rule-box')].forEach((box, idx) => box.checked = checks.includes(idx));
+        card.querySelector('.custom-note').value = note;
+      });
+      generateOutputs();
+    });
+
+    createRows();
+  </script>
+</body>
+</html>
