@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Plan Builder for Teachers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --bg-elev: #fbf8f1;
+    --bg-card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-mute: #7a7a7a;
+    --rule: #e5dfd0;
+    --rule-strong: #c9bfa8;
+    --accent: #8b3a2e;
+    --accent-soft: #c46b5d;
+    --accent-bg: #f4e8e3;
+    --gold: #b8923c;
+    --ok: #4a6b3d;
+    --warn: #a8632a;
+    --shadow-sm: 0 1px 2px rgba(60, 45, 20, 0.04), 0 1px 3px rgba(60, 45, 20, 0.06);
+    --shadow-md: 0 4px 12px rgba(60, 45, 20, 0.06), 0 2px 4px rgba(60, 45, 20, 0.04);
+    --shadow-lg: 0 12px 32px rgba(60, 45, 20, 0.08), 0 4px 8px rgba(60, 45, 20, 0.04);
+    --radius: 6px;
+    --radius-lg: 10px;
+    --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="dark"] {
+    --bg: #1a1814;
+    --bg-elev: #221f1a;
+    --bg-card: #2a2620;
+    --ink: #f0ece2;
+    --ink-soft: #c8c2b3;
+    --ink-mute: #8a8474;
+    --rule: #3a3429;
+    --rule-strong: #4d463a;
+    --accent: #d68b7e;
+    --accent-soft: #c46b5d;
+    --accent-bg: #3a2620;
+    --gold: #d4ab5a;
+    --ok: #8aae7a;
+    --warn: #d4a06a;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 15px;
+    transition: background var(--transition), color var(--transition);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(139, 58, 46, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(184, 146, 60, 0.04) 0%, transparent 40%);
+  }
+
+  [data-theme="dark"] body {
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(214, 139, 126, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(212, 171, 90, 0.03) 0%, transparent 40%);
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg-elev);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand-mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 48, 'SOFT' 50;
+  }
+
+  .brand-mark::before {
+    content: '§';
+    color: var(--accent);
+    font-weight: 400;
+    margin-right: 8px;
+    font-style: italic;
+  }
+
+  .brand-tag {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    letter-spacing: 0.02em;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    border-radius: 100px;
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .theme-toggle:hover {
+    background: var(--bg-card);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .theme-toggle svg { width: 14px; height: 14px; }
+
+  /* ===== LAYOUT ===== */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+    display: grid;
+    grid-template-columns: minmax(360px, 440px) 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 980px) {
+    main { grid-template-columns: 1fr; gap: 28px; padding: 24px 18px 60px; }
+    .header-inner { padding: 14px 18px; }
+    .brand-mark { font-size: 22px; }
+  }
+
+  /* ===== FORM PANEL ===== */
+  .form-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 88px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+
+  @media (max-width: 980px) {
+    .form-panel { position: static; max-height: none; padding: 22px; }
+  }
+
+  .form-panel::-webkit-scrollbar { width: 8px; }
+  .form-panel::-webkit-scrollbar-track { background: transparent; }
+  .form-panel::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+  .form-panel::-webkit-scrollbar-thumb:hover { background: var(--rule-strong); }
+
+  .panel-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+    font-variation-settings: 'opsz' 24;
+  }
+
+  .panel-sub {
+    color: var(--ink-mute);
+    font-size: 13px;
+    margin: 0 0 24px;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  /* ===== PRESETS ===== */
+  .presets {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .presets-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+
+  .preset-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .preset-chip {
+    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: inherit;
+  }
+
+  .preset-chip:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* ===== FORM CONTROLS ===== */
+  .field { margin-bottom: 18px; }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .field-label .req { color: var(--accent); margin-left: 2px; }
+  .field-label .opt {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-mute);
+    font-style: italic;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    transition: all var(--transition);
+  }
+
+  input[type="text"]:hover, select:hover, textarea:hover {
+    border-color: var(--rule-strong);
+  }
+
+  input[type="text"]:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 78px;
+    line-height: 1.5;
+    font-family: inherit;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5l3 3 3-3' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  ::placeholder { color: var(--ink-mute); opacity: 0.7; }
+
+  .field-help {
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .field-error {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 4px;
+    display: none;
+    font-weight: 500;
+  }
+
+  .field.error input, .field.error select, .field.error textarea {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+
+  .field.error .field-error { display: block; }
+
+  /* ===== BUTTONS ===== */
+  .button-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 18px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+
+  .btn svg { width: 14px; height: 14px; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    flex: 1;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary:hover {
+    background: var(--ink);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink-soft);
+    border-color: var(--rule-strong);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-elev);
+    color: var(--ink);
+    border-color: var(--ink-soft);
+  }
+
+  /* ===== OUTPUT PANEL ===== */
+  .output-panel { min-width: 0; }
+
+  .output-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .output-meta {
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+
+  .output-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .output-actions .btn { padding: 8px 14px; font-size: 12px; }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    background: var(--bg-card);
+    border: 1px dashed var(--rule-strong);
+    border-radius: var(--radius-lg);
+    padding: 80px 32px;
+    text-align: center;
+    color: var(--ink-mute);
+  }
+
+  .empty-icon {
+    font-family: 'Fraunces', serif;
+    font-size: 64px;
+    color: var(--rule-strong);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .empty-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+
+  .empty-body {
+    font-size: 14px;
+    max-width: 360px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ===== LESSON DOCUMENT ===== */
+  .lesson-doc {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    animation: fadeIn 400ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lesson-masthead {
+    padding: 36px 40px 28px;
+    border-bottom: 1px solid var(--rule);
+    background: linear-gradient(to bottom, var(--bg-elev), var(--bg-card));
+    position: relative;
+  }
+
+  .lesson-masthead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 50%, var(--accent-soft) 100%);
+  }
+
+  .masthead-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .masthead-title {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 48;
+  }
+
+  .masthead-course {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+
+  .masthead-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px dashed var(--rule);
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+
+  .meta-value {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .lesson-masthead { padding: 24px 22px 20px; }
+    .masthead-title { font-size: 26px; }
+  }
+
+  /* ===== SECTION CARDS ===== */
+  .sections { padding: 8px 0; }
+
+  .section {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    text-align: left;
+    transition: background var(--transition);
+  }
+
+  .section-header:hover { background: var(--bg-elev); }
+
+  .section-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 500;
+    flex-shrink: 0;
+    min-width: 24px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    margin: 0;
+    font-variation-settings: 'opsz' 24;
+  }
+
+  .section-chevron {
+    color: var(--ink-mute);
+    transition: transform var(--transition);
+    flex-shrink: 0;
+  }
+
+  .section.open .section-chevron { transform: rotate(90deg); }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease;
+  }
+
+  .section.open .section-body { max-height: 4000px; }
+
+  .section-content {
+    padding: 4px 40px 28px 78px;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 600px) {
+    .section-header { padding: 14px 22px; }
+    .section-content { padding: 4px 22px 22px 22px; }
+    .section-title { font-size: 17px; }
+  }
+
+  .section-content p { margin: 0 0 12px; }
+  .section-content p:last-child { margin-bottom: 0; }
+
+  .section-content strong { color: var(--ink); font-weight: 600; }
+
+  .section-content ul, .section-content ol {
+    margin: 0 0 14px;
+    padding-left: 20px;
+  }
+
+  .section-content li { margin-bottom: 8px; }
+  .section-content li:last-child { margin-bottom: 0; }
+
+  /* ===== OUTLINE TABLE ===== */
+  .outline-table {
+    margin: 4px 0 0;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .outline-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .outline-row:last-child { border-bottom: none; }
+  .outline-row.header { background: var(--bg-elev); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-mute); }
+  .outline-row.header .outline-time, .outline-row.header .outline-activity { padding: 8px 14px; }
+
+  .outline-time {
+    padding: 12px 14px;
+    background: var(--bg-elev);
+    border-right: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .outline-activity {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .outline-activity strong { display: block; margin-bottom: 2px; }
+
+  /* ===== KEY TERMS ===== */
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+
+  .term-card {
+    padding: 12px 14px;
+    background: var(--bg-elev);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .term-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .term-def {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ===== ASSESSMENT BLOCKS ===== */
+  .assess-block {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: var(--bg-elev);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--ok);
+  }
+
+  .assess-block:last-child { margin-bottom: 0; }
+
+  .assess-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ok);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* Differentiation block */
+  .diff-block {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: var(--bg-elev);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent-soft);
+  }
+
+  .diff-block:last-child { margin-bottom: 0; }
+
+  .diff-label {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 300ms ease;
+    z-index: 100;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 24px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    background: var(--bg-elev);
+  }
+
+  footer .dot { color: var(--accent); margin: 0 8px; font-style: normal; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: white; color: black; font-size: 11pt; }
+    header, .form-panel, .output-toolbar, .theme-toggle, footer, .section-chevron { display: none !important; }
+    main { display: block; padding: 0; max-width: 100%; }
+    .lesson-doc { box-shadow: none; border: none; }
+    .section { break-inside: avoid; border-bottom: 1px solid #ccc; }
+    .section-body { max-height: none !important; overflow: visible !important; }
+    .section-content { padding: 0 0 16pt 24pt; color: black; }
+    .lesson-masthead { padding: 0 0 16pt; }
+    .lesson-masthead::before { display: none; }
+    .masthead-title { font-size: 22pt; color: black; }
+    .section-header { padding: 8pt 0; cursor: default; }
+    .section-title { font-size: 14pt; color: black; }
+    .term-card, .assess-block, .diff-block, .outline-time { background: #f5f5f5; }
+  }
+
+  /* ===== UTILITIES ===== */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="header-inner">
+    <div class="brand">
+      <h1 class="brand-mark">Lesson Plan Builder</h1>
+      <span class="brand-tag">a planning companion for thoughtful teachers</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ FORM PANEL ============ -->
+  <aside class="form-panel" aria-label="Lesson plan inputs">
+    <h2 class="panel-title">Compose a Lesson</h2>
+    <p class="panel-sub">Fill in the essentials. We'll draft the rest.</p>
+
+    <div class="presets">
+      <div class="presets-label">Quick Start Presets</div>
+      <div class="preset-chips" id="presetChips"></div>
+    </div>
+
+    <form id="lessonForm" novalidate>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="courseTitle">Course Title<span class="req">*</span></label>
+          <input type="text" id="courseTitle" placeholder="e.g., Introduction to Cybersecurity" required>
+          <div class="field-error">Required.</div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="lessonTitle">Lesson Title<span class="req">*</span></label>
+          <input type="text" id="lessonTitle" placeholder="e.g., The CIA Triad" required>
+          <div class="field-error">Required.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="subject">Subject<span class="req">*</span></label>
+        <input type="text" id="subject" list="subjectList" placeholder="e.g., Cybersecurity, Biology, Mathematics" required>
+        <datalist id="subjectList">
+          <option value="Cybersecurity"></option>
+          <option value="Computer Science"></option>
+          <option value="Networking"></option>
+          <option value="Mathematics"></option>
+          <option value="Biology"></option>
+          <option value="Chemistry"></option>
+          <option value="Physics"></option>
+          <option value="History"></option>
+          <option value="English / Language Arts"></option>
+          <option value="Economics"></option>
+          <option value="Art"></option>
+          <option value="Music"></option>
+        </datalist>
+        <div class="field-error">Required.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="concepts">Concepts / Topics to Cover<span class="req">*</span></label>
+        <textarea id="concepts" rows="4" placeholder="List the key ideas you want students to encounter. One per line works well.&#10;e.g.,&#10;- Confidentiality, integrity, availability&#10;- Real-world breaches&#10;- Trade-offs between principles" required></textarea>
+        <div class="field-help">Tip: more specific concepts produce sharper lessons.</div>
+        <div class="field-error">Required.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="objectives">Learning Objectives<span class="opt">optional — we'll write them if you don't</span></label>
+        <textarea id="objectives" rows="3" placeholder="Leave blank to auto-generate, or write your own.&#10;e.g., Students will be able to explain the CIA Triad and analyze trade-offs between its components."></textarea>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="audience">Audience Level<span class="req">*</span></label>
+          <select id="audience" required>
+            <option value="">Select…</option>
+            <option value="elementary">Elementary School</option>
+            <option value="middle">Middle School</option>
+            <option value="high">High School</option>
+            <option value="college">College / Undergraduate</option>
+            <option value="adult">Adult Learners / Professional</option>
+            <option value="custom">Custom / Mixed</option>
+          </select>
+          <div class="field-error">Required.</div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="length">Lesson Length<span class="req">*</span></label>
+          <select id="length" required>
+            <option value="">Select…</option>
+            <option value="30">30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="75">75 minutes</option>
+            <option value="90">90 minutes</option>
+            <option value="multi">Multi-day unit</option>
+          </select>
+          <div class="field-error">Required.</div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button type="submit" class="btn btn-primary" id="generateBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2L9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+          Generate Lesson Plan
+        </button>
+        <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- ============ OUTPUT PANEL ============ -->
+  <section class="output-panel" aria-label="Generated lesson plan" aria-live="polite">
+
+    <div class="output-toolbar" id="outputToolbar" style="display:none;">
+      <div class="output-meta" id="outputMeta">Draft Plan</div>
+      <div class="output-actions">
+        <button class="btn btn-secondary" id="expandAllBtn">Expand all</button>
+        <button class="btn btn-secondary" id="copyBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+        <button class="btn btn-secondary" id="downloadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="btn btn-secondary" id="printBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
+      </div>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">¶</div>
+      <h3 class="empty-title">Your lesson begins here</h3>
+      <p class="empty-body">Complete the form and your plan will appear in this space — outline, objectives, activities, and assessments, all in one place.</p>
+    </div>
+
+    <div id="lessonOutput"></div>
+  </section>
+</main>
+
+<footer>
+  This tool is intended to support teacher planning <span class="dot">·</span> not to replace teacher judgment
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   LESSON PLAN BUILDER
+   Architecture:
+   - generator.js (logic): pure functions that take input → lesson object
+   - ui.js (view): renders lesson object → DOM
+   - Swap generator.generateLesson() for an AI API call later.
+   ============================================================ */
+
+// ============================================================
+// 1. LESSON GENERATION LOGIC (swap with AI API call later)
+// ============================================================
+const Generator = (() => {
+
+  // ----- Subject-aware analogy & example libraries -----
+  const subjectLibrary = {
+    cybersecurity: {
+      analogies: [
+        "A computer system is like a medieval castle — walls, gates, guards, and a moat each protect against a different kind of threat.",
+        "Encryption is like sending a letter in a locked box: only someone with the matching key can open it.",
+        "A firewall acts like a nightclub bouncer, checking every packet against a guest list before letting it through."
+      ],
+      examples: [
+        "The 2017 Equifax breach exposed 147 million records due to an unpatched vulnerability — a real-world failure of basic maintenance.",
+        "Two-factor authentication on a bank account demonstrates layered defense in everyday life.",
+        "Ransomware attacks on hospitals show why availability is just as critical as confidentiality."
+      ],
+      materials: ["Whiteboard or shared digital workspace", "Network diagram handouts", "Access to a sandboxed lab environment (optional)"]
+    },
+    biology: {
+      analogies: [
+        "A cell is like a factory — the nucleus is management, ribosomes are workers, and mitochondria are the power plant.",
+        "DNA is like a recipe book: same ingredients, but the instructions decide whether you make bread or cake.",
+        "Photosynthesis is like a solar panel converting sunlight into stored energy a plant can spend later."
+      ],
+      examples: [
+        "Watching bread mold over a week to observe fungal growth firsthand.",
+        "Comparing oxygen levels in a sealed jar with and without a plant under light.",
+        "Tracking heart rate before and after exercise to see cellular respiration in action."
+      ],
+      materials: ["Microscopes or magnifiers", "Specimen samples or imagery", "Lab notebook for observations"]
+    },
+    mathematics: {
+      analogies: [
+        "Variables are like labeled jars — the label stays the same, but the contents can change.",
+        "A function is a vending machine: put in a number, get out exactly one answer.",
+        "Solving an equation is like unwrapping a gift — undo each layer in reverse order."
+      ],
+      examples: [
+        "Calculating compound interest on a savings account over 10 years.",
+        "Using ratios to scale a recipe from 4 servings to 7.",
+        "Modeling the trajectory of a basketball as a parabola."
+      ],
+      materials: ["Graph paper or graphing software", "Calculators", "Manipulatives for younger learners"]
+    },
+    history: {
+      analogies: [
+        "A historical document is like a fingerprint at a crime scene — useful only if you know who left it and why.",
+        "Studying causes of a war is like diagnosing an illness: many small symptoms point to the underlying disease.",
+        "Primary and secondary sources are like eyewitnesses versus newspaper reporters covering the same event."
+      ],
+      examples: [
+        "Comparing newspaper headlines from 1914 and 1939 to spot patterns of rising tension.",
+        "Reading letters from soldiers to understand the lived experience behind a textbook timeline.",
+        "Tracing the journey of a single object (cotton, sugar, oil) through global trade."
+      ],
+      materials: ["Primary source packets", "Timeline templates", "Maps from the relevant era"]
+    },
+    english: {
+      analogies: [
+        "A thesis statement is like a map's legend — small, but it tells you what every other element means.",
+        "Revision is like editing a photograph: the picture is already there; you're adjusting light and focus.",
+        "A strong paragraph is a sandwich — topic sentence, evidence as the filling, analysis to close it up."
+      ],
+      examples: [
+        "Comparing two reviews of the same film to study tone and rhetorical choice.",
+        "Rewriting a single paragraph in three different voices to feel how diction changes meaning.",
+        "Annotating a poem line-by-line for imagery, rhythm, and shifts."
+      ],
+      materials: ["Reading selections (printed or digital)", "Annotation tools or sticky notes", "Writing journals"]
+    },
+    networking: {
+      analogies: [
+        "The OSI model is like a postal system — each layer adds an envelope, and each is opened in reverse on arrival.",
+        "DNS is the phonebook of the internet: you remember names, but computers need numbers.",
+        "A router is a traffic cop at an intersection, deciding which lane each packet should take."
+      ],
+      examples: [
+        "Tracing a packet from your laptop to a webpage using traceroute.",
+        "Watching a Wi-Fi signal weaken as you move from room to room.",
+        "Diagnosing why a printer disappears from a home network after the router reboots."
+      ],
+      materials: ["Network diagram templates", "Access to command-line tools (ping, traceroute)", "Cabling samples (Cat5e, fiber) if available"]
+    },
+    economics: {
+      analogies: [
+        "Inflation is like a tire slowly leaking air — you don't notice it day to day, but eventually you can't drive.",
+        "Supply and demand is a seesaw: when one side moves, the other has to respond.",
+        "Opportunity cost is the road not taken — the value of what you gave up to choose what you have."
+      ],
+      examples: [
+        "Comparing grocery receipts from this year and three years ago to see inflation directly.",
+        "Mapping how a coffee bean's price changes from farm to café.",
+        "Tracking the price of one stock across a week and identifying news that moved it."
+      ],
+      materials: ["Charts of historical economic data", "Sample budgets or receipts", "Calculator or spreadsheet access"]
+    },
+    default: {
+      analogies: [
+        "Learning this concept is like building a house — foundations first, then walls, then the details that make it feel like home.",
+        "Each new idea is a thread; today we'll weave several together into something stronger than any single strand.",
+        "Think of the topic as a city map: today we'll learn the main streets so you can navigate before exploring side roads."
+      ],
+      examples: [
+        "We'll work through a real-world scenario where this idea applies.",
+        "We'll examine a case study to see the concept in motion.",
+        "We'll connect what we learn today to something you've already encountered."
+      ],
+      materials: ["Whiteboard or shared screen", "Handouts or digital notes", "Student notebooks"]
+    }
+  };
+
+  function pickSubjectKey(subject) {
+    const s = (subject || "").toLowerCase();
+    if (s.includes("cyber") || s.includes("security")) return "cybersecurity";
+    if (s.includes("biolog") || s.includes("life science")) return "biology";
+    if (s.includes("math") || s.includes("algebra") || s.includes("geometry") || s.includes("calculus")) return "mathematics";
+    if (s.includes("history") || s.includes("social stud")) return "history";
+    if (s.includes("english") || s.includes("language arts") || s.includes("literat") || s.includes("writing")) return "english";
+    if (s.includes("network")) return "networking";
+    if (s.includes("econ") || s.includes("finance")) return "economics";
+    return "default";
+  }
+
+  function audienceLabel(a) {
+    return ({
+      elementary: "Elementary School", middle: "Middle School", high: "High School",
+      college: "College / Undergraduate", adult: "Adult Learners / Professional",
+      custom: "Mixed-Level Learners"
+    })[a] || a;
+  }
+
+  function audienceVoice(a) {
+    // language complexity guidance
+    return ({
+      elementary: { complexity: "concrete and playful", verbs: ["explore", "discover", "show", "describe"], hook: "story or visual surprise" },
+      middle:     { complexity: "accessible with curiosity hooks", verbs: ["identify", "compare", "explain", "predict"], hook: "puzzle or quick scenario" },
+      high:       { complexity: "rigorous yet engaging", verbs: ["analyze", "evaluate", "apply", "interpret"], hook: "provocative question or short case" },
+      college:    { complexity: "rigorous and conceptually demanding", verbs: ["critique", "synthesize", "model", "defend"], hook: "current research excerpt or counter-example" },
+      adult:      { complexity: "practical and respect-for-experience", verbs: ["apply", "evaluate", "transfer", "implement"], hook: "real workplace dilemma" },
+      custom:     { complexity: "differentiated across levels", verbs: ["explore", "apply", "explain", "extend"], hook: "tiered prompt students can enter at their level" }
+    })[a] || { complexity: "clear and engaging", verbs: ["explain", "apply", "analyze"], hook: "warm-up prompt" };
+  }
+
+  function parseConcepts(text) {
+    return (text || "")
+      .split(/\n|;|\u2022/g)
+      .map(s => s.replace(/^[-*•\d.\s)]+/, "").trim())
+      .filter(Boolean);
+  }
+
+  // ----- Time outline builder -----
+  function buildOutline(lengthValue, lessonTitle, concepts, voice) {
+    if (lengthValue === "multi") {
+      return [
+        { time: "Day 1", title: "Introduction & Foundations", desc: `Open with a ${voice.hook}. Establish core vocabulary and surface prior knowledge. End the day with a low-stakes formative check.` },
+        { time: "Day 2", title: "Guided Practice", desc: `Work through structured examples connected to the concepts: ${concepts.slice(0,2).join(", ") || lessonTitle}. Introduce a collaborative element.` },
+        { time: "Day 3", title: "Application & Extension", desc: `Students apply the ideas to a novel scenario. Begin small-group project work.` },
+        { time: "Day 4", title: "Project & Peer Review", desc: `Continued project work with structured peer feedback. Address misconceptions surfaced earlier.` },
+        { time: "Day 5", title: "Synthesis & Assessment", desc: `Final presentations or summative assessment. Reflective wrap-up connecting the unit to broader themes.` }
+      ];
+    }
+    const total = parseInt(lengthValue, 10);
+    // proportional split: opener 15%, exposition 30%, guided 25%, independent 20%, closing 10%
+    const t = n => Math.max(2, Math.round(total * n));
+    const opener = t(0.15), expo = t(0.30), guided = t(0.25), indep = t(0.20);
+    let used = opener + expo + guided + indep;
+    const closing = Math.max(3, total - used);
+    let cursor = 0;
+    const row = (mins, title, desc) => {
+      const start = cursor, end = cursor + mins;
+      cursor = end;
+      return { time: `${start}–${end} min`, title, desc };
+    };
+    return [
+      row(opener, "Opening & Hook", `Begin with a ${voice.hook} to surface prior knowledge and signal the day's question. Briefly preview the lesson arc.`),
+      row(expo, "Core Concept Introduction", `Introduce ${concepts.slice(0,2).join(" and ") || lessonTitle}. Use a worked example, visual, or analogy. Pause for one quick comprehension check.`),
+      row(guided, "Guided Practice", `Students work through 1–2 problems or short tasks with teacher support. Circulate and address misconceptions in real time.`),
+      row(indep, "Independent or Collaborative Application", `Students apply the idea in pairs, small groups, or solo — depending on the activity. Teacher coaches rather than directs.`),
+      row(closing, "Closing & Exit Ticket", `Quick share-out of key takeaways. Distribute a brief exit ticket to gauge understanding before students leave.`)
+    ];
+  }
+
+  // ----- Objectives generator -----
+  function generateObjectives(concepts, voice, lessonTitle) {
+    const verbs = voice.verbs;
+    const topic = concepts.length ? concepts : [lessonTitle];
+    return topic.slice(0, 4).map((c, i) => `Students will be able to ${verbs[i % verbs.length]} ${c.toLowerCase().replace(/\.$/, "")}.`);
+  }
+
+  function refineObjectives(text, voice) {
+    return text
+      .split(/\n|;/g)
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(s => {
+        if (/^students will/i.test(s)) return s.replace(/\.$/, "") + ".";
+        return `Students will be able to ${s.charAt(0).toLowerCase() + s.slice(1).replace(/\.$/, "")}.`;
+      });
+  }
+
+  // ----- Key terms generator -----
+  function generateKeyTerms(concepts, lessonTitle) {
+    // For each concept (up to 6), generate a name + brief definition placeholder
+    const src = concepts.length ? concepts : [lessonTitle];
+    return src.slice(0, 6).map(c => {
+      const name = c.split(/[:—–-]/)[0].split(/\(/)[0].trim();
+      const short = name.length > 36 ? name.split(/[, ]/).slice(0, 4).join(" ") : name;
+      return {
+        term: short,
+        def: `A core idea in this lesson. Students should be able to define ${short.toLowerCase()} and recognize it in context.`
+      };
+    });
+  }
+
+  // ----- Activities -----
+  function buildActivities(concepts, voice, lengthValue) {
+    const isShort = lengthValue !== "multi" && parseInt(lengthValue, 10) <= 45;
+    const c0 = concepts[0] || "the lesson topic";
+    const c1 = concepts[1] || c0;
+    const activities = [
+      `<strong>Think-Pair-Share:</strong> Pose a question about ${c0}. Students think silently (1 min), discuss with a partner (2 min), then share with the full group.`,
+      `<strong>Concept Sort:</strong> Provide cards or digital tiles representing examples and non-examples. Students sort them and justify their reasoning aloud.`,
+      `<strong>Worked-Example Pair:</strong> Show one solved problem, then have students attempt a near-identical one, comparing approaches at the end.`,
+      `<strong>Gallery Walk:</strong> Post prompts around the room (or in breakout rooms). Small groups rotate, adding to each chart with a different colored marker.`,
+      `<strong>Quick Build:</strong> Students sketch, diagram, or prototype a representation of ${c1} in 5–7 minutes, then justify one choice they made.`,
+      `<strong>Misconception Hunt:</strong> Present a flawed solution or argument. Students identify what's wrong and propose a fix.`
+    ];
+    return isShort ? activities.slice(0, 3) : activities.slice(0, 5);
+  }
+
+  function buildGroupProjects(concepts, voice, lengthValue) {
+    const c0 = concepts[0] || "the lesson topic";
+    const isMulti = lengthValue === "multi";
+    const long = isMulti || (parseInt(lengthValue, 10) >= 75);
+    const base = [
+      `<strong>Case-Study Team Challenge:</strong> Groups of 3–4 receive a scenario involving ${c0}. They must produce a brief recommendation (poster, slide, or memo) and present it.`
+    ];
+    if (long) {
+      base.push(`<strong>Design Sprint:</strong> Teams propose a small-scale solution, prototype, or model related to the lesson concepts and present it for peer critique.`);
+      base.push(`<strong>Jigsaw Investigation:</strong> Each team studies one sub-topic in depth, then forms new groups so every member teaches their piece to others.`);
+    }
+    return base;
+  }
+
+  function buildEngagement(voice) {
+    return [
+      `<strong>Cold-call with safety nets:</strong> Use "no opt-out" but pair it with "phone a friend" so participation feels low-risk.`,
+      `<strong>Whiteboard chorus:</strong> Every student answers on a mini-whiteboard simultaneously and raises it — 100% participation, instant data.`,
+      `<strong>Polling:</strong> One multiple-choice poll mid-lesson surfaces misconceptions in real time and resets attention.`,
+      `<strong>Movement break:</strong> "Stand if you agree, sit if you disagree" — physical commitment to a position raises engagement and reveals thinking.`,
+      `<strong>Strategic silence:</strong> After asking a hard question, count to 10 silently before taking any answer. Wait time doubles response quality.`
+    ];
+  }
+
+  function buildAssessment(objectives, voice) {
+    const o = objectives[0] || "the core concept";
+    return {
+      formative: `<strong>Mid-lesson check:</strong> After the guided practice, ask students to solve one short problem or answer one targeted question independently. Collect responses (paper, digital, or whiteboard) and scan for patterns before continuing.`,
+      informal: `<strong>Informal checks:</strong> Watch for ${voice.complexity === "concrete and playful" ? "facial cues and engagement during partner talk" : "the quality of student questions and how they justify answers in discussion"}. A thumbs-up / sideways / down gesture can give you a 5-second pulse on the room.`,
+      exit: `<strong>Exit ticket:</strong> In the final 3–5 minutes, students respond in writing to: "Explain ${o.replace(/^Students will be able to /, "").replace(/\.$/, "")} in your own words, and ask one question you still have." This single artifact reveals both mastery and lingering confusion to plan tomorrow's opener.`
+    };
+  }
+
+  function buildDifferentiation(voice, audience) {
+    return [
+      { label: "For students who need more support", body: `Provide a partially-completed scaffold (sentence stems, partial diagrams, vocabulary glossary). Pre-teach one or two terms with a small group before the main lesson. Allow verbal responses in place of written ones where possible.` },
+      { label: "For students ready for a stretch", body: `Offer an extension question that pushes beyond the lesson's scope — a "what if" variant, a contradiction to resolve, or a connection to a parallel topic. Invite them to design a question for peers.` },
+      { label: "For multilingual learners", body: `Pair visuals with key terms, allow native-language brainstorming before English production, and provide a bilingual glossary of the lesson's vocabulary. Sentence frames support equal participation.` },
+      { label: "For students with attention or focus needs", body: `Break the lesson into smaller chunks with explicit transitions. Offer a printed agenda they can check off. Strategic seating near the teacher and movement built into activities both help.` }
+    ];
+  }
+
+  function buildHomework(concepts, voice, lengthValue) {
+    const c0 = concepts[0] || "today's topic";
+    const items = [
+      `<strong>Practice:</strong> Complete 4–6 problems or short tasks reinforcing ${c0}. Keep the workload under 20 minutes.`,
+      `<strong>Reflection prompt:</strong> Write a 3-sentence response — one thing you learned, one thing you're still unsure about, one place you noticed today's idea outside of class.`,
+      `<strong>Extension (optional):</strong> Find one real-world example of the concept in news, media, or daily life. Be ready to share it tomorrow.`
+    ];
+    if (lengthValue === "multi") {
+      items.push(`<strong>Unit project work:</strong> Continue progress on the team project; bring artifacts (notes, data, drafts) to the next class.`);
+    }
+    return items;
+  }
+
+  function buildOverview(input, voice) {
+    const concepts = parseConcepts(input.concepts);
+    const lead = concepts[0] || input.lessonTitle;
+    const lengthText = input.length === "multi" ? "a multi-day unit" : `${input.length} minutes`;
+    return `<p>This ${lengthText} lesson introduces <strong>${input.lessonTitle}</strong> to ${audienceLabel(input.audience).toLowerCase()} students within the ${input.courseTitle} course. The lesson centers on ${lead}${concepts.length > 1 ? `, and extends into ${concepts.slice(1, 3).join(" and ")}` : ""}.</p><p>The arc is intentionally student-active: a short opener surfaces prior knowledge, a focused exposition introduces the core idea, guided practice builds confidence, and a closing assessment captures what stuck. The pacing is ${voice.complexity}, with built-in checkpoints for the teacher to adjust in real time.</p>`;
+  }
+
+  // ----- MAIN ENTRY POINT -----
+  function generateLesson(input) {
+    const concepts = parseConcepts(input.concepts);
+    const voice = audienceVoice(input.audience);
+    const subjectKey = pickSubjectKey(input.subject);
+    const lib = subjectLibrary[subjectKey];
+
+    const objectives = input.objectives && input.objectives.trim()
+      ? refineObjectives(input.objectives, voice)
+      : generateObjectives(concepts, voice, input.lessonTitle);
+
+    return {
+      meta: {
+        courseTitle: input.courseTitle,
+        lessonTitle: input.lessonTitle,
+        subject: input.subject,
+        audience: audienceLabel(input.audience),
+        length: input.length === "multi" ? "Multi-day unit" : `${input.length} minutes`
+      },
+      overview: buildOverview(input, voice),
+      outline: buildOutline(input.length, input.lessonTitle, concepts, voice),
+      objectives: objectives,
+      keyTerms: generateKeyTerms(concepts, input.lessonTitle),
+      teacherNotes: `<p>Anchor the lesson in <strong>${concepts[0] || input.lessonTitle}</strong>. When introducing the idea, narrate your own thinking aloud — students learn as much from watching an expert reason as from any definition.</p><p>Watch for two predictable misconceptions: (1) students conflating surface features with the underlying principle, and (2) students applying the idea correctly in one context but failing to transfer it. Address both by varying the examples you use.</p><p>If the room loses momentum, return to the central question. The discipline of <em>${input.subject}</em> is rich enough that pacing matters more than coverage.</p>`,
+      examples: lib.examples,
+      analogies: lib.analogies,
+      activities: buildActivities(concepts, voice, input.length),
+      groupProjects: buildGroupProjects(concepts, voice, input.length),
+      engagement: buildEngagement(voice),
+      assessment: buildAssessment(objectives, voice),
+      materials: lib.materials.concat([
+        "Printed or digital copy of this lesson plan",
+        "Exit ticket slips or shared digital form"
+      ]),
+      differentiation: buildDifferentiation(voice, input.audience),
+      homework: buildHomework(concepts, voice, input.length)
+    };
+  }
+
+  return { generateLesson };
+})();
+
+// ============================================================
+// 2. UI / RENDERING LAYER
+// ============================================================
+const UI = (() => {
+
+  const SECTIONS = [
+    { key: "overview",        title: "Lesson Overview" },
+    { key: "outline",         title: "Detailed Lesson Outline" },
+    { key: "objectives",      title: "Learning Objectives" },
+    { key: "keyTerms",        title: "Key Terms & Vocabulary" },
+    { key: "teacherNotes",    title: "Teacher Explanation Notes" },
+    { key: "examples",        title: "Examples" },
+    { key: "analogies",       title: "Analogies" },
+    { key: "activities",      title: "Student Activities" },
+    { key: "groupProjects",   title: "Team & Group Project Ideas" },
+    { key: "engagement",      title: "Engagement Strategies" },
+    { key: "assessment",      title: "Assessment Methods" },
+    { key: "materials",       title: "Materials & Preparation" },
+    { key: "differentiation", title: "Differentiation & Adaptation" },
+    { key: "homework",        title: "Homework & Extension" }
+  ];
+
+  function renderMasthead(meta) {
+    return `
+      <div class="lesson-masthead">
+        <div class="masthead-eyebrow">Lesson Plan</div>
+        <h2 class="masthead-title">${escapeHtml(meta.lessonTitle)}</h2>
+        <p class="masthead-course">${escapeHtml(meta.courseTitle)}</p>
+        <div class="masthead-meta">
+          <div class="meta-item"><span class="meta-label">Subject</span><span class="meta-value">${escapeHtml(meta.subject)}</span></div>
+          <div class="meta-item"><span class="meta-label">Audience</span><span class="meta-value">${escapeHtml(meta.audience)}</span></div>
+          <div class="meta-item"><span class="meta-label">Length</span><span class="meta-value">${escapeHtml(meta.length)}</span></div>
+        </div>
+      </div>`;
+  }
+
+  function renderSectionBody(key, data) {
+    switch (key) {
+      case "overview":
+      case "teacherNotes":
+        return data;
+
+      case "outline":
+        return `
+          <div class="outline-table">
+            <div class="outline-row header"><div class="outline-time">Time</div><div class="outline-activity">Segment</div></div>
+            ${data.map(r => `
+              <div class="outline-row">
+                <div class="outline-time">${escapeHtml(r.time)}</div>
+                <div class="outline-activity"><strong>${escapeHtml(r.title)}</strong>${escapeHtml(r.desc)}</div>
+              </div>
+            `).join("")}
+          </div>`;
+
+      case "objectives":
+        return `<ul>${data.map(o => `<li>${escapeHtml(o)}</li>`).join("")}</ul>`;
+
+      case "keyTerms":
+        return `<div class="terms-grid">${data.map(t => `
+          <div class="term-card">
+            <div class="term-name">${escapeHtml(t.term)}</div>
+            <div class="term-def">${escapeHtml(t.def)}</div>
+          </div>
+        `).join("")}</div>`;
+
+      case "examples":
+      case "analogies":
+        return `<ul>${data.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+
+      case "activities":
+      case "groupProjects":
+      case "engagement":
+      case "homework":
+        return `<ul>${data.map(x => `<li>${x}</li>`).join("")}</ul>`;
+
+      case "assessment":
+        return `
+          <div class="assess-block"><div class="assess-label">Formative</div>${data.formative}</div>
+          <div class="assess-block"><div class="assess-label">Informal checks</div>${data.informal}</div>
+          <div class="assess-block"><div class="assess-label">Exit ticket</div>${data.exit}</div>`;
+
+      case "materials":
+        return `<ul>${data.map(m => `<li>${escapeHtml(m)}</li>`).join("")}</ul>`;
+
+      case "differentiation":
+        return data.map(d => `
+          <div class="diff-block">
+            <div class="diff-label">${escapeHtml(d.label)}</div>
+            <div>${escapeHtml(d.body)}</div>
+          </div>
+        `).join("");
+
+      default:
+        return "";
+    }
+  }
+
+  function render(lesson) {
+    const sectionsHtml = SECTIONS.map((s, i) => {
+      const body = renderSectionBody(s.key, lesson[s.key]);
+      const isOpen = i < 3 ? " open" : "";
+      const num = String(i + 1).padStart(2, "0");
+      return `
+        <article class="section${isOpen}" data-key="${s.key}">
+          <button class="section-header" aria-expanded="${i < 3}" aria-controls="sec-${s.key}">
+            <div class="section-title-row">
+              <span class="section-num">${num}</span>
+              <h3 class="section-title">${s.title}</h3>
+            </div>
+            <svg class="section-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="section-body" id="sec-${s.key}">
+            <div class="section-content">${body}</div>
+          </div>
+        </article>`;
+    }).join("");
+
+    return `<div class="lesson-doc">${renderMasthead(lesson.meta)}<div class="sections">${sectionsHtml}</div></div>`;
+  }
+
+  // Plain-text export
+  function toPlainText(lesson) {
+    const lines = [];
+    const rule = "─".repeat(64);
+    lines.push(rule);
+    lines.push(`LESSON PLAN: ${lesson.meta.lessonTitle}`);
+    lines.push(`Course: ${lesson.meta.courseTitle}`);
+    lines.push(`Subject: ${lesson.meta.subject}  |  Audience: ${lesson.meta.audience}  |  Length: ${lesson.meta.length}`);
+    lines.push(rule);
+    lines.push("");
+
+    const strip = h => h.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+
+    SECTIONS.forEach((s, i) => {
+      lines.push(`${String(i+1).padStart(2,"0")}.  ${s.title.toUpperCase()}`);
+      lines.push("");
+      const d = lesson[s.key];
+      switch (s.key) {
+        case "overview":
+        case "teacherNotes":
+          lines.push(wrap(strip(d))); break;
+        case "outline":
+          d.forEach(r => lines.push(`  • ${r.time}  —  ${r.title}: ${r.desc}`)); break;
+        case "objectives":
+        case "examples":
+        case "analogies":
+        case "materials":
+          d.forEach(x => lines.push(`  • ${x}`)); break;
+        case "keyTerms":
+          d.forEach(t => lines.push(`  • ${t.term} — ${t.def}`)); break;
+        case "activities":
+        case "groupProjects":
+        case "engagement":
+        case "homework":
+          d.forEach(x => lines.push(`  • ${strip(x)}`)); break;
+        case "assessment":
+          lines.push(`  Formative: ${strip(d.formative)}`);
+          lines.push(`  Informal:  ${strip(d.informal)}`);
+          lines.push(`  Exit:      ${strip(d.exit)}`);
+          break;
+        case "differentiation":
+          d.forEach(x => lines.push(`  • ${x.label}: ${x.body}`)); break;
+      }
+      lines.push("");
+    });
+    lines.push(rule);
+    lines.push("Generated by Lesson Plan Builder — a teacher's planning companion.");
+    return lines.join("\n");
+  }
+
+  function wrap(text, width = 76) {
+    const words = text.split(/\s+/);
+    let line = "  ", out = [];
+    words.forEach(w => {
+      if ((line + w).length > width) { out.push(line); line = "  " + w + " "; }
+      else line += w + " ";
+    });
+    if (line.trim()) out.push(line);
+    return out.join("\n");
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return "";
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]);
+  }
+
+  return { render, toPlainText };
+})();
+
+// ============================================================
+// 3. APP / CONTROLLER
+// ============================================================
+(() => {
+  const form = document.getElementById("lessonForm");
+  const outputEl = document.getElementById("lessonOutput");
+  const emptyEl = document.getElementById("emptyState");
+  const toolbarEl = document.getElementById("outputToolbar");
+  const toast = document.getElementById("toast");
+
+  let currentLesson = null;
+
+  // ---- Presets ----
+  const presets = [
+    {
+      label: "Cybersecurity · CIA Triad",
+      data: {
+        courseTitle: "Introduction to Cybersecurity",
+        lessonTitle: "The CIA Triad: Confidentiality, Integrity, Availability",
+        subject: "Cybersecurity",
+        concepts: "Confidentiality and access control\nIntegrity and tamper detection\nAvailability and uptime guarantees\nReal-world trade-offs among the three",
+        objectives: "",
+        audience: "college",
+        length: "60"
+      }
+    },
+    {
+      label: "Biology · Photosynthesis",
+      data: {
+        courseTitle: "General Biology",
+        lessonTitle: "Photosynthesis: How Plants Capture Light",
+        subject: "Biology",
+        concepts: "The role of chloroplasts and chlorophyll\nLight-dependent vs. light-independent reactions\nInputs and outputs of photosynthesis\nWhy photosynthesis matters for ecosystems",
+        objectives: "Students will be able to describe the inputs and outputs of photosynthesis.\nStudents will be able to explain why chlorophyll appears green.",
+        audience: "high",
+        length: "45"
+      }
+    },
+    {
+      label: "Economics · M1 Velocity",
+      data: {
+        courseTitle: "Principles of Macroeconomics",
+        lessonTitle: "M1 and the Velocity of Money",
+        subject: "Economics",
+        concepts: "Definition of M1 money supply\nVelocity of money and the equation of exchange\nHow velocity changes in recessions and recoveries\nImplications for monetary policy",
+        objectives: "",
+        audience: "college",
+        length: "75"
+      }
+    }
+  ];
+
+  function renderPresetChips() {
+    const wrap = document.getElementById("presetChips");
+    wrap.innerHTML = presets.map((p, i) =>
+      `<button type="button" class="preset-chip" data-preset="${i}">${UI_escapeChip(p.label)}</button>`
+    ).join("");
+    wrap.querySelectorAll(".preset-chip").forEach(btn => {
+      btn.addEventListener("click", () => applyPreset(parseInt(btn.dataset.preset, 10)));
+    });
+  }
+
+  function UI_escapeChip(s) {
+    return s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]);
+  }
+
+  function applyPreset(idx) {
+    const p = presets[idx].data;
+    document.getElementById("courseTitle").value = p.courseTitle;
+    document.getElementById("lessonTitle").value = p.lessonTitle;
+    document.getElementById("subject").value = p.subject;
+    document.getElementById("concepts").value = p.concepts;
+    document.getElementById("objectives").value = p.objectives;
+    document.getElementById("audience").value = p.audience;
+    document.getElementById("length").value = p.length;
+    clearErrors();
+    showToast(`Loaded: ${presets[idx].label}`);
+  }
+
+  // ---- Validation ----
+  function validate() {
+    clearErrors();
+    const required = ["courseTitle", "lessonTitle", "subject", "concepts", "audience", "length"];
+    let firstInvalid = null;
+    let ok = true;
+    required.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.closest(".field").classList.add("error");
+        ok = false;
+        if (!firstInvalid) firstInvalid = el;
+      }
+    });
+    if (firstInvalid) firstInvalid.focus();
+    return ok;
+  }
+
+  function clearErrors() {
+    document.querySelectorAll(".field.error").forEach(f => f.classList.remove("error"));
+  }
+
+  // ---- Generation ----
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!validate()) { showToast("Please fill in the required fields."); return; }
+
+    const input = {
+      courseTitle: document.getElementById("courseTitle").value.trim(),
+      lessonTitle: document.getElementById("lessonTitle").value.trim(),
+      subject: document.getElementById("subject").value.trim(),
+      concepts: document.getElementById("concepts").value.trim(),
+      objectives: document.getElementById("objectives").value.trim(),
+      audience: document.getElementById("audience").value,
+      length: document.getElementById("length").value
+    };
+
+    /* HOOK FOR FUTURE AI INTEGRATION:
+       Replace the next line with an async fetch() to an LLM endpoint
+       that returns the same lesson object shape produced by Generator.generateLesson.
+       Example:
+         const lesson = await fetch('/api/lesson', {method:'POST', body:JSON.stringify(input)}).then(r=>r.json());
+    */
+    currentLesson = Generator.generateLesson(input);
+
+    outputEl.innerHTML = UI.render(currentLesson);
+    emptyEl.style.display = "none";
+    toolbarEl.style.display = "flex";
+    bindSectionToggles();
+    showToast("Lesson plan generated.");
+    // Scroll on mobile so user sees output
+    if (window.innerWidth < 980) {
+      outputEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  // ---- Reset ----
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    form.reset();
+    clearErrors();
+    outputEl.innerHTML = "";
+    emptyEl.style.display = "block";
+    toolbarEl.style.display = "none";
+    currentLesson = null;
+    showToast("Form cleared.");
+  });
+
+  // ---- Section toggles ----
+  function bindSectionToggles() {
+    document.querySelectorAll(".section-header").forEach(h => {
+      h.addEventListener("click", () => {
+        const section = h.closest(".section");
+        const isOpen = section.classList.toggle("open");
+        h.setAttribute("aria-expanded", isOpen);
+      });
+    });
+  }
+
+  // ---- Expand / collapse all ----
+  document.getElementById("expandAllBtn").addEventListener("click", function() {
+    const sections = document.querySelectorAll(".section");
+    const allOpen = Array.from(sections).every(s => s.classList.contains("open"));
+    sections.forEach(s => {
+      s.classList.toggle("open", !allOpen);
+      s.querySelector(".section-header").setAttribute("aria-expanded", !allOpen);
+    });
+    this.textContent = allOpen ? "Expand all" : "Collapse all";
+  });
+
+  // ---- Copy ----
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    if (!currentLesson) return;
+    const text = UI.toPlainText(currentLesson);
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard.");
+    } catch {
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard."); }
+      catch { showToast("Copy failed — please copy manually."); }
+      document.body.removeChild(ta);
+    }
+  });
+
+  // ---- Download ----
+  document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!currentLesson) return;
+    const text = UI.toPlainText(currentLesson);
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const safe = currentLesson.meta.lessonTitle.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "").toLowerCase();
+    a.download = `lesson_${safe || "plan"}.txt`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Download started.");
+  });
+
+  // ---- Print ----
+  document.getElementById("printBtn").addEventListener("click", () => {
+    // Expand all sections before printing
+    document.querySelectorAll(".section").forEach(s => s.classList.add("open"));
+    window.print();
+  });
+
+  // ---- Toast ----
+  let toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+  }
+
+  // ---- Theme toggle ----
+  const themeToggle = document.getElementById("themeToggle");
+  const themeLabel = document.getElementById("themeLabel");
+  const themeIcon = document.getElementById("themeIcon");
+
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    themeLabel.textContent = t === "dark" ? "Light" : "Dark";
+    themeIcon.innerHTML = t === "dark"
+      ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+      : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
+    try { localStorage.setItem("lpb-theme", t); } catch {}
+  }
+  themeToggle.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    setTheme(cur === "dark" ? "light" : "dark");
+  });
+
+  // Init theme
+  let savedTheme = "light";
+  try { savedTheme = localStorage.getItem("lpb-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch {}
+  setTheme(savedTheme);
+
+  // Init presets
+  renderPresetChips();
+
+  // Clear error state on input
+  document.querySelectorAll("#lessonForm input, #lessonForm select, #lessonForm textarea").forEach(el => {
+    el.addEventListener("input", () => {
+      el.closest(".field")?.classList.remove("error");
+    });
+    el.addEventListener("change", () => {
+      el.closest(".field")?.classList.remove("error");
+    });
+  });
+})();
+</script>
+</body>
+</html>
