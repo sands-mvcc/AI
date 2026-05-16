@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Bank Builder — Quick</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+  :root{
+    --paper:#f5f1e8;
+    --paper-soft:#ede6d3;
+    --paper-deep:#e4d9bf;
+    --ink:#1a1612;
+    --ink-soft:#3a342a;
+    --ink-muted:#6b6356;
+    --rule:#c9bca0;
+    --accent:#8b1a1a;
+    --gold:#9a7b2e;
+    --green:#4a6b3a;
+    --amber:#b8761e;
+    --serif:'Fraunces',Georgia,serif;
+    --sans:'Inter Tight','Helvetica Neue',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(at 12% 8%, rgba(154,123,46,.05) 0, transparent 40%),
+      radial-gradient(at 88% 92%, rgba(139,26,26,.04) 0, transparent 45%);
+    min-height:100vh;
+  }
+  .grain{position:fixed;inset:0;pointer-events:none;opacity:.04;mix-blend-mode:multiply;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* Masthead */
+  header.masthead{
+    border-bottom:3px double var(--ink);
+    padding:20px 40px 16px;
+    background:var(--paper);
+  }
+  .masthead-row{max-width:1100px;margin:0 auto;text-align:center}
+  .wordmark h1{font-family:var(--serif);font-weight:700;font-size:42px;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+  .wordmark .sub{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-muted);margin-top:6px;letter-spacing:.04em}
+  .ornament{display:inline-block;color:var(--accent);margin:0 8px;font-size:14px;vertical-align:middle}
+
+  main{max-width:1100px;margin:0 auto;padding:36px 40px 80px;position:relative;z-index:2}
+
+  /* Setup */
+  .card{background:var(--paper);border:1px solid var(--rule);padding:32px;border-radius:2px;margin-bottom:24px;box-shadow:0 1px 0 var(--paper-deep),0 4px 16px rgba(26,22,18,.04)}
+  .section-eyebrow{font-family:var(--serif);font-style:italic;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .section-title{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.1;letter-spacing:-.015em;margin-bottom:6px}
+  .section-lede{font-family:var(--serif);font-style:italic;color:var(--ink-muted);font-size:15px;margin-bottom:24px;max-width:64ch}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:720px){.grid-2{grid-template-columns:1fr}}
+
+  .field{margin-bottom:18px}
+  .field label{display:block;font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+  .field label .opt{font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;color:var(--ink-muted);font-family:var(--serif);font-size:13px;margin-left:4px}
+  .field label .req{color:var(--accent);margin-left:2px}
+  .field .hint{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-muted);margin-top:4px}
+  input[type=text],textarea,select{
+    width:100%;background:var(--paper);border:1px solid var(--rule);
+    padding:10px 13px;font-family:var(--sans);font-size:14px;color:var(--ink);
+    border-radius:2px;transition:all .15s;
+  }
+  textarea{font-family:var(--serif);font-size:14.5px;line-height:1.5;resize:vertical;min-height:70px}
+  input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--ink);background:#fefcf6;box-shadow:0 0 0 3px rgba(26,22,18,.05)}
+  select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1612' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+  .toggle-row{display:flex;align-items:center;gap:12px}
+  .toggle{position:relative;width:42px;height:22px;background:var(--rule);border-radius:99px;cursor:pointer;transition:all .2s;flex:none}
+  .toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:var(--paper);border-radius:50%;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .toggle.on{background:var(--green)}
+  .toggle.on::after{transform:translateX(20px)}
+
+  /* Question type rows */
+  .qt-list{border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+  .qt-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--rule);background:var(--paper);transition:background .15s}
+  .qt-row:last-child{border-bottom:none}
+  .qt-row.on{background:#fefcf6}
+  .qt-info .qt-name{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:-.005em}
+  .qt-info .qt-desc{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-muted);margin-top:1px}
+  .qty-control{display:flex;align-items:center;border:1px solid var(--rule);border-radius:2px;background:var(--paper)}
+  .qty-btn{width:30px;height:30px;background:none;border:none;font-family:var(--serif);font-size:17px;cursor:pointer;color:var(--ink)}
+  .qty-btn:hover{background:var(--paper-deep)}
+  .qty-input{width:44px;height:30px;text-align:center;border:none;border-left:1px solid var(--rule);border-right:1px solid var(--rule);background:var(--paper);font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink);padding:0}
+  .qty-input:focus{outline:none;background:#fff7e0}
+
+  .total-strip{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--paper-soft);border:1px solid var(--rule);border-radius:2px;margin-top:14px}
+  .total-strip .lbl{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-muted)}
+  .total-strip .n{font-family:var(--serif);font-weight:600;font-size:22px;color:var(--ink)}
+
+  /* Big generate */
+  .gen-row{text-align:center;margin:32px 0 8px}
+  .btn{padding:12px 26px;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;border-radius:2px;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{background:var(--ink);color:var(--paper)}
+  .btn.big{padding:16px 36px;font-size:14px;background:var(--accent);border-color:var(--accent);color:var(--paper)}
+  .btn.big:hover{background:var(--ink);border-color:var(--ink)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.dl{background:var(--ink);color:var(--paper)}
+  .btn.dl:hover{background:var(--accent);border-color:var(--accent)}
+
+  /* Output */
+  .output-card{display:none}
+  .output-card.show{display:block;animation:fadeUp .35s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .out-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--rule);margin-bottom:20px}
+  .out-meta{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-muted)}
+  .out-meta b{color:var(--ink);font-weight:600;font-style:normal}
+  .dl-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* Item card */
+  .q-item{padding:18px 0;border-bottom:1px dotted var(--rule)}
+  .q-item:last-child{border-bottom:none}
+  .q-head{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .q-num{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--accent);min-width:28px}
+  .q-tag{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:2px;border:1px solid var(--rule);background:var(--paper);color:var(--ink-soft)}
+  .q-tag.type{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .q-tag.diff-easy{background:#e8f0e0;color:var(--green);border-color:#b8d09a}
+  .q-tag.diff-moderate{background:#fff2d6;color:var(--amber);border-color:#e8c87a}
+  .q-tag.diff-challenging{background:#f5dada;color:var(--accent);border-color:#d8a0a0}
+  .q-stem{font-family:var(--serif);font-size:16px;line-height:1.5;margin-bottom:10px;color:var(--ink)}
+  .q-options{list-style:none;padding:0;margin:0 0 8px 0}
+  .q-options li{padding:5px 0;display:flex;gap:10px;align-items:flex-start;font-family:var(--serif);font-size:14.5px}
+  .opt-letter{font-weight:600;color:var(--ink-muted);font-family:var(--sans);font-size:12px;min-width:20px;text-transform:uppercase;margin-top:3px;letter-spacing:.04em}
+  .opt-correct{color:var(--green);font-weight:500}
+  .opt-correct .opt-letter{color:var(--green)}
+  .opt-correct::after{content:'  ✓';font-style:italic;color:var(--green)}
+  .q-rationale{margin-top:8px;padding:10px 12px;background:#fefcf6;border-left:3px solid var(--gold);font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink-soft);border-radius:0 2px 2px 0}
+  .q-rationale .lbl{font-style:italic;font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-right:6px}
+
+  /* Match / rubric table */
+  .mini-table{width:100%;border-collapse:collapse;font-family:var(--serif);font-size:13.5px;margin:4px 0}
+  .mini-table th{text-align:left;padding:5px 8px;border-bottom:1px solid var(--rule);font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);font-weight:600}
+  .mini-table td{padding:5px 8px;border-bottom:1px dotted var(--rule)}
+  .mini-table td.correct{color:var(--green);font-weight:500}
+
+  /* Generating overlay */
+  .gen-overlay{display:none;text-align:center;padding:50px 20px}
+  .gen-overlay.show{display:block}
+  .gen-mark{font-family:var(--serif);font-size:52px;color:var(--accent);line-height:1;margin-bottom:16px;animation:pulse 1.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .gen-msg{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink-muted)}
+
+  /* Warning */
+  .warn-banner{background:#fff7d6;border:1px solid #e8c87a;border-left:3px solid var(--amber);padding:10px 14px;font-family:var(--serif);font-size:13px;color:var(--ink-soft);margin-bottom:14px;border-radius:0 2px 2px 0;display:none}
+  .warn-banner.show{display:block}
+  .warn-banner b{font-style:normal;color:var(--amber)}
+
+  /* Toast */
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:11px 20px;border-radius:2px;font-family:var(--sans);font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:1000;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.error{background:var(--accent)}
+  .toast.ok{background:var(--green)}
+
+  .draft-note{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-muted);text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--rule)}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="masthead">
+  <div class="masthead-row">
+    <div class="wordmark">
+      <h1>Test Bank Builder<span class="ornament">❦</span></h1>
+      <div class="sub">Quick edition &middot; single-screen authoring with PDF, DOCX &amp; JSON export</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SETUP -->
+  <section class="card" id="setup-card">
+    <div class="section-eyebrow">Compose</div>
+    <h2 class="section-title">Build a test bank in one step.</h2>
+    <p class="section-lede">Tell the tool what you are testing and how many of each item type you need. The bank generates in place; download as PDF, Word, or JSON when ready.</p>
+
+    <div class="field">
+      <label>Subject / Concepts Tested <span class="req">*</span></label>
+      <input type="text" id="f-subject" placeholder="e.g., CMMC 2.0 Level 2 — Access Control practices">
+    </div>
+
+    <div class="field">
+      <label>Learning Objectives <span class="opt">(optional, one per line)</span></label>
+      <textarea id="f-objectives" rows="3" placeholder="Students will be able to&hellip;"></textarea>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Student Level <span class="req">*</span></label>
+        <select id="f-level">
+          <option value="">Select a level&hellip;</option>
+          <option value="elementary">Elementary</option>
+          <option value="middle">Middle School</option>
+          <option value="high">High School</option>
+          <option value="undergraduate">Undergraduate</option>
+          <option value="graduate">Graduate</option>
+          <option value="adult">Adult Learning</option>
+          <option value="certification">Certification / Professional</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Difficulty</label>
+        <select id="f-difficulty">
+          <option value="mixed">Mixed</option>
+          <option value="easy">Easy</option>
+          <option value="moderate">Moderate</option>
+          <option value="challenging">Challenging</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Include Answer Explanations</label>
+      <div class="toggle-row">
+        <div class="toggle on" id="f-explanations"></div>
+        <span class="hint" style="margin:0">Adds a rationale to each item.</span>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:22px">
+      <label>Question Types &amp; Quantities <span class="opt">(1–25 each)</span></label>
+      <div class="qt-list" id="qt-list"></div>
+      <div class="warn-banner" id="qt-warn"></div>
+      <div class="total-strip">
+        <span class="lbl">Total items</span>
+        <span class="n" id="qt-total">0</span>
+      </div>
+    </div>
+
+    <div class="gen-row">
+      <button class="btn big" id="generate-btn">Generate Test Bank</button>
+    </div>
+  </section>
+
+  <!-- GENERATING -->
+  <section class="card gen-overlay" id="gen-overlay">
+    <div class="gen-mark">❦</div>
+    <div class="gen-msg">Composing your test bank&hellip;</div>
+  </section>
+
+  <!-- OUTPUT -->
+  <section class="card output-card" id="output-card">
+    <div class="out-head">
+      <div>
+        <div class="section-eyebrow">Output</div>
+        <h2 class="section-title" id="out-title">Your test bank</h2>
+        <div class="out-meta" id="out-meta"></div>
+      </div>
+      <div class="dl-row">
+        <button class="btn dl" onclick="exportPDF()">↓ PDF</button>
+        <button class="btn dl" onclick="exportDOCX()">↓ DOCX</button>
+        <button class="btn dl" onclick="exportJSON()">↓ JSON</button>
+        <button class="btn" onclick="resetForm()">Start Over</button>
+      </div>
+    </div>
+
+    <div id="bank-render"></div>
+
+    <div class="draft-note">
+      Draft material — generated by AI. Verify each item before classroom or LMS use.
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTION_TYPES = [
+  {id:'mc',  name:'Multiple Choice',  desc:'Single best answer from four options.',  default:5},
+  {id:'ms',  name:'Multiple Select',  desc:'Two or more correct from five options.', default:0},
+  {id:'tf',  name:'True / False',      desc:'Binary judgment of a statement.',         default:0},
+  {id:'mat', name:'Matching',          desc:'Five prompts paired with five responses.', default:0},
+  {id:'sa',  name:'Short Answer',      desc:'One-to-two sentence response.',           default:0},
+  {id:'es',  name:'Essay / Extended', desc:'Extended response evaluated by rubric.',  default:0},
+];
+
+const state = {
+  setup:{subject:'',objectives:'',level:'',difficulty:'mixed',explanations:true},
+  quantities:Object.fromEntries(QUESTION_TYPES.map(t=>[t.id,t.default])),
+  bank:[]
+};
+
+/* Build the type list */
+function buildQTList(){
+  const list=document.getElementById('qt-list');
+  list.innerHTML='';
+  QUESTION_TYPES.forEach(t=>{
+    const qty=state.quantities[t.id];
+    const row=document.createElement('div');
+    row.className='qt-row'+(qty>0?' on':'');
+    row.innerHTML=`
+      <div class="qt-info">
+        <div class="qt-name">${t.name}</div>
+        <div class="qt-desc">${t.desc}</div>
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" data-act="dec">−</button>
+        <input class="qty-input" type="number" min="0" max="25" value="${qty}">
+        <button class="qty-btn" data-act="inc">+</button>
+      </div>`;
+    list.appendChild(row);
+    const input=row.querySelector('.qty-input');
+    row.querySelector('[data-act=dec]').addEventListener('click',()=>{const v=Math.max(0,+input.value-1);input.value=v;update(t.id,v,row)});
+    row.querySelector('[data-act=inc]').addEventListener('click',()=>{const v=Math.min(25,+input.value+1);input.value=v;update(t.id,v,row)});
+    input.addEventListener('input',()=>{let v=Math.max(0,Math.min(25,parseInt(input.value)||0));input.value=v;update(t.id,v,row)});
+  });
+  updateTotal();
+}
+function update(id,v,row){state.quantities[id]=v;row.classList.toggle('on',v>0);updateTotal()}
+function updateTotal(){
+  const total=Object.values(state.quantities).reduce((a,b)=>a+b,0);
+  document.getElementById('qt-total').textContent=total;
+  const warn=document.getElementById('qt-warn');
+  const typesSelected=Object.values(state.quantities).filter(v=>v>0).length;
+  if(typesSelected===1 && total>=5){
+    warn.classList.add('show');
+    warn.innerHTML='<b>Tip.</b> Only one question type selected. Balanced banks usually mix selected-response with a constructed-response type.';
+  } else {warn.classList.remove('show')}
+}
+
+/* Setup wiring */
+['f-subject','f-objectives','f-level','f-difficulty'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',e=>{state.setup[id.replace('f-','')]=e.target.value});
+});
+document.getElementById('f-explanations').addEventListener('click',e=>{
+  e.currentTarget.classList.toggle('on');
+  state.setup.explanations=e.currentTarget.classList.contains('on');
+});
+
+/* Generate */
+document.getElementById('generate-btn').addEventListener('click',()=>{
+  if(!state.setup.subject.trim()){toast('Enter a subject or concepts tested.','error');return}
+  if(!state.setup.level){toast('Select a student level.','error');return}
+  const total=Object.values(state.quantities).reduce((a,b)=>a+b,0);
+  if(total===0){toast('Select at least one question type.','error');return}
+
+  document.getElementById('setup-card').style.display='none';
+  document.getElementById('output-card').classList.remove('show');
+  document.getElementById('gen-overlay').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  setTimeout(()=>{
+    composeBank();
+    renderBank();
+    document.getElementById('gen-overlay').classList.remove('show');
+    document.getElementById('output-card').classList.add('show');
+    toast('Test bank generated','ok');
+  },900);
+});
+
+/* Item composition */
+function parseObjectives(){
+  return state.setup.objectives.split('\n').map(s=>s.replace(/^\s*\d+[\.\)]?\s*/,'').trim()).filter(Boolean);
+}
+function pick(arr,i){return arr[i%arr.length]}
+const DIFFS={easy:['easy','easy','moderate'],moderate:['moderate','moderate','easy'],challenging:['challenging','challenging','moderate'],mixed:['easy','moderate','challenging','moderate']};
+
+function composeBank(){
+  state.bank=[];
+  let idCounter=1;
+  QUESTION_TYPES.forEach(t=>{
+    const n=state.quantities[t.id];
+    for(let i=0;i<n;i++) state.bank.push(composeItem(t,idCounter++));
+  });
+}
+
+function composeItem(t,id){
+  const subject=state.setup.subject.trim()||'the topic';
+  const objs=parseObjectives();
+  const objAlign=objs.length? pick(objs,id-1):null;
+  const diffPool=DIFFS[state.setup.difficulty]||DIFFS.mixed;
+  const difficulty=pick(diffPool,id-1);
+  const cogLevel = difficulty==='easy'?pick(['Recall','Understanding'],id):difficulty==='moderate'?pick(['Understanding','Application'],id):pick(['Application','Analysis','Evaluation'],id);
+
+  const base={
+    id:'Q-'+String(id).padStart(3,'0'),
+    type:t.id, typeName:t.name, topic:subject,
+    objective:objAlign, difficulty, cognitive:cogLevel,
+    explanation: state.setup.explanations? generateExplanation(t,subject) : null
+  };
+
+  if(t.id==='mc') return {...base, stem:`Which of the following best describes a key feature of ${subject}? (Item ${id})`, options:[
+    `A primary mechanism or component central to ${subject}.`,
+    `A related but distinct concept commonly confused with ${subject}.`,
+    `An unrelated process that superficially resembles ${subject}.`,
+    `A historical idea now considered incorrect about ${subject}.`,
+  ], correctIndex:0};
+
+  if(t.id==='ms') return {...base, stem:`Select all statements that accurately describe ${subject}. (Item ${id})`, options:[
+    `A correct attribute or function of ${subject}.`,
+    `A second correct property of ${subject}.`,
+    `An incorrect claim about ${subject}.`,
+    `A partially correct statement with a critical inaccuracy.`,
+    `Another verifiable feature of ${subject}.`,
+  ], correctIndices:[0,1,4]};
+
+  if(t.id==='tf') return {...base, stem:`True or False: ${subject} can be reliably described by the general principles discussed in the source material. (Item ${id})`, correctBool:(id%2===0)};
+
+  if(t.id==='mat') return {...base, stem:`Match each term related to ${subject} with its correct description. (Item ${id})`,
+    matchPairs:[
+      {prompt:`Term A — a core concept of ${subject}`,response:`Its primary definition or function.`},
+      {prompt:`Term B — a related sub-component`,response:`Its specific role in the larger system.`},
+      {prompt:`Term C — a process within ${subject}`,response:`The conditions under which it occurs.`},
+      {prompt:`Term D — a measurable property`,response:`The unit or method used to quantify it.`},
+      {prompt:`Term E — an outcome of ${subject}`,response:`Its downstream effect or product.`},
+    ]};
+
+  if(t.id==='sa') return {...base, stem:`In one or two sentences, explain how ${subject} functions${objAlign?` in the context of: "${objAlign}"`:''}. (Item ${id})`,
+    sampleAnswer:`A complete answer identifies the central mechanism of ${subject}, names at least one key component, and links it to the process or outcome under study.`};
+
+  if(t.id==='es') return {...base, stem:`Compose an extended response that analyzes ${subject}${objAlign?`, particularly addressing the objective: "${objAlign}"`:''}. Support your argument with evidence and identify at least two implications. (Item ${id})`,
+    rubric:[
+      {dim:'Conceptual accuracy',pts:5,desc:'Identifies and correctly explains core concepts of '+subject+'.'},
+      {dim:'Evidence & reasoning',pts:5,desc:'Supports claims with specific evidence; reasoning is logically sound.'},
+      {dim:'Synthesis & application',pts:5,desc:'Links the topic to broader implications or applications.'},
+      {dim:'Clarity & organization',pts:5,desc:'Writing is clear, well-organized, and appropriate to the audience.'}
+    ]};
+  return base;
+}
+
+function generateExplanation(t,subject){
+  if(t.id==='mc') return `The correct option identifies the defining feature of ${subject}. Distractors represent common misconceptions; students who select one may benefit from revisiting the foundational concept.`;
+  if(t.id==='ms') return `Three options are correct (A, B, E). Options C and D contain factual errors. Partial credit may apply per institutional policy.`;
+  if(t.id==='tf') return `Evaluate the statement against established understanding of ${subject}. The correct answer follows from the central principle under study.`;
+  if(t.id==='mat') return `Each prompt has exactly one correct response. The pairs are designed to test discrimination between related but distinct concepts.`;
+  if(t.id==='sa') return `Award credit for responses that name the central mechanism, identify components, and link them to a process or outcome.`;
+  if(t.id==='es') return `Apply the rubric consistently. Strong responses demonstrate accuracy, evidence, synthesis, and clarity.`;
+  return '';
+}
+
+/* Render in page */
+function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderBank(){
+  const subject=state.setup.subject||'Test Bank';
+  document.getElementById('out-title').textContent=subject;
+  document.getElementById('out-meta').innerHTML=`<b>${state.bank.length}</b> items · <b>${state.setup.level}</b> level · <b>${state.setup.difficulty}</b> difficulty${state.setup.explanations?' · explanations included':''}`;
+
+  const wrap=document.getElementById('bank-render');
+  wrap.innerHTML='';
+  state.bank.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='q-item';
+    let body=`<div class="q-head">
+      <span class="q-num">${i+1}.</span>
+      <span class="q-tag type">${q.typeName}</span>
+      <span class="q-tag diff-${q.difficulty}">${q.difficulty}</span>
+      <span class="q-tag">${q.cognitive}</span>
+    </div>
+    <div class="q-stem">${escapeHtml(q.stem)}</div>`;
+
+    if(q.type==='mc'){
+      body+='<ul class="q-options">';
+      q.options.forEach((opt,j)=>{const c=j===q.correctIndex;body+=`<li class="${c?'opt-correct':''}"><span class="opt-letter">${String.fromCharCode(65+j)}</span><span>${escapeHtml(opt)}</span></li>`});
+      body+='</ul>';
+    }
+    if(q.type==='ms'){
+      body+='<ul class="q-options">';
+      q.options.forEach((opt,j)=>{const c=q.correctIndices.includes(j);body+=`<li class="${c?'opt-correct':''}"><span class="opt-letter">${String.fromCharCode(65+j)}</span><span>${escapeHtml(opt)}</span></li>`});
+      body+='</ul>';
+    }
+    if(q.type==='tf'){
+      body+=`<ul class="q-options">
+        <li class="${q.correctBool?'opt-correct':''}"><span class="opt-letter">T</span><span>True</span></li>
+        <li class="${!q.correctBool?'opt-correct':''}"><span class="opt-letter">F</span><span>False</span></li>
+      </ul>`;
+    }
+    if(q.type==='mat'){
+      body+='<table class="mini-table"><tr><th>Prompt</th><th>Correct match</th></tr>';
+      q.matchPairs.forEach((p,j)=>body+=`<tr><td><b>${j+1}.</b> ${escapeHtml(p.prompt)}</td><td class="correct">${escapeHtml(p.response)}</td></tr>`);
+      body+='</table>';
+    }
+    if(q.type==='sa'){
+      body+=`<div style="font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-muted);padding:4px 0">Sample: ${escapeHtml(q.sampleAnswer)}</div>`;
+    }
+    if(q.type==='es'){
+      body+='<table class="mini-table"><tr><th>Dimension</th><th style="text-align:center">Pts</th><th>Criterion</th></tr>';
+      q.rubric.forEach(r=>body+=`<tr><td><b>${escapeHtml(r.dim)}</b></td><td style="text-align:center">${r.pts}</td><td>${escapeHtml(r.desc)}</td></tr>`);
+      body+='</table>';
+    }
+    if(q.explanation && q.type!=='sa'){
+      body+=`<div class="q-rationale"><span class="lbl">Rationale</span>${escapeHtml(q.explanation)}</div>`;
+    }
+    div.innerHTML=body;
+    wrap.appendChild(div);
+  });
+}
+
+function resetForm(){
+  document.getElementById('output-card').classList.remove('show');
+  document.getElementById('setup-card').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Toast */
+function toast(msg,kind){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(kind||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function fileSlug(){return (state.setup.subject||'test-bank').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)}
+
+/* ===================== EXPORTS ===================== */
+
+/* PDF */
+function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt',format:'letter'});
+  const PAGE_W=612, PAGE_H=792, M=54;
+  let y=M;
+
+  function ensure(h){if(y+h>PAGE_H-M){doc.addPage();y=M}}
+  function text(t,opts={}){
+    const size=opts.size||11, font=opts.font||'helvetica', style=opts.style||'normal', maxW=opts.maxW||(PAGE_W-2*M);
+    doc.setFont(font,style);doc.setFontSize(size);
+    if(opts.color) doc.setTextColor(...opts.color); else doc.setTextColor(20,20,20);
+    const lines=doc.splitTextToSize(t,maxW);
+    lines.forEach(ln=>{ensure(size*1.35);doc.text(ln,opts.x||M,y);y+=size*1.35});
+  }
+  function rule(){ensure(8);doc.setDrawColor(180,170,140);doc.setLineWidth(.5);doc.line(M,y,PAGE_W-M,y);y+=10}
+
+  // Cover
+  doc.setFont('times','bold');doc.setFontSize(26);doc.text(state.setup.subject||'Test Bank',M,y+30);y+=44;
+  doc.setFont('times','italic');doc.setFontSize(13);doc.setTextColor(110,100,80);
+  doc.text('Teacher Edition — Answer Key Included',M,y);y+=22;
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(80,80,80);
+  doc.text(`Level: ${state.setup.level} · Difficulty: ${state.setup.difficulty} · Items: ${state.bank.length}`,M,y);y+=14;
+  doc.text(`Generated ${new Date().toLocaleDateString()} · DRAFT — educator review required`,M,y);y+=18;
+  rule();y+=6;
+
+  state.bank.forEach((q,i)=>{
+    ensure(60);
+    text(`${i+1}. (${q.typeName} · ${q.difficulty} · ${q.cognitive})`,{size:10,style:'bold',color:[120,30,30]});
+    text(q.stem,{size:11,font:'times'});
+    y+=4;
+
+    if(q.type==='mc'||q.type==='ms'){
+      q.options.forEach((opt,j)=>{
+        const isCorrect = q.type==='mc'? j===q.correctIndex : q.correctIndices.includes(j);
+        text(`${String.fromCharCode(65+j)}. ${opt}${isCorrect?'  ✓':''}`,{size:10.5,font:'times',color:isCorrect?[60,100,50]:[20,20,20],x:M+18,maxW:PAGE_W-2*M-18});
+      });
+    }
+    if(q.type==='tf'){
+      text(`T. True${q.correctBool?'  ✓':''}`,{size:10.5,font:'times',color:q.correctBool?[60,100,50]:[20,20,20],x:M+18});
+      text(`F. False${!q.correctBool?'  ✓':''}`,{size:10.5,font:'times',color:!q.correctBool?[60,100,50]:[20,20,20],x:M+18});
+    }
+    if(q.type==='mat'){
+      q.matchPairs.forEach((p,j)=>text(`${j+1}. ${p.prompt}  →  ${p.response}`,{size:10.5,font:'times',color:[60,100,50],x:M+18}));
+    }
+    if(q.type==='sa'){
+      text('Sample answer: '+q.sampleAnswer,{size:10,font:'times',style:'italic',color:[100,90,40],x:M+18});
+    }
+    if(q.type==='es'){
+      text('Extended response — rubric:',{size:10.5,font:'times',style:'italic',color:[100,100,90],x:M+18});
+      q.rubric.forEach(r=>text(`• ${r.dim} (${r.pts} pts): ${r.desc}`,{size:9.5,font:'times',color:[80,70,40],x:M+24}));
+    }
+    if(q.explanation && q.type!=='sa'){
+      y+=2;
+      text('Rationale: '+q.explanation,{size:10,font:'times',style:'italic',color:[100,90,40],x:M+18});
+    }
+    y+=2;
+    text(`[${q.id}]${q.objective?' · Obj: '+q.objective.slice(0,80):''}`,{size:8.5,color:[140,140,130],x:M+18});
+    y+=10;
+  });
+
+  const pages = doc.internal.getNumberOfPages();
+  for(let i=1;i<=pages;i++){
+    doc.setPage(i);
+    doc.setFont('times','italic');doc.setFontSize(9);doc.setTextColor(140,130,110);
+    doc.text(`${state.setup.subject||'Test Bank'} — page ${i} of ${pages}`,PAGE_W/2,PAGE_H-24,{align:'center'});
+  }
+  doc.save(`${fileSlug()}.pdf`);
+  toast('PDF downloaded','ok');
+}
+
+/* DOCX */
+async function exportDOCX(){
+  const { Document, Packer, Paragraph, TextRun, AlignmentType } = docx;
+  const para = (text, opts={}) => new Paragraph({
+    alignment: opts.center?AlignmentType.CENTER:AlignmentType.LEFT,
+    spacing:{after: opts.after||80},
+    children:[new TextRun({text,bold:opts.bold,italics:opts.italic,size:opts.size||22,color:opts.color,font:opts.font||'Georgia'})]
+  });
+
+  const children = [];
+  children.push(new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:state.setup.subject||'Test Bank',bold:true,size:40,font:'Georgia'})]}));
+  children.push(para('Teacher Edition — Answer Key Included',{italic:true,size:24,center:true,color:'8B1A1A'}));
+  children.push(para(`Level: ${state.setup.level} · Difficulty: ${state.setup.difficulty} · Items: ${state.bank.length}`,{size:20,center:true,color:'666666'}));
+  children.push(para(`Generated ${new Date().toLocaleDateString()} · DRAFT — educator review required`,{italic:true,size:18,center:true,color:'999999',after:240}));
+
+  state.bank.forEach((q,i)=>{
+    children.push(new Paragraph({spacing:{before:200,after:60},children:[
+      new TextRun({text:`${i+1}. `,bold:true,size:22,font:'Georgia'}),
+      new TextRun({text:`(${q.typeName} · ${q.difficulty} · ${q.cognitive})`,bold:true,size:18,color:'8B1A1A',font:'Helvetica'})
+    ]}));
+    children.push(para(q.stem,{size:22}));
+    if(q.type==='mc'||q.type==='ms'){
+      q.options.forEach((opt,j)=>{
+        const correct = q.type==='mc'? j===q.correctIndex : q.correctIndices.includes(j);
+        children.push(new Paragraph({indent:{left:360},spacing:{after:40},children:[new TextRun({text:`${String.fromCharCode(65+j)}.  ${opt}${correct?'   ✓':''}`,size:20,color:correct?'4A6B3A':'1A1612',bold:correct,font:'Georgia'})]}));
+      });
+    }
+    if(q.type==='tf'){
+      children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:`T.  True${q.correctBool?'   ✓':''}`,size:20,bold:q.correctBool,color:q.correctBool?'4A6B3A':'1A1612',font:'Georgia'})]}));
+      children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:`F.  False${!q.correctBool?'   ✓':''}`,size:20,bold:!q.correctBool,color:!q.correctBool?'4A6B3A':'1A1612',font:'Georgia'})]}));
+    }
+    if(q.type==='mat'){
+      q.matchPairs.forEach((p,j)=>{
+        children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:`${j+1}. ${p.prompt}  →  ${p.response}`,size:20,color:'4A6B3A',font:'Georgia'})]}));
+      });
+    }
+    if(q.type==='sa'){
+      children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:'Sample answer: '+q.sampleAnswer,size:18,italics:true,color:'9A7B2E',font:'Georgia'})]}));
+    }
+    if(q.type==='es'){
+      children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:'Extended response — rubric:',size:20,italics:true,color:'6B6356',font:'Georgia'})]}));
+      q.rubric.forEach(r=>children.push(new Paragraph({indent:{left:540},children:[new TextRun({text:`• ${r.dim} (${r.pts} pts): ${r.desc}`,size:18,color:'5A5044',font:'Georgia'})]})));
+    }
+    if(q.explanation && q.type!=='sa'){
+      children.push(new Paragraph({indent:{left:360},spacing:{before:80},children:[new TextRun({text:'Rationale: '+q.explanation,size:18,italics:true,color:'9A7B2E',font:'Georgia'})]}));
+    }
+    children.push(new Paragraph({indent:{left:360},children:[new TextRun({text:`[${q.id}]${q.objective?' · Obj: '+q.objective.slice(0,80):''}`,size:16,color:'888888',font:'Helvetica'})]}));
+  });
+
+  const doc = new Document({sections:[{properties:{},children}]});
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob,`${fileSlug()}.docx`);
+  toast('DOCX downloaded','ok');
+}
+
+/* JSON */
+function exportJSON(){
+  const payload = {
+    schema:'test-bank/v1',
+    generated_at:new Date().toISOString(),
+    metadata:{
+      subject:state.setup.subject,
+      level:state.setup.level,
+      difficulty:state.setup.difficulty,
+      objectives:parseObjectives(),
+      explanations_included:state.setup.explanations,
+      total_items:state.bank.length
+    },
+    items: state.bank.map(q=>({
+      id:q.id, type:q.type, type_name:q.typeName,
+      stem:q.stem, topic:q.topic, objective:q.objective,
+      difficulty:q.difficulty, cognitive_level:q.cognitive,
+      options:q.options, correct_index:q.correctIndex, correct_indices:q.correctIndices,
+      correct_bool:q.correctBool, match_pairs:q.matchPairs,
+      sample_answer:q.sampleAnswer, rubric:q.rubric,
+      explanation:q.explanation
+    }))
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  saveAs(blob,`${fileSlug()}.json`);
+  toast('JSON downloaded','ok');
+}
+
+/* Init */
+buildQTList();
+</script>
+</body>
+</html>
