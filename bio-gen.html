@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Document Generator — NCyTE</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --oxblood: #6b1a1a;
+  --oxblood-light: #8b2a2a;
+  --oxblood-pale: #f9f1f1;
+  --oxblood-border: #d4aaaa;
+  --ink: #1a1612;
+  --ink-medium: #3d3630;
+  --ink-muted: #7a706a;
+  --ink-subtle: #b5aca6;
+  --parchment: #fdf8f3;
+  --cream: #f5efe8;
+  --rule: #e0d8d0;
+  --white: #ffffff;
+  --success: #1d5c2a;
+  --success-bg: #edf7ef;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --radius: 4px;
+  --radius-lg: 8px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--parchment);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--oxblood);
+  color: #fff;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #4a0e0e;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: 64px;
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.header-icon {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -1px;
+}
+.header-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.header-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+.header-badge {
+  font-size: 11px;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Layout ── */
+.main-layout {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ── Privacy Banner ── */
+.privacy-bar {
+  background: #fff8e6;
+  border: 1px solid #e8d49a;
+  border-left: 3px solid #c4992a;
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  font-size: 12.5px;
+  color: #6b5a1e;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.privacy-bar svg { flex-shrink: 0; color: #c4992a; }
+
+/* ── Section Labels ── */
+.step-label {
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+.section-desc {
+  color: var(--ink-muted);
+  font-size: 14px;
+  margin-bottom: 2rem;
+  max-width: 620px;
+  line-height: 1.6;
+}
+
+/* ── Type Selector ── */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 640px) { .type-grid { grid-template-columns: 1fr; } }
+
+.type-card {
+  background: var(--white);
+  border: 2px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 20px 18px;
+  cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+  position: relative;
+  text-align: left;
+}
+.type-card:hover {
+  border-color: var(--oxblood-border);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.type-card.selected {
+  border-color: var(--oxblood);
+  background: var(--oxblood-pale);
+  box-shadow: 0 0 0 3px rgba(107,26,26,0.1);
+}
+.type-card-icon {
+  width: 38px; height: 38px;
+  background: var(--cream);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+.type-card.selected .type-card-icon { background: var(--oxblood); }
+.type-card.selected .type-card-icon svg { color: #fff; }
+.type-card-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.type-card-desc { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
+.type-card-tag {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  background: var(--cream);
+  color: var(--ink-muted);
+  padding: 2px 7px;
+  border-radius: 20px;
+  border: 1px solid var(--rule);
+}
+.type-card.selected .type-card-tag { background: var(--oxblood); color: #fff; border-color: var(--oxblood); }
+
+/* ── Form Sections ── */
+.form-panel {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.form-section-header {
+  padding: 14px 20px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.form-section-header h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  flex: 1;
+}
+.form-section-header .chevron { transition: transform 0.2s; color: var(--ink-muted); }
+.form-section-header.open .chevron { transform: rotate(180deg); }
+.section-num {
+  width: 24px; height: 24px;
+  background: var(--oxblood);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.form-body { padding: 20px; display: none; }
+.form-body.open { display: block; }
+
+/* ── Form Controls ── */
+.field-group { margin-bottom: 18px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-medium);
+  margin-bottom: 5px;
+}
+.field-hint {
+  font-size: 11.5px;
+  color: var(--ink-subtle);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+input[type="text"], input[type="email"], input[type="tel"], input[type="url"],
+input[type="number"], select, textarea {
+  width: 100%;
+  background: var(--parchment);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--oxblood-light);
+  box-shadow: 0 0 0 3px rgba(107,26,26,0.08);
+  background: var(--white);
+}
+textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a706a' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+/* Entry blocks for vita */
+.entry-block {
+  background: var(--parchment);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.entry-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.entry-block-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+}
+.btn-remove {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-remove:hover { border-color: #c0392b; color: #c0392b; background: #fff5f5; }
+
+.btn-add-entry {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--oxblood-border);
+  border-radius: var(--radius);
+  padding: 10px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--oxblood);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-add-entry:hover { background: var(--oxblood-pale); }
+
+/* ── Options Bar ── */
+.options-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.option-group { display: flex; align-items: center; gap: 8px; }
+.option-label { font-size: 13px; font-weight: 500; color: var(--ink-medium); }
+.toggle-group { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.toggle-btn {
+  padding: 6px 14px;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-right: 1px solid var(--rule);
+}
+.toggle-btn:last-child { border-right: none; }
+.toggle-btn.active { background: var(--oxblood); color: #fff; }
+
+/* ── Generate Button ── */
+.generate-strip {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn-generate {
+  background: var(--oxblood);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 13px 28px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(107,26,26,0.3);
+}
+.btn-generate:hover { background: var(--oxblood-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(107,26,26,0.3); }
+.btn-generate:active { transform: translateY(0); }
+.btn-generate svg { flex-shrink: 0; }
+
+.btn-save-data {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-medium);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-save-data:hover { border-color: var(--oxblood-border); color: var(--oxblood); background: var(--oxblood-pale); }
+
+.btn-load-data {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-medium);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-load-data:hover { border-color: var(--oxblood-border); color: var(--oxblood); background: var(--oxblood-pale); }
+
+/* ── Output Preview ── */
+.output-panel {
+  background: var(--white);
+  border: 1.5px solid var(--oxblood-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+.output-header {
+  background: var(--oxblood-pale);
+  border-bottom: 1px solid var(--oxblood-border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.output-title-area { display: flex; align-items: center; gap: 10px; }
+.output-type-badge {
+  background: var(--oxblood);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.output-header-label {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.output-actions { display: flex; gap: 8px; }
+.btn-action {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 7px 14px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-medium);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-action:hover { border-color: var(--oxblood-border); color: var(--oxblood); background: var(--oxblood-pale); }
+
+.output-word-count {
+  padding: 8px 20px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-muted);
+  display: flex;
+  gap: 20px;
+}
+.wc-stat { display: flex; gap: 5px; align-items: center; }
+.wc-num { font-weight: 600; color: var(--ink-medium); }
+
+#output-content {
+  padding: 28px 32px;
+  min-height: 200px;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+#output-content:focus { box-shadow: inset 0 0 0 2px rgba(107,26,26,0.15); }
+#output-content h2 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  border-bottom: 1.5px solid var(--oxblood-border);
+  padding-bottom: 4px;
+  margin: 22px 0 10px;
+}
+#output-content h2:first-child { margin-top: 0; }
+#output-content p { margin-bottom: 10px; }
+#output-content .vita-entry { margin-bottom: 6px; }
+#output-content .vita-date {
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s;
+  pointer-events: none;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: var(--success); }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 20px 2rem;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-subtle);
+  background: var(--cream);
+}
+footer strong { color: var(--oxblood); font-weight: 500; }
+
+/* ── Utility ── */
+.hidden { display: none !important; }
+.divider { border: none; border-top: 1px solid var(--rule); margin: 24px 0; }
+.required { color: var(--oxblood); margin-left: 2px; }
+.optional-tag { font-size: 10.5px; color: var(--ink-subtle); font-weight: 400; margin-left: 4px; letter-spacing: 0px; text-transform: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-brand">
+    <div class="header-icon">PD</div>
+    <div>
+      <div class="header-title">Professional Document Generator</div>
+      <div class="header-sub">For Educators &amp; Presenters</div>
+    </div>
+  </div>
+  <div class="header-badge">NCyTE Training Tool</div>
+</header>
+
+<main class="main-layout">
+
+  <div class="privacy-bar">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span><strong>Privacy:</strong> All information entered here is used only to generate your document within this browser session. Nothing is sent to any server or stored beyond your session.</span>
+  </div>
+
+  <!-- Step 1: Type Selection -->
+  <div id="step-selector">
+    <div class="step-label">Step 1 of 3</div>
+    <h1 class="section-title">Choose your document type</h1>
+    <p class="section-desc">Select the type of professional document you need. Each format is tailored to its specific audience and purpose.</p>
+
+    <div class="type-grid">
+      <div class="type-card" data-type="bio" onclick="selectType('bio')">
+        <div class="type-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="type-card-tag">School &amp; Web</div>
+        <div class="type-card-name">Biographical Sketch</div>
+        <div class="type-card-desc">Professional narrative for school websites, grant applications, workshop materials, and career advancement.</div>
+      </div>
+      <div class="type-card" data-type="conf" onclick="selectType('conf')">
+        <div class="type-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h2m2 0h4"/></svg>
+        </div>
+        <div class="type-card-tag">Events &amp; CFPs</div>
+        <div class="type-card-name">Conference Bio Sketch</div>
+        <div class="type-card-desc">Concise, topic-focused bio for conference proposals, speaker programs, and event submissions.</div>
+      </div>
+      <div class="type-card" data-type="vita" onclick="selectType('vita')">
+        <div class="type-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <div class="type-card-tag">Academic &amp; Career</div>
+        <div class="type-card-name">Professional Vita</div>
+        <div class="type-card-desc">Comprehensive academic and professional record for tenure, promotion, grant applications, and leadership roles.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Form -->
+  <div id="step-form" class="hidden">
+    <div class="step-label">Step 2 of 3</div>
+    <h2 class="section-title" id="form-title">Enter your information</h2>
+    <p class="section-desc" id="form-desc">Fill in the fields below. Required fields are marked with <span style="color:var(--oxblood)">*</span>. Helper text under each field explains what to include.</p>
+
+    <!-- Core Identity Fields -->
+    <div class="form-panel">
+      <div class="form-section-header open" onclick="toggleSection(this)">
+        <span class="section-num">1</span>
+        <h3>Core Identity</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body open">
+        <div class="field-row">
+          <div>
+            <label>Full Name <span class="required">*</span></label>
+            <input type="text" id="f-name" placeholder="Dr. Jane M. Smith">
+          </div>
+          <div>
+            <label>Preferred Name / Pronouns <span class="optional-tag">(optional)</span></label>
+            <input type="text" id="f-pronouns" placeholder="she/her">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>Current Title / Role <span class="required">*</span></label>
+            <input type="text" id="f-title" placeholder="Professor of Cybersecurity">
+            <div class="field-hint">Your current job title as it should appear in the document.</div>
+          </div>
+          <div>
+            <label>School / Institution / Affiliation <span class="required">*</span></label>
+            <input type="text" id="f-institution" placeholder="Moraine Valley Community College">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>Years of Experience <span class="required">*</span></label>
+            <input type="number" id="f-years" placeholder="15" min="0" max="60">
+          </div>
+          <div>
+            <label>Department / Division <span class="optional-tag">(optional)</span></label>
+            <input type="text" id="f-dept" placeholder="Division of Science and Health Careers">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Degrees, Certifications &amp; Qualifications <span class="required">*</span></label>
+          <textarea id="f-degrees" rows="3" placeholder="Ph.D. in Computer Science, Colorado State University&#10;M.S. in Information Systems, Northern Illinois University&#10;CISSP, CCNP, CompTIA Security+"></textarea>
+          <div class="field-hint">List each degree or certification on its own line. Include institution and year if desired.</div>
+        </div>
+        <div class="field-group">
+          <label>Areas of Expertise / Specialization <span class="required">*</span></label>
+          <textarea id="f-expertise" rows="2" placeholder="Cybersecurity workforce development, AI in education, network security, curriculum innovation"></textarea>
+          <div class="field-hint">Comma-separated list of your primary subject-area specializations.</div>
+        </div>
+        <div class="field-group">
+          <label>Key Accomplishments, Awards &amp; Recognitions <span class="required">*</span></label>
+          <textarea id="f-awards" rows="3" placeholder="2024 ACCT National Faculty Member Award&#10;NSF ATE Principal Investigator, $37M+ in federal grants&#10;Founded CSSIA, nationally recognized cybersecurity center"></textarea>
+          <div class="field-hint">List awards, honors, publications, certifications, grants, or major leadership roles — one per line.</div>
+        </div>
+        <div class="field-row" id="contact-fields">
+          <div>
+            <label>Email <span class="optional-tag">(optional)</span></label>
+            <input type="email" id="f-email" placeholder="jsmith@college.edu">
+          </div>
+          <div>
+            <label>Website / LinkedIn <span class="optional-tag">(optional)</span></label>
+            <input type="url" id="f-web" placeholder="https://linkedin.com/in/jsmith">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bio-specific fields -->
+    <div class="form-panel" id="panel-bio">
+      <div class="form-section-header open" onclick="toggleSection(this)">
+        <span class="section-num">2</span>
+        <h3>Biographical Details</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body open">
+        <div class="field-group">
+          <label>Professional Summary / Focus Statement</label>
+          <textarea id="f-bio-summary" rows="3" placeholder="Briefly describe your professional mission, teaching philosophy, or current focus area in 2–3 sentences."></textarea>
+        </div>
+        <div class="field-group">
+          <label>Teaching Philosophy or Approach <span class="optional-tag">(optional)</span></label>
+          <textarea id="f-bio-philosophy" rows="2" placeholder="e.g., 'I believe in hands-on, project-based learning that connects classroom concepts to real-world cybersecurity challenges.'"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Personal / Humanizing Detail <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="f-bio-personal" placeholder="e.g., avid hiker, volunteer coach, travel enthusiast">
+          <div class="field-hint">A brief personal note makes bios more relatable. Leave blank to omit.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conference-specific fields -->
+    <div class="form-panel hidden" id="panel-conf">
+      <div class="form-section-header open" onclick="toggleSection(this)">
+        <span class="section-num">2</span>
+        <h3>Presentation Details</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body open">
+        <div class="field-group">
+          <label>Presentation Title <span class="required">*</span></label>
+          <input type="text" id="f-conf-title" placeholder="AI-Powered Curriculum Design for Cybersecurity Instructors">
+        </div>
+        <div class="field-group">
+          <label>Presentation Topic / Abstract <span class="required">*</span></label>
+          <textarea id="f-conf-topic" rows="3" placeholder="Briefly describe what your presentation covers and the key takeaways for attendees."></textarea>
+        </div>
+        <div class="field-group">
+          <label>Intended Audience</label>
+          <input type="text" id="f-conf-audience" placeholder="Community college faculty, instructional designers, workforce development professionals">
+        </div>
+        <div class="field-group">
+          <label>Prior Speaking Experience <span class="optional-tag">(optional)</span></label>
+          <textarea id="f-conf-speaking" rows="2" placeholder="e.g., Keynote speaker at 3CS 2023, presenter at NSF ATE PI Meeting 2024, TEDx talk 2022"></textarea>
+          <div class="field-hint">Mention 2–3 relevant speaking engagements. Leave blank to omit.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vita-specific fields -->
+    <div class="form-panel hidden" id="panel-vita-employment">
+      <div class="form-section-header open" onclick="toggleSection(this)">
+        <span class="section-num">2</span>
+        <h3>Employment History</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body open">
+        <div id="employment-list"></div>
+        <button class="btn-add-entry" onclick="addEntry('employment')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Position
+        </button>
+      </div>
+    </div>
+
+    <div class="form-panel hidden" id="panel-vita-teaching">
+      <div class="form-section-header" onclick="toggleSection(this)">
+        <span class="section-num">3</span>
+        <h3>Teaching Experience &amp; Courses</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body">
+        <div class="field-group">
+          <label>Courses Taught / Teaching Areas</label>
+          <textarea id="f-vita-courses" rows="4" placeholder="Network Security Fundamentals (CIS 135), 2018–present&#10;Ethical Hacking and Penetration Testing (CIS 240), 2020–present&#10;Introduction to AI and Machine Learning (CIS 280), 2022–present"></textarea>
+          <div class="field-hint">List courses with course numbers and years if applicable. One per line.</div>
+        </div>
+        <div class="field-group">
+          <label>Curriculum Development Contributions <span class="optional-tag">(optional)</span></label>
+          <textarea id="f-vita-curriculum" rows="2" placeholder="Developed 12-course cybersecurity AAS degree program, 2019&#10;Authored NSA GenCyber camp curriculum, 2021–present"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel hidden" id="panel-vita-presentations">
+      <div class="form-section-header" onclick="toggleSection(this)">
+        <span class="section-num">4</span>
+        <h3>Presentations &amp; Publications</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body">
+        <div class="field-group">
+          <label>Presentations <span class="optional-tag">(reverse chronological)</span></label>
+          <textarea id="f-vita-presentations" rows="4" placeholder="Sands, J. (2024). AI in Community College Education. NSF ATE PI Conference, Washington, DC.&#10;Sands, J. (2023). Cybersecurity Workforce Pipeline Development. 3CS Annual Symposium, Chicago, IL."></textarea>
+          <div class="field-hint">Use a consistent citation style. List most recent first.</div>
+        </div>
+        <div class="field-group">
+          <label>Publications <span class="optional-tag">(optional)</span></label>
+          <textarea id="f-vita-publications" rows="3" placeholder="Sands, J. (2023). AI in Action: A Community College Guide. MVCC Press. ISBN 978-0-000000-00-0."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel hidden" id="panel-vita-grants">
+      <div class="form-section-header" onclick="toggleSection(this)">
+        <span class="section-num">5</span>
+        <h3>Grants &amp; Honors</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body">
+        <div class="field-group">
+          <label>Grants &amp; Funded Projects</label>
+          <textarea id="f-vita-grants" rows="4" placeholder="Principal Investigator. NSF ATE Program: CSSIA National Center. $1.2M. 2022–2025.&#10;Co-PI. NCyTE Center. NSF ATE. $3.5M. 2020–2024."></textarea>
+          <div class="field-hint">Include role (PI/Co-PI), funder, project title, amount, and dates.</div>
+        </div>
+        <div class="field-group">
+          <label>Honors &amp; Awards</label>
+          <textarea id="f-vita-honors" rows="3" placeholder="2024 ACCT National Faculty Member Award&#10;2020 AACC Dale P. Parnell Faculty Distinction Award&#10;MVCC Distinguished Faculty Award, 2018"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel hidden" id="panel-vita-service">
+      <div class="form-section-header" onclick="toggleSection(this)">
+        <span class="section-num">6</span>
+        <h3>Service, Affiliations &amp; References</h3>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="form-body">
+        <div class="field-group">
+          <label>Professional Service &amp; Leadership</label>
+          <textarea id="f-vita-service" rows="3" placeholder="Executive Director, National AI Training Initiative, 2023–present&#10;Co-PI, National Cybersecurity Training and Education (NCyTE) Center&#10;Founder, Community College Cybersecurity Symposium (3CS)"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Professional Affiliations &amp; Memberships</label>
+          <textarea id="f-vita-affiliations" rows="2" placeholder="IEEE, ACM SIGCSE, ISTE, InfraGard, NSA/DHS CAE Advisory Board"></textarea>
+        </div>
+        <div class="field-group">
+          <label>References <span class="optional-tag">(optional — include or use "Available upon request")</span></label>
+          <textarea id="f-vita-refs" rows="2" placeholder="Available upon request."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options Bar -->
+    <div class="options-bar">
+      <div class="option-group" id="person-toggle-group">
+        <span class="option-label">Person:</span>
+        <div class="toggle-group">
+          <button class="toggle-btn active" onclick="setOption('person','third')">Third person</button>
+          <button class="toggle-btn" onclick="setOption('person','first')">First person</button>
+        </div>
+      </div>
+      <div class="option-group" id="length-toggle-group">
+        <span class="option-label">Length:</span>
+        <div class="toggle-group">
+          <button class="toggle-btn" onclick="setOption('length','short')">Short (~100w)</button>
+          <button class="toggle-btn active" onclick="setOption('length','medium')">Medium (~200w)</button>
+          <button class="toggle-btn" onclick="setOption('length','long')">Long (~350w)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="generate-strip">
+      <button class="btn-generate" onclick="generateDocument()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Generate Document
+      </button>
+      <button class="btn-save-data" onclick="saveData()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save My Data
+      </button>
+      <button class="btn-load-data" onclick="loadData()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Load Saved Data
+      </button>
+      <button class="btn-save-data" onclick="changeType()">← Change Type</button>
+    </div>
+
+    <!-- Output Preview -->
+    <div class="output-panel" id="output-panel">
+      <div class="output-header">
+        <div class="output-title-area">
+          <span class="output-type-badge" id="output-badge">Bio Sketch</span>
+          <span class="output-header-label">Generated Document — click text to edit</span>
+        </div>
+        <div class="output-actions">
+          <button class="btn-action" onclick="copyOutput()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="btn-action" onclick="downloadTxt()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download .txt
+          </button>
+          <button class="btn-action" onclick="downloadDocx()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7" transform="translate(-2,0)"/><path d="M14 2v6h6M4 20v-6M7 17l-3 3-3-3M20 17l3-3 3 3" transform="translate(-2,0)"/></svg>
+            Download .html
+          </button>
+          <button class="btn-action" onclick="regenerate()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.51"/></svg>
+            Regenerate
+          </button>
+        </div>
+      </div>
+      <div class="output-word-count" id="word-count-bar">
+        <span class="wc-stat">Words: <span class="wc-num" id="wc-words">—</span></span>
+        <span class="wc-stat">Characters: <span class="wc-num" id="wc-chars">—</span></span>
+        <span id="wc-note" style="color:var(--oxblood);font-weight:500"></span>
+      </div>
+      <div id="output-content" contenteditable="true" spellcheck="true" aria-label="Generated document — editable">
+        <p style="color:var(--ink-subtle);font-style:italic">Your generated document will appear here. Click "Generate Document" above to create it.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>Generated for NCyTE Training Classes</strong> &nbsp;·&nbsp;
+  National Cybersecurity Training and Education Center &nbsp;·&nbsp;
+  Professional Document Generator v1.0 &nbsp;·&nbsp;
+  For educator use
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── State ── */
+const state = {
+  type: null,
+  person: 'third',
+  length: 'medium',
+  employmentEntries: []
+};
+
+let employmentCount = 0;
+
+/* ── Type Selection ── */
+function selectType(type) {
+  state.type = type;
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+
+  // Show form
+  document.getElementById('step-form').classList.remove('hidden');
+
+  // Show/hide specialized panels
+  document.getElementById('panel-bio').classList.toggle('hidden', type !== 'bio');
+  document.getElementById('panel-conf').classList.toggle('hidden', type !== 'conf');
+  ['panel-vita-employment','panel-vita-teaching','panel-vita-presentations','panel-vita-grants','panel-vita-service'].forEach(id => {
+    document.getElementById(id).classList.toggle('hidden', type !== 'vita');
+  });
+
+  // Initialize vita employment if empty
+  if (type === 'vita' && state.employmentEntries.length === 0) addEntry('employment');
+
+  // Update form labels
+  const titles = { bio: 'Biographical Sketch', conf: 'Conference Bio Sketch', vita: 'Professional Vita' };
+  const descs = {
+    bio: 'Fill in the fields below to generate your professional biographical sketch.',
+    conf: 'Enter your details and presentation information for a polished conference speaker bio.',
+    vita: 'Complete each section to build your comprehensive professional vita. Use reverse chronological order within each section.'
+  };
+  document.getElementById('form-title').textContent = titles[type] + ' — Enter Your Information';
+  document.getElementById('form-desc').innerHTML = descs[type] + ' Required fields are marked with <span style="color:var(--oxblood)">*</span>.';
+
+  // Badge
+  document.getElementById('output-badge').textContent = titles[type];
+
+  // Toggle options visibility
+  const lengthGroup = document.getElementById('length-toggle-group');
+  const personGroup = document.getElementById('person-toggle-group');
+  if (type === 'vita') {
+    lengthGroup.style.display = 'none';
+    personGroup.style.display = 'none';
+  } else {
+    lengthGroup.style.display = 'flex';
+    personGroup.style.display = type === 'conf' ? 'none' : 'flex';
+  }
+
+  // Scroll to form
+  setTimeout(() => document.getElementById('step-form').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function changeType() {
+  state.type = null;
+  document.getElementById('step-form').classList.add('hidden');
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('step-selector').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ── Section Toggles ── */
+function toggleSection(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+/* ── Options ── */
+function setOption(key, value) {
+  state[key] = value;
+  const group = key === 'person' ? 'person-toggle-group' : 'length-toggle-group';
+  document.querySelectorAll(`#${group} .toggle-btn`).forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+/* ── Employment Entry Builder (Vita) ── */
+function addEntry(type) {
+  if (type === 'employment') {
+    const id = ++employmentCount;
+    state.employmentEntries.push(id);
+    const list = document.getElementById('employment-list');
+    const block = document.createElement('div');
+    block.className = 'entry-block';
+    block.id = `emp-${id}`;
+    block.innerHTML = `
+      <div class="entry-block-header">
+        <span class="entry-block-label">Position ${id}</span>
+        <button class="btn-remove" onclick="removeEntry('emp-${id}')">Remove</button>
+      </div>
+      <div class="field-row">
+        <div>
+          <label>Job Title</label>
+          <input type="text" id="emp-${id}-title" placeholder="Professor of Cybersecurity">
+        </div>
+        <div>
+          <label>Institution / Employer</label>
+          <input type="text" id="emp-${id}-inst" placeholder="Moraine Valley Community College">
+        </div>
+      </div>
+      <div class="field-row">
+        <div>
+          <label>Start Year</label>
+          <input type="text" id="emp-${id}-start" placeholder="1988">
+        </div>
+        <div>
+          <label>End Year</label>
+          <input type="text" id="emp-${id}-end" placeholder="Present">
+        </div>
+      </div>
+      <div>
+        <label>Key Responsibilities / Highlights <span class="optional-tag">(optional)</span></label>
+        <textarea id="emp-${id}-desc" rows="2" placeholder="Brief description of responsibilities, accomplishments, or scope"></textarea>
+      </div>`;
+    list.appendChild(block);
+  }
+}
+
+function removeEntry(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+/* ── Helpers ── */
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function plural(n, word) {
+  return n === 1 ? `${n} ${word}` : `${n} ${word}s`;
+}
+
+function buildExpertiseList(raw) {
+  return raw.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+function buildDegreeList(raw) {
+  return raw.split('\n').map(s => s.trim()).filter(Boolean);
+}
+
+function buildAwardList(raw) {
+  return raw.split('\n').map(s => s.trim()).filter(Boolean);
+}
+
+/* ── Generate ── */
+function generateDocument() {
+  const type = state.type;
+  if (!type) { showToast('Please select a document type first.', false); return; }
+
+  const name = v('f-name');
+  const title = v('f-title');
+  const institution = v('f-institution');
+  const years = v('f-years');
+  const degrees = buildDegreeList(v('f-degrees'));
+  const expertise = buildExpertiseList(v('f-expertise'));
+  const awards = buildAwardList(v('f-awards'));
+  const email = v('f-email');
+  const web = v('f-web');
+
+  if (!name || !title || !institution) {
+    showToast('Please fill in name, title, and institution.', false);
+    return;
+  }
+
+  let html = '';
+
+  if (type === 'bio') html = generateBio(name, title, institution, years, degrees, expertise, awards, email, web);
+  else if (type === 'conf') html = generateConf(name, title, institution, years, degrees, expertise, awards);
+  else html = generateVita(name, title, institution, years, degrees, expertise, awards, email, web);
+
+  const output = document.getElementById('output-content');
+  output.innerHTML = html;
+  updateWordCount();
+  output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast('Document generated successfully!', true);
+}
+
+function generateBio(name, title, institution, years, degrees, expertise, awards) {
+  const person = state.person;
+  const length = state.length;
+  const summary = v('f-bio-summary');
+  const philosophy = v('f-bio-philosophy');
+  const personal = v('f-bio-personal');
+
+  const pronoun = person === 'first' ? { sub: 'I', obj: 'me', poss: 'my', possPro: 'mine', ref: 'myself' }
+                                     : { sub: 'They', obj: 'them', poss: 'their', possPro: 'theirs', ref: 'themselves' };
+  const he = person === 'first' ? 'I' : name.split(' ')[0];
+  const his = person === 'first' ? 'my' : 'their';
+  const him = person === 'first' ? 'me' : 'them';
+  const hasHas = person === 'first' ? 'have' : 'has';
+  const isAre = person === 'first' ? 'am' : 'is';
+  const topDegree = degrees[0] || '';
+  const expertStr = expertise.slice(0,3).join(', ');
+  const yearsStr = years ? `${years} years` : 'many years';
+
+  let paragraphs = [];
+
+  // Opening
+  if (person === 'third') {
+    paragraphs.push(`${name} ${isAre} ${title} at ${institution}${topDegree ? ', holding ' + topDegree : ''}. With ${yearsStr} of experience in ${expertStr}, ${he} ${hasHas} built a distinguished career dedicated to educational excellence and innovation.`);
+  } else {
+    paragraphs.push(`${isAre} ${title} at ${institution}${topDegree ? ' with ' + topDegree : ''}. Over ${yearsStr} in ${expertStr}, I have dedicated ${his} career to educational excellence and continuous innovation in teaching and learning.`);
+  }
+
+  if (summary) {
+    paragraphs.push(summary);
+  }
+
+  if (length !== 'short') {
+    if (awards.length > 0) {
+      const awardSnippet = awards.slice(0, length === 'long' ? 3 : 2).join('; ');
+      paragraphs.push(`${person === 'third' ? name.split(' ')[0] : 'I'} ${hasHas} earned recognition including ${awardSnippet}.`);
+    }
+    if (philosophy) paragraphs.push(philosophy);
+  }
+
+  if (length === 'long') {
+    if (expertise.length > 3) {
+      paragraphs.push(`${person === 'third' ? his.charAt(0).toUpperCase() + his.slice(1) : 'My'} expertise spans ${expertise.join(', ')}.`);
+    }
+    if (awards.length > 3) {
+      const extra = awards.slice(2).join('; ');
+      paragraphs.push(`Additional accomplishments include ${extra}.`);
+    }
+  }
+
+  if (personal && length !== 'short') {
+    paragraphs.push(person === 'third'
+      ? `Outside the classroom, ${name.split(' ')[0]} ${isAre} ${personal}.`
+      : `Outside the classroom, I am ${personal}.`);
+  }
+
+  return paragraphs.map(p => `<p>${p}</p>`).join('\n');
+}
+
+function generateConf(name, title, institution, years, degrees, expertise, awards) {
+  const length = state.length;
+  const confTitle = v('f-conf-title');
+  const confTopic = v('f-conf-topic');
+  const audience = v('f-conf-audience');
+  const speaking = v('f-conf-speaking');
+
+  const topDegree = degrees[0] || '';
+  const yearsStr = years ? `${years} years` : 'over a decade';
+  const expertStr = expertise.slice(0,3).join(', ');
+  const topAward = awards[0] || '';
+  const firstName = name.split(' ')[0];
+
+  let lines = [];
+
+  // Core sentence
+  lines.push(`${name} is ${title} at ${institution}${topDegree ? ' (' + topDegree + ')' : ''}, with ${yearsStr} of professional experience in ${expertStr}.`);
+
+  if (confTitle && confTopic) {
+    lines.push(`In ${confTitle.includes('"') ? confTitle : '"' + confTitle + '"'}, ${firstName} will explore ${confTopic.toLowerCase().replace(/\.$/, '')} — offering actionable insights for ${audience || 'educators and practitioners'}.`);
+  }
+
+  if (length !== 'short') {
+    if (topAward) lines.push(`${firstName}'s work has been recognized through honors including ${topAward}.`);
+    if (speaking) lines.push(`${firstName} has presented at events including ${speaking.split('\n')[0]}.`);
+  }
+
+  if (length === 'long') {
+    const moreAwards = awards.slice(1, 3).join('; ');
+    if (moreAwards) lines.push(`Additional recognitions include ${moreAwards}.`);
+    if (expertise.length > 3) lines.push(`${firstName}'s specializations extend to ${expertise.slice(3).join(', ')}.`);
+  }
+
+  return `<p>${lines.join(' ')}</p>`;
+}
+
+function generateVita(name, title, institution, years, degrees, expertise, awards, email, web) {
+  const dept = v('f-dept');
+  const pronouns = v('f-pronouns');
+  const courses = v('f-vita-courses');
+  const curriculum = v('f-vita-curriculum');
+  const presentations = v('f-vita-presentations');
+  const publications = v('f-vita-publications');
+  const grants = v('f-vita-grants');
+  const honors = v('f-vita-honors');
+  const service = v('f-vita-service');
+  const affiliations = v('f-vita-affiliations');
+  const refs = v('f-vita-refs');
+
+  let html = '';
+
+  // Header
+  html += `<h2 style="font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:-0.5px;color:var(--ink);border:none;text-transform:none;letter-spacing:0;margin-bottom:4px">${name}${pronouns ? ' <span style="font-size:14px;color:var(--ink-muted);font-weight:400">(${pronouns})</span>' : ''}</h2>`;
+  html += `<p style="color:var(--ink-medium);margin-bottom:2px">${title}</p>`;
+  html += `<p style="color:var(--ink-muted);font-size:14px;margin-bottom:2px">${institution}${dept ? ', ' + dept : ''}</p>`;
+  if (email || web) {
+    html += `<p style="font-size:13px;color:var(--ink-muted);margin-bottom:0">${[email, web].filter(Boolean).join(' &nbsp;·&nbsp; ')}</p>`;
+  }
+  html += `<hr style="border:none;border-top:2px solid var(--oxblood);margin:14px 0 18px">`;
+
+  // Education
+  if (degrees.length) {
+    html += `<h2>Education</h2>`;
+    html += degrees.map(d => `<div class="vita-entry"><p>${d}</p></div>`).join('');
+  }
+
+  // Experience
+  const empBlocks = [];
+  for (let i = 1; i <= employmentCount; i++) {
+    const t = v(`emp-${i}-title`);
+    const ins = v(`emp-${i}-inst`);
+    const start = v(`emp-${i}-start`);
+    const end = v(`emp-${i}-end`);
+    const desc = v(`emp-${i}-desc`);
+    if (t || ins) {
+      empBlocks.push(`<div class="vita-entry"><p><strong>${t}</strong>${ins ? ', ' + ins : ''}</p><p class="vita-date">${[start, end].filter(Boolean).join(' – ')}</p>${desc ? '<p style="font-size:13.5px;color:var(--ink-muted);margin-top:2px">' + desc + '</p>' : ''}</div>`);
+    }
+  }
+  if (empBlocks.length) {
+    html += `<h2>Professional Experience</h2>` + empBlocks.join('');
+  } else if (years || institution || title) {
+    html += `<h2>Professional Experience</h2>`;
+    html += `<div class="vita-entry"><p><strong>${title}</strong>, ${institution}</p><p class="vita-date">${years ? years + ' years of service' : 'Dates not specified'}</p></div>`;
+  }
+
+  // Teaching
+  if (courses || curriculum) {
+    html += `<h2>Teaching Experience</h2>`;
+    if (courses) {
+      courses.split('\n').filter(Boolean).forEach(c => { html += `<div class="vita-entry"><p>${c}</p></div>`; });
+    }
+    if (curriculum) {
+      html += `<h3 style="font-size:13px;color:var(--ink-medium);font-weight:500;margin:10px 0 6px">Curriculum Development</h3>`;
+      curriculum.split('\n').filter(Boolean).forEach(c => { html += `<div class="vita-entry"><p>${c}</p></div>`; });
+    }
+  }
+
+  // Expertise
+  if (expertise.length) {
+    html += `<h2>Areas of Expertise</h2>`;
+    html += `<p>${expertise.join(' &nbsp;·&nbsp; ')}</p>`;
+  }
+
+  // Presentations
+  if (presentations) {
+    html += `<h2>Presentations</h2>`;
+    presentations.split('\n').filter(Boolean).forEach(p => { html += `<div class="vita-entry"><p>${p}</p></div>`; });
+  }
+
+  // Publications
+  if (publications) {
+    html += `<h2>Publications</h2>`;
+    publications.split('\n').filter(Boolean).forEach(p => { html += `<div class="vita-entry"><p>${p}</p></div>`; });
+  }
+
+  // Grants
+  if (grants) {
+    html += `<h2>Grants &amp; Funded Projects</h2>`;
+    grants.split('\n').filter(Boolean).forEach(g => { html += `<div class="vita-entry"><p>${g}</p></div>`; });
+  }
+
+  // Honors
+  const allHonors = [...(honors ? honors.split('\n').filter(Boolean) : []), ...(awards.length ? awards : [])];
+  const uniqueHonors = [...new Set(allHonors)];
+  if (uniqueHonors.length) {
+    html += `<h2>Honors &amp; Awards</h2>`;
+    uniqueHonors.forEach(a => { html += `<div class="vita-entry"><p>${a}</p></div>`; });
+  }
+
+  // Service
+  if (service) {
+    html += `<h2>Professional Service</h2>`;
+    service.split('\n').filter(Boolean).forEach(s => { html += `<div class="vita-entry"><p>${s}</p></div>`; });
+  }
+
+  // Affiliations
+  if (affiliations) {
+    html += `<h2>Professional Affiliations</h2>`;
+    html += `<p>${affiliations}</p>`;
+  }
+
+  // References
+  html += `<h2>References</h2>`;
+  html += `<p>${refs || 'Available upon request.'}</p>`;
+
+  return html;
+}
+
+/* ── Word Count ── */
+function updateWordCount() {
+  const el = document.getElementById('output-content');
+  const text = el.innerText || el.textContent || '';
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  const chars = text.length;
+  document.getElementById('wc-words').textContent = words;
+  document.getElementById('wc-chars').textContent = chars.toLocaleString();
+
+  const note = document.getElementById('wc-note');
+  if (state.type === 'conf') {
+    const target = state.length === 'short' ? 100 : state.length === 'medium' ? 200 : 350;
+    const diff = words - target;
+    if (Math.abs(diff) < 20) note.textContent = `✓ Near ${target}-word target`;
+    else if (diff > 0) note.textContent = `${diff} words over ${target}-word target`;
+    else note.textContent = `${Math.abs(diff)} words under ${target}-word target`;
+  } else {
+    note.textContent = '';
+  }
+}
+
+document.getElementById('output-content').addEventListener('input', updateWordCount);
+
+/* ── Copy / Download ── */
+function copyOutput() {
+  const el = document.getElementById('output-content');
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!', true)).catch(() => {
+    const range = document.createRange();
+    range.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    showToast('Copied to clipboard!', true);
+  });
+}
+
+function downloadTxt() {
+  const el = document.getElementById('output-content');
+  const text = el.innerText || el.textContent;
+  const name = v('f-name') || 'document';
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name.replace(/\s+/g,'_')}_${state.type}_bio.txt`;
+  a.click();
+  showToast('Downloading .txt file', true);
+}
+
+function downloadDocx() {
+  const name = v('f-name') || 'document';
+  const content = document.getElementById('output-content').innerHTML;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${name} — Professional Document</title><style>
+body{font-family:'Times New Roman',serif;font-size:12pt;line-height:1.8;max-width:720px;margin:40px auto;color:#111;padding:40px}
+h2{font-size:11pt;font-weight:bold;letter-spacing:1px;text-transform:uppercase;border-bottom:1pt solid #888;padding-bottom:3px;margin:18pt 0 8pt;color:#5a0000}
+p{margin-bottom:8pt}
+</style></head><body>${content}<hr><p style="font-size:9pt;color:#888;text-align:center;margin-top:32pt">Generated for NCyTE Training Classes &nbsp;·&nbsp; Professional Document Generator</p></body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name.replace(/\s+/g,'_')}_${state.type}.html`;
+  a.click();
+  showToast('Downloading formatted .html file', true);
+}
+
+function regenerate() {
+  generateDocument();
+}
+
+/* ── Save / Load Data ── */
+function collectFormData() {
+  const allFields = [
+    'f-name','f-pronouns','f-title','f-institution','f-years','f-dept',
+    'f-degrees','f-expertise','f-awards','f-email','f-web',
+    'f-bio-summary','f-bio-philosophy','f-bio-personal',
+    'f-conf-title','f-conf-topic','f-conf-audience','f-conf-speaking',
+    'f-vita-courses','f-vita-curriculum','f-vita-presentations','f-vita-publications',
+    'f-vita-grants','f-vita-honors','f-vita-service','f-vita-affiliations','f-vita-refs'
+  ];
+  const data = {};
+  allFields.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+
+  // Employment
+  const emp = [];
+  for (let i = 1; i <= employmentCount; i++) {
+    const t = v(`emp-${i}-title`);
+    const ins = v(`emp-${i}-inst`);
+    const start = v(`emp-${i}-start`);
+    const end = v(`emp-${i}-end`);
+    const desc = v(`emp-${i}-desc`);
+    if (t || ins) emp.push({ title: t, inst: ins, start, end, desc });
+  }
+  data._employment = emp;
+  data._type = state.type;
+  return data;
+}
+
+function saveData() {
+  const data = collectFormData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const name = v('f-name') || 'my_data';
+  a.download = `${name.replace(/\s+/g,'_')}_bio_data.json`;
+  a.click();
+  showToast('Data saved as JSON file!', true);
+}
+
+function loadData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        Object.keys(data).forEach(id => {
+          if (id.startsWith('_')) return;
+          const el = document.getElementById(id);
+          if (el) el.value = data[id];
+        });
+        if (data._type) selectType(data._type);
+        showToast('Data loaded successfully!', true);
+      } catch { showToast('Could not read file. Please use a saved JSON file.', false); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+/* ── Toast ── */
+function showToast(msg, success = true) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show' + (success ? ' success' : '');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
