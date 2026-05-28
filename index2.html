@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Fundamentals for Educators — NCyTE vFDW</title>
+  <meta name="description" content="A 5-day intensive virtual professional development workshop presented by NCyTE at the Virtual Faculty Development Weeks (vFDW). Empowering educators to leverage AI in teaching and learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ══════════════════════════════════════════════
+       DESIGN TOKENS — matched to sands-mvcc aicyber
+    ══════════════════════════════════════════════ */
+    :root {
+      --navy:          #0d2240;
+      --navy-mid:      #16325e;
+      --navy-light:    #1e3f72;
+      --cyan:          #0099bb;
+      --cyan-bright:   #00b4d8;
+      --cyan-glow:     rgba(0,180,216,0.18);
+      --orange:        #e8700f;
+      --orange-light:  #f4821f;
+      --white:         #ffffff;
+      --off-white:     #f8fafc;
+      --text:          #111827;
+      --text-mid:      #374151;
+      --text-muted:    #6b7280;
+      --border:        #dde6f0;
+      --border-dark:   #c8d8eb;
+      --shadow-sm:     0 1px 4px rgba(13,34,64,0.09);
+      --shadow-md:     0 4px 18px rgba(13,34,64,0.11);
+      --shadow-lg:     0 8px 36px rgba(13,34,64,0.16);
+      --radius:        12px;
+      --radius-sm:     8px;
+      --nav-h:         58px;
+
+      /* module accent colors */
+      --m1: #3b82f6; --m1-bg: #eff6ff;
+      --m2: #f97316; --m2-bg: #fff7ed;
+      --m3: #22c55e; --m3-bg: #f0fdf4;
+      --m4: #a855f7; --m4-bg: #fdf4ff;
+      --m5: #f43f5e; --m5-bg: #fff1f2;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text); background: var(--white);
+      line-height: 1.65; -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════════════════
+       SCROLL PROGRESS
+    ══════════════════════════════════════════════ */
+    #scroll-prog {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, var(--cyan-bright), var(--orange-light));
+      width: 0%; z-index: 400; transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════════════
+       SKIP LINK
+    ══════════════════════════════════════════════ */
+    .skip-link {
+      position: absolute; top: 0; left: 0;
+      background: var(--orange); color: var(--white);
+      padding: 0.5rem 1.25rem; font-weight: 700; font-size: 0.875rem;
+      text-decoration: none; border-radius: 0 0 6px 0;
+      transform: translateY(-100%); z-index: 9999;
+      transition: transform 0.2s;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+
+    /* ══════════════════════════════════════════════
+       BREADCRUMB BAR  (matches aicyber top strip)
+    ══════════════════════════════════════════════ */
+    .breadcrumb-bar {
+      background: #0a1a33;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.45rem 1.5rem;
+      font-size: 0.73rem; color: rgba(255,255,255,0.45);
+      letter-spacing: 0.02em;
+      display: flex; align-items: center; gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .breadcrumb-bar a {
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .breadcrumb-bar a:hover { color: var(--cyan-bright); }
+    .breadcrumb-bar .sep { color: rgba(255,255,255,0.22); }
+
+    /* ══════════════════════════════════════════════
+       STICKY NAV
+    ══════════════════════════════════════════════ */
+    .site-nav {
+      position: sticky; top: 0; z-index: 300;
+      background: var(--navy);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+      height: var(--nav-h);
+      display: flex; align-items: center;
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none;
+    }
+    .nav-brand-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--cyan-bright);
+      animation: nav-pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes nav-pulse {
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.5;transform:scale(1.5)}
+    }
+    .nav-brand-text {
+      font-size: 0.95rem; font-weight: 800;
+      color: var(--white); letter-spacing: -0.01em;
+    }
+    .nav-brand-text span { color: var(--cyan-bright); }
+
+    .nav-links { display: flex; list-style: none; gap: 0.15rem; flex-wrap: wrap; }
+    .nav-links a {
+      color: rgba(255,255,255,0.72); text-decoration: none;
+      font-size: 0.84rem; font-weight: 600;
+      padding: 0.38rem 0.85rem; border-radius: 18px;
+      transition: background 0.18s, color 0.18s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+    .nav-links a.active {
+      background: rgba(0,180,216,0.22); color: var(--white);
+    }
+    .nav-cta {
+      background: var(--cyan); color: var(--white) !important;
+      font-weight: 700 !important; border-radius: 18px !important;
+    }
+    .nav-cta:hover { background: var(--cyan-bright) !important; }
+
+    @media (max-width: 640px) {
+      .site-nav { padding: 0 1rem; }
+      .nav-links a { font-size: 0.75rem; padding: 0.3rem 0.6rem; }
+    }
+
+    /* ══════════════════════════════════════════════
+       HERO  (dark navy gradient — aicyber style)
+    ══════════════════════════════════════════════ */
+    .hero {
+      background: linear-gradient(160deg, #0a1a33 0%, #0d2240 50%, #0e1f3a 100%);
+      padding: 5rem 2rem 4.5rem;
+      position: relative; overflow: hidden;
+    }
+    /* grid overlay pattern */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,180,216,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,180,216,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    /* glowing orbs */
+    .hero::after {
+      content: '';
+      position: absolute; top: -120px; right: -120px;
+      width: 480px; height: 480px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,180,216,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; bottom: -80px; left: -80px;
+      width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 800px; margin: 0 auto;
+      text-align: center; position: relative; z-index: 1;
+    }
+
+    /* course pill — matches aicyber "AI-103 · 3 Credit Hours" strip */
+    .hero-course-strip {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,180,216,0.3);
+      border-radius: 24px;
+      padding: 0.4rem 1.1rem;
+      margin-bottom: 1.75rem;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--cyan-bright);
+    }
+    .hero-course-strip .strip-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--cyan-bright);
+      animation: nav-pulse 2s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
+      font-weight: 800; color: var(--white);
+      line-height: 1.12; letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 .hl {
+      background: linear-gradient(135deg, var(--cyan-bright) 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: rgba(255,255,255,0.68);
+      margin-bottom: 1.25rem; line-height: 1.6;
+      max-width: 600px; margin-left: auto; margin-right: auto;
+    }
+    .hero-meta-row {
+      font-size: 0.84rem; color: rgba(255,255,255,0.45);
+      margin-bottom: 2.25rem; letter-spacing: 0.01em;
+    }
+    .hero-meta-row strong { color: rgba(255,255,255,0.75); font-weight: 700; }
+
+    .hero-btn-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.85rem; flex-wrap: wrap;
+    }
+    .btn-hero-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--cyan); color: var(--white);
+      font-size: 0.9rem; font-weight: 700;
+      padding: 0.75rem 1.85rem; border-radius: 28px;
+      text-decoration: none;
+      box-shadow: 0 4px 18px rgba(0,180,216,0.35);
+      transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+    }
+    .btn-hero-primary:hover {
+      background: var(--cyan-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,180,216,0.48);
+    }
+    .btn-hero-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: rgba(255,255,255,0.75);
+      border: 1.5px solid rgba(255,255,255,0.22);
+      font-size: 0.9rem; font-weight: 600;
+      padding: 0.73rem 1.6rem; border-radius: 28px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .btn-hero-ghost:hover {
+      border-color: var(--cyan-bright);
+      color: var(--cyan-bright);
+      background: rgba(0,180,216,0.07);
+    }
+    .btn-arrow { transition: transform 0.2s; }
+    .btn-hero-primary:hover .btn-arrow { transform: translateX(4px); }
+
+    /* ══════════════════════════════════════════════
+       STATS BAR  (matches aicyber counter strip)
+    ══════════════════════════════════════════════ */
+    .stats-bar {
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 2rem;
+    }
+    .stats-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+      gap: 0; justify-content: center;
+    }
+    .stat-item {
+      flex: 1 1 120px; min-width: 110px;
+      text-align: center;
+      padding: 1rem 1.25rem;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      display: block;
+      font-size: 2.4rem; font-weight: 800;
+      color: var(--white); line-height: 1;
+      letter-spacing: -0.03em; margin-bottom: 0.25rem;
+    }
+    .stat-num .stat-unit { font-size: 1.2rem; }
+    .stat-label-top {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--cyan-bright); display: block;
+      margin-bottom: 0.15rem;
+    }
+    .stat-label-sub {
+      font-size: 0.69rem; color: rgba(255,255,255,0.38);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 520px) {
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .stat-item:last-child { border-bottom: none; }
+    }
+
+    /* ══════════════════════════════════════════════
+       SECTION SHARED
+    ══════════════════════════════════════════════ */
+    .section { padding: 4.5rem 2rem; }
+    .section--dark {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .section--alt { background: #f0f5fb; }
+    .section-inner { max-width: 1020px; margin: 0 auto; }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--cyan); background: rgba(0,153,187,0.1);
+      border: 1px solid rgba(0,153,187,0.2);
+      padding: 0.28rem 0.85rem; border-radius: 20px;
+      margin-bottom: 0.65rem;
+    }
+    .section--dark .section-eyebrow {
+      color: var(--cyan-bright);
+      background: rgba(0,180,216,0.12);
+      border-color: rgba(0,180,216,0.25);
+    }
+    .section-heading {
+      font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--navy); line-height: 1.18;
+      margin-bottom: 0.45rem;
+    }
+    .section--dark .section-heading { color: var(--white); }
+    .section-sub {
+      font-size: 0.97rem; color: var(--text-muted);
+      margin-bottom: 2.5rem; max-width: 560px;
+    }
+    .section--dark .section-sub { color: rgba(255,255,255,0.5); }
+
+    /* ══════════════════════════════════════════════
+       FADE-UP ANIMATION
+    ══════════════════════════════════════════════ */
+    .fup {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fup.vis { opacity: 1; transform: none; }
+    .fup:nth-child(2) { transition-delay: 0.07s; }
+    .fup:nth-child(3) { transition-delay: 0.14s; }
+    .fup:nth-child(4) { transition-delay: 0.21s; }
+    .fup:nth-child(5) { transition-delay: 0.28s; }
+    .fup:nth-child(6) { transition-delay: 0.35s; }
+
+    /* ══════════════════════════════════════════════
+       OVERVIEW — two-column layout
+    ══════════════════════════════════════════════ */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 820px) {
+      .overview-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    .overview-body {
+      font-size: 1rem; line-height: 1.85;
+      color: var(--text-mid);
+    }
+    .overview-body strong { color: var(--navy); }
+    .overview-body p + p { margin-top: 1rem; }
+
+    /* deliverables sidebar card */
+    .deliverables-card {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.5rem 1.75rem;
+      color: var(--white);
+    }
+    .deliverables-card h3 {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--cyan-bright); margin-bottom: 1rem;
+    }
+    .del-list {
+      list-style: none;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem;
+    }
+    .del-list li {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.82rem; font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 0.7rem;
+      transition: background 0.18s, border-color 0.18s;
+      cursor: default;
+    }
+    .del-list li:hover {
+      background: rgba(0,180,216,0.12);
+      border-color: rgba(0,180,216,0.3);
+    }
+    .del-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ══════════════════════════════════════════════
+       OBJECTIVES — numbered list cards (aicyber style)
+    ══════════════════════════════════════════════ */
+    .lo-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .lo-item {
+      display: flex; align-items: flex-start; gap: 1.1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.25rem;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .lo-item:hover {
+      background: rgba(0,180,216,0.07);
+      border-color: rgba(0,180,216,0.3);
+      transform: translateX(4px);
+    }
+    .lo-num {
+      flex-shrink: 0;
+      min-width: 32px; height: 32px; border-radius: 50%;
+      background: var(--navy-mid);
+      border: 1.5px solid rgba(0,180,216,0.4);
+      color: var(--cyan-bright);
+      font-size: 0.82rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lo-text {
+      font-size: 0.93rem; line-height: 1.6;
+      color: rgba(255,255,255,0.78);
+      padding-top: 0.1rem;
+    }
+    .lo-text strong { color: var(--white); }
+
+    /* ══════════════════════════════════════════════
+       FLIP CARD MODULES  ← the new interaction
+    ══════════════════════════════════════════════ */
+    .modules-hint {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .modules-hint svg { flex-shrink: 0; }
+
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* flip wrapper */
+    .flip-wrap {
+      height: 320px;
+      perspective: 1200px;
+      cursor: pointer;
+    }
+    /* accessibility: also flip on focus */
+    .flip-wrap:focus { outline: none; }
+    .flip-wrap:focus .flip-inner,
+    .flip-wrap.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      border-radius: var(--radius);
+    }
+
+    .flip-front, .flip-back {
+      position: absolute; inset: 0;
+      border-radius: var(--radius);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    /* FRONT face */
+    .flip-front {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-md);
+      display: flex; flex-direction: column;
+    }
+
+    .flip-front-top {
+      padding: 1.2rem 1.5rem 1rem;
+      display: flex; align-items: center; gap: 0.85rem;
+    }
+    .mod-num-badge {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 800;
+      color: var(--white); flex-shrink: 0;
+    }
+    .mod-emoji { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+    .mod-title-wrap { flex: 1; min-width: 0; }
+    .mod-title-wrap h3 {
+      font-size: 1.02rem; font-weight: 800;
+      color: var(--navy); line-height: 1.25;
+    }
+    .mod-tagline {
+      font-size: 0.76rem; color: var(--text-muted);
+      font-style: italic; margin-top: 0.1rem;
+    }
+
+    /* colored bar under header */
+    .flip-front-bar {
+      height: 3px;
+      margin: 0 1.5rem 1rem;
+      border-radius: 2px;
+    }
+
+    .flip-front-body {
+      padding: 0 1.5rem 1rem;
+      flex: 1;
+      display: flex; flex-direction: column; gap: 0.85rem;
+    }
+    .mod-desc {
+      font-size: 0.86rem; color: var(--text-mid);
+      line-height: 1.62; flex: 1;
+    }
+    .mod-pills {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+    }
+    .mod-pill {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.18rem 0.62rem; border-radius: 18px;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted); background: var(--off-white);
+      transition: none;
+    }
+
+    .flip-front-footer {
+      padding: 0.85rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--off-white);
+    }
+    .flip-hint {
+      font-size: 0.72rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .flip-hint svg { opacity: .55; }
+
+    /* BACK face */
+    .flip-back {
+      transform: rotateY(180deg);
+      display: flex; flex-direction: column;
+    }
+
+    .flip-back-inner {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 1.5rem;
+      overflow: hidden;
+    }
+    .flip-back-eyebrow {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      opacity: 0.55; margin-bottom: 0.35rem;
+    }
+    .flip-back h3 {
+      font-size: 1rem; font-weight: 800;
+      line-height: 1.25; margin-bottom: 0.9rem;
+    }
+    .flip-back-topics {
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0.6; margin-bottom: 0.55rem;
+    }
+    .flip-back-list {
+      list-style: none; flex: 1;
+      overflow-y: auto; display: flex;
+      flex-direction: column; gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .flip-back-list li {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.82rem; line-height: 1.45;
+    }
+    .flip-back-list li::before {
+      content: '▸';
+      flex-shrink: 0; margin-top: 0.05rem;
+      font-size: 0.65rem;
+    }
+    .flip-back-footer {
+      padding: 0.85rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .flip-open-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 0.55rem 1.25rem; border-radius: 22px;
+      text-decoration: none; color: var(--white);
+      transition: filter 0.18s, transform 0.18s;
+    }
+    .flip-open-btn:hover { filter: brightness(1.12); transform: translateX(3px); }
+    .flip-back-hint {
+      font-size: 0.69rem; opacity: 0.45;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+
+    /* Per-module color theming */
+    /* M1 */
+    .flip-m1 .mod-num-badge { background: var(--m1); }
+    .flip-m1 .flip-front-top { background: var(--m1-bg); border-bottom: 1px solid #dbeafe; }
+    .flip-m1 .flip-front-bar { background: var(--m1); }
+    .flip-m1 .flip-back { background: #1d3461; }
+    .flip-m1 .flip-open-btn { background: var(--m1); }
+    /* M2 */
+    .flip-m2 .mod-num-badge { background: var(--m2); }
+    .flip-m2 .flip-front-top { background: var(--m2-bg); border-bottom: 1px solid #fed7aa; }
+    .flip-m2 .flip-front-bar { background: var(--m2); }
+    .flip-m2 .flip-back { background: #2d1a0a; }
+    .flip-m2 .flip-back { background: #1e2e1a; }
+    .flip-m2 .flip-back { background: #321c0a; }
+    .flip-m2 .flip-open-btn { background: var(--m2); }
+    /* M3 */
+    .flip-m3 .mod-num-badge { background: var(--m3); }
+    .flip-m3 .flip-front-top { background: var(--m3-bg); border-bottom: 1px solid #bbf7d0; }
+    .flip-m3 .flip-front-bar { background: var(--m3); }
+    .flip-m3 .flip-back { background: #0d2e1a; }
+    .flip-m3 .flip-open-btn { background: var(--m3); }
+    /* M4 */
+    .flip-m4 .mod-num-badge { background: var(--m4); }
+    .flip-m4 .flip-front-top { background: var(--m4-bg); border-bottom: 1px solid #e9d5ff; }
+    .flip-m4 .flip-front-bar { background: var(--m4); }
+    .flip-m4 .flip-back { background: #1e0d30; }
+    .flip-m4 .flip-open-btn { background: var(--m4); }
+    /* M5 */
+    .flip-m5 .mod-num-badge { background: var(--m5); }
+    .flip-m5 .flip-front-top { background: var(--m5-bg); border-bottom: 1px solid #fecdd3; }
+    .flip-m5 .flip-front-bar { background: var(--m5); }
+    .flip-m5 .flip-back { background: #2a0d12; }
+    .flip-m5 .flip-open-btn { background: var(--m5); }
+
+    /* back text colors */
+    .flip-back { color: rgba(255,255,255,0.88); }
+    .flip-back h3 { color: var(--white); }
+    .flip-back-list li::before { color: var(--cyan-bright); }
+
+    /* day badge style used inside flip */
+    .mod-day-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 0.22rem 0.65rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .mod-day-badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--cyan-bright);
+    }
+
+    /* ══════════════════════════════════════════════
+       BACK TO TOP
+    ══════════════════════════════════════════════ */
+    #btt {
+      position: fixed; bottom: 1.75rem; right: 1.75rem;
+      background: var(--navy); color: var(--white);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%; width: 44px; height: 44px;
+      font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.3s, transform 0.3s, background 0.2s;
+      z-index: 200;
+    }
+    #btt.vis { opacity: 1; transform: translateY(0); }
+    #btt:hover { background: var(--cyan); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER  (matches aicyber)
+    ══════════════════════════════════════════════ */
+    .site-footer {
+      background: #070f1c;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 3.5rem 2rem;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+    }
+    .footer-inner { max-width: 660px; margin: 0 auto; }
+    .footer-dots {
+      display: flex; justify-content: center; gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+    .footer-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(0,180,216,0.4);
+    }
+    .footer-dot:nth-child(2) { background: rgba(0,180,216,0.65); }
+    .footer-dot:nth-child(3) { background: var(--cyan-bright); }
+    .footer-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: var(--white); margin-bottom: 0.3rem;
+    }
+    .footer-org {
+      font-size: 0.86rem; color: var(--cyan-bright);
+      margin-bottom: 0.2rem;
+    }
+    .footer-detail { font-size: 0.78rem; margin-bottom: 0.9rem; }
+    .footer-nsf {
+      font-size: 0.73rem; color: rgba(255,255,255,0.28);
+      line-height: 1.65; margin-bottom: 1.1rem;
+    }
+    .footer-link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      color: var(--cyan-bright); text-decoration: none;
+      font-size: 0.84rem; font-weight: 700;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .footer-link:hover { border-color: var(--cyan-bright); }
+
+    /* ══════════════════════════════════════════════
+       PRINT
+    ══════════════════════════════════════════════ */
+    @media print {
+      .site-nav, .breadcrumb-bar, #btt, #scroll-prog { display: none !important; }
+      .flip-wrap { height: auto; perspective: none; }
+      .flip-inner { transform: none !important; transform-style: flat; }
+      .flip-back { display: none; }
+      .flip-front { position: static; }
+      .fup { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SCROLL PROGRESS -->
+  <div id="scroll-prog" role="progressbar" aria-label="Page scroll progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <!-- SKIP LINK -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- BREADCRUMB BAR — matches aicyber top strip -->
+  <div class="breadcrumb-bar" aria-label="Breadcrumb">
+    NCyTE &nbsp;<span class="sep">·</span>&nbsp;
+    Virtual Faculty Development Weeks
+    &nbsp;<span class="sep">·</span>&nbsp;
+    <a href="https://www.ncyte.net" target="_blank" rel="noopener">ncyte.net</a>
+    &nbsp;<span class="sep">·</span>&nbsp;
+    Dr. John L. Sands
+  </div>
+
+  <!-- STICKY NAV -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-brand">
+        <span class="nav-brand-dot" aria-hidden="true"></span>
+        <span class="nav-brand-text">AI <span>for Educators</span></span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#objectives">Objectives</a></li>
+        <li><a href="#modules">Modules</a></li>
+        <li><a href="module01.html" class="nav-cta">→ Day 1</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+
+    <!-- ── HERO ── -->
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <div class="hero-glow2" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-course-strip">
+          <span class="strip-dot" aria-hidden="true"></span>
+          🎓 vFDW &nbsp;·&nbsp; Presented by NCyTE &nbsp;·&nbsp; 5-Day Intensive
+        </div>
+        <h1 id="hero-title">
+          <span class="hl">AI Fundamentals</span><br>for Educators
+        </h1>
+        <p class="hero-tagline">
+          Empowering Educators to Leverage AI<br>
+          in the Teaching and Learning Process
+        </p>
+        <p class="hero-meta-row">
+          <strong>National Cybersecurity Training and Education Center (NCyTE)</strong><br>
+          Virtual Faculty Development Weeks (vFDW)
+        </p>
+        <div class="hero-btn-row">
+          <a href="#modules" class="btn-hero-primary">
+            Explore Modules <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="#overview" class="btn-hero-ghost">
+            Course Overview
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ── -->
+    <section aria-label="Workshop at a glance" class="stats-bar">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-label-top">📅 Days</span>
+          <span class="stat-num" data-target="5">5</span>
+          <span class="stat-label-sub">Intensive Workshop</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label-top">📦 Modules</span>
+          <span class="stat-num" data-target="5">5</span>
+          <span class="stat-label-sub">Structured Learning</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label-top">🎯 Objectives</span>
+          <span class="stat-num" data-target="6">6</span>
+          <span class="stat-label-sub">Measurable Outcomes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label-top">🧪 Deliverables</span>
+          <span class="stat-num">9<span class="stat-unit">+</span></span>
+          <span class="stat-label-sub">Hands-On Artifacts</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COURSE OVERVIEW ── -->
+    <section id="overview" class="section" aria-labelledby="overview-heading">
+      <div class="section-inner">
+        <span class="section-eyebrow">About This Workshop</span>
+        <h2 class="section-heading" id="overview-heading">Course Overview</h2>
+        <p class="section-sub">Everything you need to bring AI confidently into your classroom.</p>
+
+        <div class="overview-grid">
+          <div class="overview-body fup">
+            <p>
+              <strong>AI Fundamentals for Educators</strong> is an intensive five-day professional development workshop
+              designed for educators at every level who want to confidently integrate artificial intelligence into their
+              classrooms. Hosted by the <strong>National Cybersecurity Training and Education Center (NCyTE)</strong>
+              as part of the <strong>Virtual Faculty Development Weeks (vFDW)</strong>, this workshop bridges theory and
+              practice — moving from foundational AI concepts to hands-on creation of AI-powered course materials,
+              assessments, and classroom tools.
+            </p>
+            <p>
+              Participants will explore leading AI platforms, master prompt engineering techniques, and develop an
+              AI Acceptable Use Policy tailored to their own discipline. No prior AI experience is required.
+              Participants leave with real deliverables ready to implement on day one back in the classroom.
+            </p>
+          </div>
+
+          <div class="deliverables-card fup" aria-label="What you will build">
+            <h3>What You'll Build</h3>
+            <ul class="del-list" role="list">
+              <li role="listitem"><span class="del-icon" aria-hidden="true">📝</span> Lesson Plan</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">📖</span> Study Guide</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🃏</span> Flashcards</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">📋</span> Quiz / Assessment</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🎬</span> Animation</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🎙️</span> Podcast</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🤖</span> Course Chatbot</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🗺️</span> Mind Map</li>
+              <li role="listitem"><span class="del-icon" aria-hidden="true">🔬</span> Lab Activity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LEARNING OBJECTIVES ── -->
+    <section id="objectives" class="section section--dark" aria-labelledby="objectives-heading">
+      <div class="section-inner">
+        <span class="section-eyebrow">What You'll Learn</span>
+        <h2 class="section-heading" id="objectives-heading">Learning Objectives</h2>
+        <p class="section-sub">By the end of this workshop, participants will be able to:</p>
+
+        <ol class="lo-list" role="list">
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 1">1</span>
+            <p class="lo-text"><strong>Define</strong> artificial intelligence, machine learning, and deep learning, and explain their growing role in education and the workforce.</p>
+          </li>
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 2">2</span>
+            <p class="lo-text"><strong>Evaluate</strong> leading AI tools and large language models — including MS Copilot, ChatGPT, and Claude — for classroom applicability and pedagogical fit.</p>
+          </li>
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 3">3</span>
+            <p class="lo-text"><strong>Design</strong> effective AI prompts using the CO-STAR framework to generate accurate, discipline-specific educational content.</p>
+          </li>
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 4">4</span>
+            <p class="lo-text"><strong>Create</strong> AI-generated instructional materials tailored to diverse learner needs, including lesson plans, assessments, study guides, and multimedia resources.</p>
+          </li>
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 5">5</span>
+            <p class="lo-text"><strong>Integrate</strong> AI tools into existing teaching workflows, including personalized feedback, accessibility supports, and interactive course chatbots.</p>
+          </li>
+
+          <li class="lo-item fup" role="listitem">
+            <span class="lo-num" aria-label="Objective 6">6</span>
+            <p class="lo-text"><strong>Develop</strong> a classroom AI Acceptable Use Policy grounded in ethical principles, bias awareness, academic integrity standards, and data privacy requirements.</p>
+          </li>
+
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── WORKSHOP MODULES (FLIP CARDS) ── -->
+    <section id="modules" class="section section--alt" aria-labelledby="modules-heading">
+      <div class="section-inner">
+        <span class="section-eyebrow">5-Day Program</span>
+        <h2 class="section-heading" id="modules-heading">Workshop Modules</h2>
+        <p class="section-sub">Five structured modules — click any card to reveal details, then open the module.</p>
+
+        <div class="modules-hint" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          Click or tap any card to flip it — front shows the overview, back shows topics and the module link.
+        </div>
+
+        <div class="flip-grid" role="list">
+
+          <!-- MODULE 1 -->
+          <div class="flip-wrap flip-m1 fup" tabindex="0" role="listitem"
+               aria-label="Module 1: Introduction to Artificial Intelligence — click to flip">
+            <div class="flip-inner">
+              <!-- FRONT -->
+              <div class="flip-front">
+                <div class="flip-front-top">
+                  <span class="mod-num-badge" aria-label="Module 1">1</span>
+                  <span class="mod-emoji" aria-hidden="true">🤖</span>
+                  <div class="mod-title-wrap">
+                    <h3>Introduction to Artificial Intelligence</h3>
+                    <p class="mod-tagline">From concept to classroom relevance</p>
+                  </div>
+                </div>
+                <div class="flip-front-bar"></div>
+                <div class="flip-front-body">
+                  <p class="mod-desc">Build a solid foundation in AI fundamentals — what AI is, how it differs from machine learning and deep learning, and why every educator needs this knowledge today.</p>
+                  <div class="mod-pills" aria-label="Key topics">
+                    <span class="mod-pill">What is AI</span>
+                    <span class="mod-pill">AI vs ML vs DL</span>
+                    <span class="mod-pill">Neural Networks</span>
+                    <span class="mod-pill">AI in Education</span>
+                    <span class="mod-pill">Workforce Impact</span>
+                  </div>
+                </div>
+                <div class="flip-front-footer">
+                  <span class="flip-hint">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Flip for topics & link
+                  </span>
+                  <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;">Day 1</span>
+                </div>
+              </div>
+              <!-- BACK -->
+              <div class="flip-back">
+                <div class="flip-back-inner">
+                  <span class="flip-back-eyebrow">Module 1 · Day 1</span>
+                  <h3>Introduction to Artificial Intelligence</h3>
+                  <p class="flip-back-topics">Key Topics</p>
+                  <ul class="flip-back-list" aria-label="Module 1 topics">
+                    <li>Definitions: AI, Machine Learning, Deep Learning</li>
+                    <li>Neural network architecture basics</li>
+                    <li>Supervised, unsupervised &amp; reinforcement learning</li>
+                    <li>AI applications in K-16 education</li>
+                    <li>AI's impact on the evolving workforce</li>
+                  </ul>
+                </div>
+                <div class="flip-back-footer">
+                  <a href="module01.html" class="flip-open-btn" aria-label="Open Module 1">
+                    Open Module <span aria-hidden="true">→</span>
+                  </a>
+                  <span class="flip-back-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><path d="M10 14L21 3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    Click to flip back
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULE 2 -->
+          <div class="flip-wrap flip-m2 fup" tabindex="0" role="listitem"
+               aria-label="Module 2: AI Tools and Platforms — click to flip">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <div class="flip-front-top">
+                  <span class="mod-num-badge" aria-label="Module 2">2</span>
+                  <span class="mod-emoji" aria-hidden="true">🛠️</span>
+                  <div class="mod-title-wrap">
+                    <h3>AI Tools &amp; Platforms</h3>
+                    <p class="mod-tagline">Hands-on exploration of leading AI tools</p>
+                  </div>
+                </div>
+                <div class="flip-front-bar"></div>
+                <div class="flip-front-body">
+                  <p class="mod-desc">Explore and compare the most powerful AI platforms for educators — MS Copilot, ChatGPT, Claude, and others — and use them to generate real classroom materials in real time.</p>
+                  <div class="mod-pills" aria-label="Key topics">
+                    <span class="mod-pill">MS Copilot</span>
+                    <span class="mod-pill">ChatGPT</span>
+                    <span class="mod-pill">Claude</span>
+                    <span class="mod-pill">LLM Comparison</span>
+                  </div>
+                </div>
+                <div class="flip-front-footer">
+                  <span class="flip-hint">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Flip for topics &amp; link
+                  </span>
+                  <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;">Day 2</span>
+                </div>
+              </div>
+              <div class="flip-back">
+                <div class="flip-back-inner">
+                  <span class="flip-back-eyebrow">Module 2 · Day 2</span>
+                  <h3>AI Tools &amp; Platforms</h3>
+                  <p class="flip-back-topics">Key Topics</p>
+                  <ul class="flip-back-list">
+                    <li>Microsoft Copilot — integration with Office 365</li>
+                    <li>ChatGPT features, tiers, and classroom use</li>
+                    <li>Claude — strengths and educator applications</li>
+                    <li>Comparing LLMs: accuracy, hallucination, cost</li>
+                    <li>Live demo: generating classroom materials</li>
+                  </ul>
+                </div>
+                <div class="flip-back-footer">
+                  <a href="module02.html" class="flip-open-btn">Open Module <span aria-hidden="true">→</span></a>
+                  <span class="flip-back-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><path d="M10 14L21 3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    Click to flip back
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULE 3 -->
+          <div class="flip-wrap flip-m3 fup" tabindex="0" role="listitem"
+               aria-label="Module 3: Prompt Engineering — click to flip">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <div class="flip-front-top">
+                  <span class="mod-num-badge" aria-label="Module 3">3</span>
+                  <span class="mod-emoji" aria-hidden="true">✍️</span>
+                  <div class="mod-title-wrap">
+                    <h3>Prompt Engineering</h3>
+                    <p class="mod-tagline">The art and science of talking to AI</p>
+                  </div>
+                </div>
+                <div class="flip-front-bar"></div>
+                <div class="flip-front-body">
+                  <p class="mod-desc">Master the craft of prompt design. Learn the CO-STAR framework, understand how tokens work, and practice creating prompts that produce high-quality, discipline-specific outputs.</p>
+                  <div class="mod-pills" aria-label="Key topics">
+                    <span class="mod-pill">CO-STAR Framework</span>
+                    <span class="mod-pill">Tokens</span>
+                    <span class="mod-pill">Beam Search</span>
+                    <span class="mod-pill">Quiz Prompts</span>
+                  </div>
+                </div>
+                <div class="flip-front-footer">
+                  <span class="flip-hint">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Flip for topics &amp; link
+                  </span>
+                  <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;">Day 3</span>
+                </div>
+              </div>
+              <div class="flip-back">
+                <div class="flip-back-inner">
+                  <span class="flip-back-eyebrow">Module 3 · Day 3</span>
+                  <h3>Prompt Engineering</h3>
+                  <p class="flip-back-topics">Key Topics</p>
+                  <ul class="flip-back-list">
+                    <li>CO-STAR: Context, Objective, Style, Tone, Audience, Response</li>
+                    <li>Token limits and context window management</li>
+                    <li>Temperature, beam search, and output variability</li>
+                    <li>Prompt chaining and iterative refinement</li>
+                    <li>Hands-on: building discipline-specific quiz prompts</li>
+                  </ul>
+                </div>
+                <div class="flip-back-footer">
+                  <a href="module03.html" class="flip-open-btn">Open Module <span aria-hidden="true">→</span></a>
+                  <span class="flip-back-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><path d="M10 14L21 3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    Click to flip back
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULE 4 -->
+          <div class="flip-wrap flip-m4 fup" tabindex="0" role="listitem"
+               aria-label="Module 4: AI-Powered Instructional Materials — click to flip">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <div class="flip-front-top">
+                  <span class="mod-num-badge" aria-label="Module 4">4</span>
+                  <span class="mod-emoji" aria-hidden="true">📚</span>
+                  <div class="mod-title-wrap">
+                    <h3>AI-Powered Instructional Materials</h3>
+                    <p class="mod-tagline">From lesson plan to chatbot — build it with AI</p>
+                  </div>
+                </div>
+                <div class="flip-front-bar"></div>
+                <div class="flip-front-body">
+                  <p class="mod-desc">Put AI to work in your course. Design lesson plans, assessments, multimedia, mind maps, and an AI-powered course chatbot — all tailored to your discipline.</p>
+                  <div class="mod-pills" aria-label="Key topics">
+                    <span class="mod-pill">Lesson Plans</span>
+                    <span class="mod-pill">Assessments</span>
+                    <span class="mod-pill">Course Chatbots</span>
+                    <span class="mod-pill">Mind Maps</span>
+                    <span class="mod-pill">Accessibility</span>
+                  </div>
+                </div>
+                <div class="flip-front-footer">
+                  <span class="flip-hint">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Flip for topics &amp; link
+                  </span>
+                  <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;">Day 4</span>
+                </div>
+              </div>
+              <div class="flip-back">
+                <div class="flip-back-inner">
+                  <span class="flip-back-eyebrow">Module 4 · Day 4</span>
+                  <h3>AI-Powered Instructional Materials</h3>
+                  <p class="flip-back-topics">Key Topics</p>
+                  <ul class="flip-back-list">
+                    <li>AI-generated lesson plans aligned to outcomes</li>
+                    <li>Creating quizzes, rubrics, and assessments with AI</li>
+                    <li>Multimedia: animations, podcasts, and study guides</li>
+                    <li>Mind mapping with AI assistance</li>
+                    <li>Building an AI-powered course chatbot</li>
+                    <li>Accessibility and UDL considerations</li>
+                  </ul>
+                </div>
+                <div class="flip-back-footer">
+                  <a href="module04.html" class="flip-open-btn">Open Module <span aria-hidden="true">→</span></a>
+                  <span class="flip-back-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><path d="M10 14L21 3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    Click to flip back
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULE 5 -->
+          <div class="flip-wrap flip-m5 fup" tabindex="0" role="listitem"
+               aria-label="Module 5: Ethics and Acceptable Use Policy — click to flip">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <div class="flip-front-top">
+                  <span class="mod-num-badge" aria-label="Module 5">5</span>
+                  <span class="mod-emoji" aria-hidden="true">⚖️</span>
+                  <div class="mod-title-wrap">
+                    <h3>Ethics &amp; Acceptable Use Policy</h3>
+                    <p class="mod-tagline">Using AI responsibly in the classroom</p>
+                  </div>
+                </div>
+                <div class="flip-front-bar"></div>
+                <div class="flip-front-body">
+                  <p class="mod-desc">Examine the ethical landscape of AI in education — bias, fairness, academic integrity, and data privacy. Draft a classroom AI Acceptable Use Policy ready to deploy.</p>
+                  <div class="mod-pills" aria-label="Key topics">
+                    <span class="mod-pill">Bias &amp; Fairness</span>
+                    <span class="mod-pill">Academic Integrity</span>
+                    <span class="mod-pill">AI Detection</span>
+                    <span class="mod-pill">IPTC &amp; C2PA</span>
+                    <span class="mod-pill">Privacy</span>
+                  </div>
+                </div>
+                <div class="flip-front-footer">
+                  <span class="flip-hint">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Flip for topics &amp; link
+                  </span>
+                  <span style="font-size:.72rem;color:var(--text-muted);font-weight:700;">Day 5</span>
+                </div>
+              </div>
+              <div class="flip-back">
+                <div class="flip-back-inner">
+                  <span class="flip-back-eyebrow">Module 5 · Day 5</span>
+                  <h3>Ethics &amp; Acceptable Use Policy</h3>
+                  <p class="flip-back-topics">Key Topics</p>
+                  <ul class="flip-back-list">
+                    <li>AI bias: sources, types, and mitigation strategies</li>
+                    <li>Academic integrity and AI detection tools</li>
+                    <li>IPTC metadata and C2PA content provenance</li>
+                    <li>FERPA, COPPA, and student data privacy</li>
+                    <li>Drafting your classroom AI AUP</li>
+                  </ul>
+                </div>
+                <div class="flip-back-footer">
+                  <a href="module05.html" class="flip-open-btn">Open Module <span aria-hidden="true">→</span></a>
+                  <span class="flip-back-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><path d="M10 14L21 3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    Click to flip back
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /flip-grid -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-dots" aria-hidden="true">
+        <div class="footer-dot"></div>
+        <div class="footer-dot"></div>
+        <div class="footer-dot"></div>
+      </div>
+      <p class="footer-title">AI Fundamentals for Educators</p>
+      <p class="footer-org">Presented by the National Cybersecurity Training and Education Center (NCyTE)</p>
+      <p class="footer-detail">Virtual Faculty Development Weeks (vFDW) &nbsp;·&nbsp; 2025–2026</p>
+      <p class="footer-nsf">Supported by the National Science Foundation Advanced Technological Education (NSF-ATE) program.</p>
+      <a href="https://www.ncyte.net" class="footer-link" target="_blank" rel="noopener noreferrer">
+        Visit NCyTE Center <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button id="btt" aria-label="Back to top">↑</button>
+
+  <script>
+    // ── SCROLL PROGRESS ──
+    const prog = document.getElementById('scroll-prog');
+    const btt  = document.getElementById('btt');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      requestAnimationFrame(() => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? Math.round((window.scrollY / h) * 100) : 0;
+        prog.style.width = pct + '%';
+        prog.setAttribute('aria-valuenow', pct);
+        btt.classList.toggle('vis', window.scrollY > 450);
+        ticking = false;
+      });
+      ticking = true;
+    }, { passive: true });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ── ACTIVE NAV ──
+    const navAs = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sects = ['overview','objectives','modules'].map(id => document.getElementById(id)).filter(Boolean);
+    const navObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sects.forEach(s => navObs.observe(s));
+
+    // ── FADE UP ──
+    const fuObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); fuObs.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -50px 0px', threshold: 0.08 });
+    document.querySelectorAll('.fup').forEach(el => fuObs.observe(el));
+
+    // ── STAT COUNTERS ──
+    const cntObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseInt(el.dataset.target, 10);
+        if (isNaN(target)) return;
+        cntObs.unobserve(el);
+        let n = 0;
+        const go = () => { n++; el.textContent = n; if (n < target) requestAnimationFrame(go); };
+        requestAnimationFrame(go);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => cntObs.observe(el));
+
+    // ── FLIP CARDS ──
+    document.querySelectorAll('.flip-wrap').forEach(card => {
+      // click
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+      // keyboard: Space / Enter
+      card.addEventListener('keydown', e => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          card.classList.toggle('flipped');
+        }
+      });
+      // prevent link click from re-flipping
+      card.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', e => e.stopPropagation());
+      });
+    });
+  </script>
+</body>
+</html>
