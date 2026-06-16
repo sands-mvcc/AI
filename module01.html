@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,7 +166,8 @@
     .landing-hero {
       background: linear-gradient(145deg, var(--mod-bg) 0%, #f0f5ff 60%, var(--white) 100%);
       border-bottom: 2px solid var(--mod-border);
-      padding: 2.8rem 2.5rem 2.2rem; text-align: center; flex-shrink: 0;
+      padding: 5rem 2.5rem 2.2rem; /* EXPANDED TOP SPACING */
+      text-align: center; flex-shrink: 0;
     }
     .landing-emoji { font-size: 3.2rem; display: block; line-height: 1; margin-bottom: 0.75rem; }
     .landing-pill {
@@ -181,7 +181,10 @@
     .landing-meta { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
     .landing-meta-item { display: flex; align-items: center; gap: 0.35rem; }
 
-    .landing-body { padding: 2rem 2.5rem 3rem; max-width: 880px; margin: 0 auto; width: 100%; }
+    .landing-body { 
+      padding: 2rem 2.5rem 1rem; /* SHORTENED BOTTOM SPACING */
+      max-width: 880px; margin: 0 auto; width: 100%; 
+    }
     .landing-section { margin-bottom: 2rem; }
     .landing-section-title {
       font-size: 0.78rem; font-weight: 800; color: var(--navy);
@@ -221,7 +224,10 @@
     }
 
     .landing-cta {
-      margin-top: 2.5rem; text-align: center; padding-top: 2rem; border-top: 1px solid var(--border);
+      margin-top: 1.5rem; /* SHORTENED SPACING */
+      text-align: center; 
+      padding-top: 1.5rem; /* SHORTENED SPACING */
+      border-top: 1px solid var(--border);
     }
     .begin-btn {
       display: inline-flex; align-items: center; gap: 0.65rem;
@@ -327,9 +333,9 @@
       .content-pane { min-height: calc(100vh - var(--header-h)); }
       #content-frame.visible { min-height: 68vh; }
       .toolbar-url { display: none; }
-      .landing-hero { padding: 2rem 1.25rem 1.5rem; }
+      .landing-hero { padding: 3.5rem 1.25rem 1.5rem; } /* EXPANDED TOP SPACING (MOBILE) */
       .landing-title { font-size: 1.45rem; }
-      .landing-body { padding: 1.5rem 1.25rem 2.5rem; }
+      .landing-body { padding: 1.5rem 1.25rem 1rem; } /* SHORTENED BOTTOM SPACING (MOBILE) */
       .landing-roles { grid-template-columns: 1fr; }
     }
     @media print { .top-bar, .sidebar, .toolbar, .skip-link { display: none !important; } }
@@ -354,7 +360,6 @@
   </header>
 
   <div class="layout">
-
     <nav class="sidebar" id="sidebar" aria-label="Module 1 lessons">
       <div class="sidebar-hero">
         <span class="sidebar-mod-emoji" aria-hidden="true">🤖</span>
@@ -364,8 +369,6 @@
       </div>
       <div class="sidebar-nav">
         <div class="sidebar-nav-label">Lessons</div>
-
-      
         <button class="nav-item" data-index="0" aria-label="AI Fundamentals"><span class="nav-item-icon" aria-hidden="true">🧠</span><span class="nav-item-text">AI Fundamentals</span><span class="nav-item-dot" aria-hidden="true"></span></button>
         <button class="nav-item" data-index="1" aria-label="Rationale for AI Integration"><span class="nav-item-icon" aria-hidden="true">💡</span><span class="nav-item-text">Rationale for AI Integration</span><span class="nav-item-dot" aria-hidden="true"></span></button>
         <button class="nav-item" data-index="2" aria-label="AI in Teaching and Learning"><span class="nav-item-icon" aria-hidden="true">🏫</span><span class="nav-item-text">AI in Teaching and Learning</span><span class="nav-item-dot" aria-hidden="true"></span></button>
@@ -374,7 +377,6 @@
         <button class="nav-item" data-index="5" aria-label="Myths and Misconceptions"><span class="nav-item-icon" aria-hidden="true">🔍</span><span class="nav-item-text">Myths and Misconceptions</span><span class="nav-item-dot" aria-hidden="true"></span></button>
         <button class="nav-item" data-index="6" aria-label="AI Career Paths"><span class="nav-item-icon" aria-hidden="true">🚀</span><span class="nav-item-text">AI Career Paths</span><span class="nav-item-dot" aria-hidden="true"></span></button>
         <button class="nav-item" data-index="7" aria-label="Survey of AI Tools"><span class="nav-item-icon" aria-hidden="true">🗂️</span><span class="nav-item-text">Survey of AI Tools</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-
       </div>
       <div class="sidebar-footer">
         <a href="index.html">← Back to Course Index</a>
@@ -382,8 +384,6 @@
     </nav>
 
     <main class="content-pane" id="main" aria-label="Module content">
-
-      <!-- LANDING -->
       <div class="module-landing" id="moduleLanding">
         <div class="landing-hero">
           <span class="landing-emoji" aria-hidden="true">🤖</span>
@@ -396,7 +396,6 @@
         </div>
 
         <div class="landing-body">
-
           <section class="landing-section" aria-labelledby="lo1-heading">
             <h2 class="landing-section-title" id="lo1-heading">🎯 Learning Objective</h2>
             <p class="landing-objective">Define artificial intelligence, machine learning, and deep learning, and explain their growing role in education and the workforce.</p>
@@ -454,10 +453,7 @@
             </button>
           </div>
         </div>
-      </div><!-- /landing -->
-
-      <!-- TOOLBAR -->
-      <div class="toolbar hidden" id="toolbar">
+      </div><div class="toolbar hidden" id="toolbar">
         <button class="overview-btn" id="overviewBtn" aria-label="Return to module overview">← Overview</button>
         <div class="toolbar-icon-wrap"><span id="toolbarIcon" aria-hidden="true">🏫</span></div>
         <div style="flex:1;min-width:0;">
@@ -474,16 +470,14 @@
       <div class="iframe-loader hidden" id="iframeLoader" aria-hidden="true">
         <div class="iframe-loader-bar" id="loaderBar"></div>
       </div>
-
       <iframe id="content-frame" title="Lesson content" loading="lazy"></iframe>
-
+      
       <div class="iframe-fallback" id="iframeFallback" role="alert">
         <span class="fallback-icon" id="fallbackIcon" aria-hidden="true">🔒</span>
         <div class="fallback-title" id="fallbackTitle">Page blocked from embedding</div>
         <p class="fallback-desc" id="fallbackDesc">This page cannot load in the embedded viewer. Open it directly to view the full content.</p>
         <a href="#" class="fallback-link" id="fallbackLink" target="_blank" rel="noopener noreferrer">↗ Open Page Directly</a>
       </div>
-
     </main>
   </div>
 
@@ -550,13 +544,22 @@
       if (landingVisible) hideLanding();
       current = index; visited.add(index);
       const l = items[index];
+      
       toolbarIcon.textContent = l.icon; toolbarTitle.textContent = l.title;
-      navItems.forEach(b => { const idx = parseInt(b.dataset.index, 10); b.classList.toggle('active', idx === index); b.classList.toggle('visited', visited.has(idx)); b.setAttribute('aria-current', idx === index ? 'page' : 'false'); });
+      navItems.forEach(b => { 
+        const idx = parseInt(b.dataset.index, 10); 
+        b.classList.toggle('active', idx === index); 
+        b.classList.toggle('visited', visited.has(idx)); 
+        b.setAttribute('aria-current', idx === index ? 'page' : 'false'); 
+      });
+      
       prevBtn.disabled = index === 0; nextBtn.disabled = index === items.length - 1;
       prevBtn.style.opacity = prevBtn.disabled ? '0.28' : '1'; nextBtn.style.opacity = nextBtn.disabled ? '0.28' : '1';
       document.title = l.title + ' — Module 1 · AI for Educators';
+      
       if (push && history.pushState) history.pushState({ index }, '', '#lesson-' + (index + 1));
       closeSidebar();
+      
       if (!l.url) {
         showLoader(false); iframeLoader.classList.add('hidden');
         frame.classList.remove('visible'); toolbarUrl.textContent = '';
@@ -580,7 +583,10 @@
       showLoader(false);
       try { if (frame.contentWindow.location.href === 'about:blank') { frame.classList.remove('visible'); fallback.classList.add('visible'); } } catch(e) {}
     });
-    frame.addEventListener('error', () => { showLoader(false); frame.classList.remove('visible'); fallback.classList.add('visible'); });
+    
+    frame.addEventListener('error', () => { 
+      showLoader(false); frame.classList.remove('visible'); fallback.classList.add('visible'); 
+    });
 
     navItems.forEach(btn => {
       btn.addEventListener('click', () => loadItem(parseInt(btn.dataset.index, 10)));
@@ -590,13 +596,15 @@
     });
 
     document.getElementById('beginBtn').addEventListener('click', () => loadItem(0));
+    
     document.querySelectorAll('.landing-chip').forEach(chip => {
       chip.addEventListener('click', () => loadItem(parseInt(chip.dataset.index, 10)));
     });
+    
     overviewBtn.addEventListener('click', showLanding);
-
     prevBtn.addEventListener('click', () => loadItem(current - 1));
     nextBtn.addEventListener('click', () => loadItem(current + 1));
+    
     document.addEventListener('keydown', e => {
       if (e.altKey && e.key === 'ArrowLeft')  loadItem(current - 1);
       if (e.altKey && e.key === 'ArrowRight') loadItem(current + 1);
@@ -604,6 +612,7 @@
 
     function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('visible'); overlay.removeAttribute('aria-hidden'); hamburger.setAttribute('aria-expanded', 'true'); }
     function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); overlay.setAttribute('aria-hidden', 'true'); hamburger.setAttribute('aria-expanded', 'false'); }
+    
     hamburger.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
     overlay.addEventListener('click', closeSidebar);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
@@ -612,6 +621,7 @@
       const m = location.hash.match(/^#lesson-(\d+)$/);
       if (m) { const idx = parseInt(m[1], 10) - 1; loadItem((idx >= 0 && idx < items.length) ? idx : 0, false); }
     })();
+    
     window.addEventListener('popstate', e => {
       if (e.state && e.state.landing) showLanding();
       else if (e.state && typeof e.state.index === 'number') loadItem(e.state.index, false);
