@@ -1,622 +1,420 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module 1: Introduction to AI — AI Fundamentals for Educators</title>
-  <meta name="description" content="Module 1 of AI Fundamentals for Educators — explore AI in teaching, fundamentals, vocabulary, myths, occupation impact, career paths, and AI in 2026." />
+  <title>Module 1: Introduction to AI</title>
+  <meta name="description" content="Module 1 of AI Fundamentals — exploring AI in teaching, vocabulary, myths, and integration." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --navy:        #0d2240;
-      --navy-light:  #16325e;
-      --cyan:        #0099bb;
-      --cyan-bright: #00b4d8;
-      --orange:      #e8700f;
-      --sky:         #e8f4fb;
-      --white:       #ffffff;
-      --text:        #111827;
-      --text-mid:    #374151;
-      --text-muted:  #6b7280;
-      --border:      #e2eaf3;
-      --shadow-sm:   0 1px 4px rgba(13,34,64,0.08);
-      --radius-sm:   8px;
-      --sidebar-w:   296px;
-      --header-h:    62px;
-      /* Module 1 accent — blue */
-      --mod-accent:  #3b82f6;
-      --mod-bg:      #eff6ff;
-      --mod-border:  #bfdbfe;
+      /* Theme Colors */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f4f5f7;
+      --text-primary: #000000;
+      --text-secondary: #333333;
+      --black: #000000;
+      --green-accent: #2e7d32; 
+      --green-light: #e8f5e9;
+      --green-hover: #1b5e20;
+      --white: #ffffff;
+      --border: #e0e0e0;
+      
+      /* Layout Variables */
+      --sidebar-w: 280px;
+      --header-h: 70px;
+      --radius: 8px;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition: none !important; animation: none !important; }
-    }
-
+    html { font-size: 16px; scroll-behavior: smooth; }
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      color: var(--text); background: var(--sky);
-      height: 100vh; overflow: hidden;
-      display: flex; flex-direction: column;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    .skip-link {
-      position: absolute; top: 0; left: 0;
-      background: var(--orange); color: var(--white);
-      padding: 0.55rem 1.25rem; font-weight: 700; font-size: 0.9rem;
-      text-decoration: none; border-radius: 0 0 6px 0;
-      transform: translateY(-100%); z-index: 9999; transition: transform 0.2s;
+    /* Accessibility */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
     }
-    .skip-link:focus { transform: translateY(0); }
-    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 3px; }
+    :focus-visible { outline: 3px solid var(--green-accent); outline-offset: 2px; border-radius: 2px; }
 
-    /* TOP BAR */
-    .top-bar {
-      background: var(--navy); height: var(--header-h);
-      display: flex; align-items: center;
-      padding: 0 1.5rem; gap: 1rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.22);
-      flex-shrink: 0; z-index: 100; position: relative;
+    /* Top Header */
+    .top-header {
+      background: var(--bg-primary);
+      border-bottom: 2px solid var(--black);
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      z-index: 100;
+      box-shadow: var(--shadow);
     }
     .hamburger {
-      display: none; flex-direction: column; justify-content: center; gap: 5px;
-      background: none; border: none; cursor: pointer;
-      padding: 6px; border-radius: 6px; flex-shrink: 0;
+      display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px;
     }
-    .hamburger span {
-      display: block; width: 22px; height: 2px;
-      background: var(--white); border-radius: 2px;
-      transition: transform 0.25s, opacity 0.25s;
-    }
-    .hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-    .hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    .top-bar-left { display: flex; align-items: center; gap: 0.65rem; flex: 1; min-width: 0; }
-    .home-link {
-      color: var(--white); text-decoration: none; font-weight: 800; font-size: 0.95rem;
-      white-space: nowrap; flex-shrink: 0; transition: opacity 0.2s;
-    }
-    .home-link span { color: var(--cyan-bright); }
-    .home-link:hover { opacity: 0.82; }
-    .breadcrumb-sep { color: rgba(255,255,255,0.28); font-size: 0.9rem; flex-shrink: 0; }
-    .breadcrumb-current {
-      color: rgba(255,255,255,0.68); font-size: 0.85rem; font-weight: 600;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .module-badge {
-      margin-left: auto; flex-shrink: 0;
-      background: var(--mod-accent); color: var(--white);
-      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
-      padding: 0.28rem 0.8rem; border-radius: 20px;
-    }
+    .hamburger span { width: 24px; height: 2px; background: var(--black); transition: 0.3s; }
+    .header-title { font-weight: 800; font-size: 1.25rem; color: var(--black); display: flex; align-items: center; gap: 10px;}
+    .header-title span { color: var(--green-accent); }
 
-    /* LAYOUT */
-    .layout { display: flex; flex: 1; overflow: hidden; }
+    /* Main Layout */
+    .layout-container { display: flex; flex: 1; overflow: hidden; }
 
-    /* SIDEBAR */
+    /* Sidebar Navigation */
     .sidebar {
-      width: var(--sidebar-w); flex-shrink: 0; background: var(--navy);
-      display: flex; flex-direction: column;
-      overflow-y: auto; overflow-x: hidden;
-      transition: transform 0.3s ease; z-index: 50;
+      width: var(--sidebar-w);
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      z-index: 50;
     }
-    .sidebar-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45); z-index: 49;
+    .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #333; }
+    .sidebar-badge {
+      display: inline-block; background: var(--green-accent); color: var(--white);
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 0.5rem;
     }
-    .sidebar-overlay.visible { display: block; }
-    .sidebar-hero {
-      padding: 1.4rem 1.1rem 1rem;
-      background: linear-gradient(160deg, #16325e 0%, #0d2240 100%);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+    .sidebar-nav { padding: 1rem 0.5rem; flex: 1; overflow-y: auto; }
+    
+    .nav-btn {
+      width: 100%; text-align: left; background: transparent; border: none;
+      color: #cccccc; font-family: inherit; font-size: 0.95rem; font-weight: 600;
+      padding: 0.85rem 1rem; margin-bottom: 0.25rem; border-radius: var(--radius);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.75rem;
     }
-    .sidebar-mod-pill {
-      display: inline-flex; align-items: center;
-      background: var(--mod-bg); border: 1.5px solid var(--mod-border); color: var(--navy);
-      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 0.22rem 0.7rem; border-radius: 20px; margin-bottom: 0.65rem;
+    .nav-btn:hover { background: #222; color: var(--white); }
+    .nav-btn.active { background: var(--green-accent); color: var(--white); }
+    .nav-icon { font-size: 1.2rem; }
+
+    /* Content Area - Adjusted Spacing */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-primary);
+      padding: 0 3rem; /* Removed vertical padding here to control it per-section */
     }
-    .sidebar-mod-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; display: block; }
-    .sidebar-mod-title { font-size: 0.92rem; font-weight: 800; color: var(--white); line-height: 1.3; }
-    .sidebar-mod-sub { font-size: 0.73rem; color: rgba(255,255,255,0.45); margin-top: 0.2rem; }
-    .sidebar-nav { padding: 0.8rem 0.65rem; flex: 1; }
-    .sidebar-nav-label {
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      color: rgba(255,255,255,0.32); padding: 0.5rem 0.65rem 0.4rem;
+    
+    .content-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding-top: 5rem; /* EXPANDED TOP SPACE */
+      padding-bottom: 2rem; /* SHORTENED BOTTOM SPACE */
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .content-section.active { display: block; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* NAV ITEMS */
-    .nav-item { display: flex; align-items: center; gap: 0.65rem; width: 100%; padding: 0.7rem 0.85rem; margin-bottom: 0.18rem; background: none; border: none; border-radius: 10px; cursor: pointer; text-align: left; color: rgba(255,255,255,0.65); font-family: inherit; font-size: 0.855rem; font-weight: 500; line-height: 1.3; transition: background 0.18s, color 0.18s, padding-left 0.18s; position: relative; }
-    .nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); padding-left: 1.1rem; }
-    .nav-item.active { background: rgba(59,130,246,0.18); color: var(--white); font-weight: 700; }
-    .nav-item.active::before { content: ''; position: absolute; left: 0; top: 22%; bottom: 22%; width: 3px; background: var(--mod-accent); border-radius: 0 3px 3px 0; }
-    .nav-item-icon { font-size: 1.05rem; flex-shrink: 0; width: 20px; text-align: center; }
-    .nav-item-text { flex: 1; }
-    .nav-item-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; transition: background 0.2s; }
-    .nav-item.visited .nav-item-dot { background: var(--cyan-bright); }
-    .nav-item.active  .nav-item-dot { background: var(--mod-accent); }
+    /* Typography & Content Styling */
+    h1 { font-size: 2.2rem; font-weight: 800; color: var(--black); margin-bottom: 1.2rem; line-height: 1.2; }
+    h2 { font-size: 1.5rem; font-weight: 700; color: var(--black); margin: 1.5rem 0 0.75rem; border-bottom: 2px solid var(--green-light); padding-bottom: 0.5rem; }
+    p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 1rem; }
+    
+    .highlight-box {
+      background: var(--green-light);
+      border-left: 5px solid var(--green-accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.25rem 0;
+    }
+    .highlight-box p { margin: 0; color: var(--black); font-weight: 500; }
 
-    .sidebar-footer {
-      padding: 0.75rem 0.65rem 1rem; border-top: 1px solid rgba(255,255,255,0.07);
+    /* Grid Cards - Tightened Spacing */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .card {
+      background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem; box-shadow: var(--shadow); transition: transform 0.2s, border-color 0.2s;
     }
-    .sidebar-footer a {
-      display: flex; align-items: center; gap: 0.5rem;
-      color: rgba(255,255,255,0.38); text-decoration: none;
-      font-size: 0.78rem; font-weight: 600;
-      padding: 0.55rem 0.75rem; border-radius: 8px; transition: color 0.2s, background 0.2s;
-    }
-    .sidebar-footer a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+    .card:hover { transform: translateY(-3px); border-color: var(--green-accent); }
+    .card-icon { font-size: 1.8rem; margin-bottom: 0.75rem; display: block; }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--black); }
+    .card-text { font-size: 0.95rem; color: var(--text-secondary); margin: 0; line-height: 1.5; }
 
-    /* CONTENT PANE */
-    .content-pane {
-      flex: 1; display: flex; flex-direction: column;
-      overflow: hidden; background: var(--white); min-width: 0;
-    }
+    /* Definition List */
+    .vocab-list dt { font-weight: 700; font-size: 1.1rem; color: var(--green-accent); margin-top: 1.5rem; }
+    .vocab-list dd { margin-left: 0; margin-top: 0.5rem; font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
 
-    /* LANDING PAGE */
-    .module-landing {
-      flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: var(--white);
+    /* Buttons - Tightened Bottom Margin */
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--black); color: var(--white); border: none;
+      font-size: 1rem; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 30px;
+      cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; margin-bottom: 0;
     }
-    .module-landing.hidden { display: none; }
+    .action-btn:hover { background: var(--green-accent); }
 
-    .landing-hero {
-      background: linear-gradient(145deg, var(--mod-bg) 0%, #f0f5ff 60%, var(--white) 100%);
-      border-bottom: 2px solid var(--mod-border);
-      padding: 2.8rem 2.5rem 2.2rem; text-align: center; flex-shrink: 0;
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; margin-right: 1rem; }
+      .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; transform: translateX(-100%); width: 260px; }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+      .content-area { padding: 0 1.5rem; }
+      .content-section { padding-top: 3rem; }
     }
-    .landing-emoji { font-size: 3.2rem; display: block; line-height: 1; margin-bottom: 0.75rem; }
-    .landing-pill {
-      display: inline-flex; align-items: center;
-      background: var(--mod-bg); border: 1.5px solid var(--mod-border); color: var(--navy);
-      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.22rem 0.9rem; border-radius: 20px; margin-bottom: 0.75rem;
-    }
-    .landing-title { font-size: 1.85rem; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 0.45rem; }
-    .landing-tagline { font-size: 0.95rem; color: var(--text-mid); font-style: italic; margin-bottom: 1rem; }
-    .landing-meta { display: inline-flex; align-items: center; gap: 1rem; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
-    .landing-meta-item { display: flex; align-items: center; gap: 0.35rem; }
-
-    .landing-body { padding: 2rem 2.5rem 3rem; max-width: 880px; margin: 0 auto; width: 100%; }
-    .landing-section { margin-bottom: 2rem; }
-    .landing-section-title {
-      font-size: 0.78rem; font-weight: 800; color: var(--navy);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.9rem;
-      display: flex; align-items: center; gap: 0.55rem;
-    }
-    .landing-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-    .landing-objective {
-      background: var(--mod-bg); border-left: 4px solid var(--mod-accent);
-      border-radius: 0 10px 10px 0; padding: 1rem 1.25rem;
-      font-size: 0.97rem; font-weight: 600; color: var(--navy); line-height: 1.65;
-    }
-    .landing-why { font-size: 0.91rem; color: var(--text-mid); line-height: 1.75; }
-
-    .landing-roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; }
-    .role-card {
-      background: var(--sky); border: 1.5px solid var(--border); border-radius: 12px; padding: 1.1rem;
-      transition: border-color 0.18s, box-shadow 0.18s;
-    }
-    .role-card:hover { border-color: var(--mod-border); box-shadow: var(--shadow-sm); }
-    .role-card-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem; }
-    .role-icon { font-size: 1.3rem; }
-    .role-title { font-size: 0.82rem; font-weight: 800; color: var(--navy); }
-    .role-desc { font-size: 0.79rem; color: var(--text-mid); line-height: 1.58; }
-
-    .landing-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; list-style: none; }
-    .landing-chip {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      background: var(--sky); border: 1.5px solid var(--border); border-radius: 8px;
-      padding: 0.42rem 0.8rem; font-size: 0.82rem; font-weight: 500; color: var(--text-mid);
-      cursor: pointer; font-family: inherit; appearance: none;
-      transition: background 0.16s, border-color 0.16s, color 0.16s, transform 0.12s;
-    }
-    .landing-chip:hover {
-      background: var(--mod-bg); border-color: var(--mod-border); color: var(--navy); transform: translateY(-1px);
-    }
-
-    .landing-cta {
-      margin-top: 2.5rem; text-align: center; padding-top: 2rem; border-top: 1px solid var(--border);
-    }
-    .begin-btn {
-      display: inline-flex; align-items: center; gap: 0.65rem;
-      background: var(--navy); color: var(--white);
-      border: 2.5px solid var(--mod-accent);
-      font-family: inherit; font-size: 1rem; font-weight: 700;
-      padding: 0.9rem 2.75rem; border-radius: 50px; cursor: pointer;
-      box-shadow: 0 4px 22px rgba(13,34,64,0.18);
-      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
-    }
-    .begin-btn:hover { background: var(--navy-light, #16325e); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(13,34,64,0.22); }
-    .begin-btn .btn-arrow { display: inline-block; transition: transform 0.2s; }
-    .begin-btn:hover .btn-arrow { transform: translateX(4px); }
-
-    /* TOOLBAR */
-    .toolbar {
-      background: var(--white); border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1.25rem; display: flex; align-items: center; gap: 0.75rem;
-      flex-shrink: 0; min-height: 52px;
-    }
-    .toolbar.hidden { display: none; }
-    .overview-btn {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      background: none; border: 1.5px solid var(--border);
-      color: var(--text-muted); font-family: inherit;
-      font-size: 0.74rem; font-weight: 600; padding: 0.32rem 0.75rem; border-radius: 8px;
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
-    }
-    .overview-btn:hover { background: var(--sky); color: var(--navy); border-color: var(--navy); }
-    .toolbar-icon-wrap {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--mod-bg); border: 1.5px solid var(--mod-border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; flex-shrink: 0;
-    }
-    .toolbar-title {
-      font-size: 0.92rem; font-weight: 700; color: var(--navy);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;
-    }
-    .toolbar-url {
-      font-size: 0.72rem; color: var(--text-muted);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; flex-shrink: 1;
-    }
-    .toolbar-right { display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0; }
-    .toolbar-btn {
-      background: none; border: 1.5px solid var(--border);
-      color: var(--text-muted); font-family: inherit;
-      font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.8rem; border-radius: 8px;
-      cursor: pointer; white-space: nowrap;
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
-    }
-    .toolbar-btn:hover { background: var(--sky); color: var(--navy); border-color: var(--navy); }
-    .toolbar-btn:disabled { opacity: 0.28; cursor: not-allowed; }
-    .open-btn {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      background: var(--mod-accent); color: var(--white);
-      font-family: inherit; font-size: 0.78rem; font-weight: 700;
-      padding: 0.38rem 0.9rem; border-radius: 8px; text-decoration: none; white-space: nowrap;
-      transition: filter 0.18s, transform 0.15s;
-    }
-    .open-btn:hover { filter: brightness(0.88); transform: translateY(-1px); }
-
-    /* IFRAME */
-    .iframe-loader { height: 3px; background: var(--sky); position: relative; overflow: hidden; flex-shrink: 0; }
-    .iframe-loader.hidden { display: none; }
-    .iframe-loader-bar {
-      position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
-      background: linear-gradient(90deg, var(--cyan-bright), var(--mod-accent));
-      border-radius: 2px; animation: loadSlide 1s ease-in-out infinite;
-      opacity: 0; transition: opacity 0.2s;
-    }
-    .iframe-loader-bar.running { opacity: 1; }
-    @keyframes loadSlide { 0% { left: -40%; } 100% { left: 110%; } }
-    #content-frame { flex: 1; border: none; width: 100%; display: none; background: var(--white); }
-    #content-frame.visible { display: block; }
-    .iframe-fallback {
-      flex: 1; display: none; flex-direction: column; align-items: center; justify-content: center;
-      gap: 1.1rem; background: var(--sky); padding: 2.5rem; text-align: center;
-    }
-    .iframe-fallback.visible { display: flex; }
-    .fallback-icon { font-size: 2.8rem; }
-    .fallback-title { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
-    .fallback-desc { font-size: 0.88rem; color: var(--text-muted); max-width: 340px; line-height: 1.65; }
-    .fallback-link {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: var(--mod-accent); color: var(--white); font-weight: 700; font-size: 0.9rem;
-      padding: 0.6rem 1.4rem; border-radius: 25px; text-decoration: none;
-      transition: filter 0.2s, transform 0.15s;
-    }
-    .fallback-link:hover { filter: brightness(0.88); transform: translateY(-1px); }
-
-    /* RESPONSIVE */
-    @media (max-width: 767px) {
-      body { overflow: auto; }
-      .layout { flex-direction: column; overflow: visible; }
-      .hamburger { display: flex; }
-      .sidebar {
-        position: fixed; top: var(--header-h); left: 0; bottom: 0;
-        transform: translateX(-100%); z-index: 50; box-shadow: 4px 0 20px rgba(0,0,0,0.25);
-      }
-      .sidebar.open { transform: translateX(0); }
-      .content-pane { min-height: calc(100vh - var(--header-h)); }
-      #content-frame.visible { min-height: 68vh; }
-      .toolbar-url { display: none; }
-      .landing-hero { padding: 2rem 1.25rem 1.5rem; }
-      .landing-title { font-size: 1.45rem; }
-      .landing-body { padding: 1.5rem 1.25rem 2.5rem; }
-      .landing-roles { grid-template-columns: 1fr; }
-    }
-    @media print { .top-bar, .sidebar, .toolbar, .skip-link { display: none !important; } }
   </style>
 </head>
 <body>
 
-  <a href="#main" class="skip-link">Skip to content</a>
-  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
-
-  <header class="top-bar" role="banner">
-    <button class="hamburger" id="hamburger"
-      aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">
+  <header class="top-header">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Navigation" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-    <div class="top-bar-left">
-      <a href="index.html" class="home-link">AI <span>for Educators</span></a>
-      <span class="breadcrumb-sep" aria-hidden="true">›</span>
-      <span class="breadcrumb-current">Module 1: Introduction to AI</span>
+    <div class="header-title">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 12 2.1 7.1"></path><path d="M12 12l9.9 4.9"></path></svg>
+      AI <span>Fundamentals</span>
     </div>
-    <span class="module-badge">🤖 Module 1</span>
   </header>
 
-  <div class="layout">
-
-    <nav class="sidebar" id="sidebar" aria-label="Module 1 lessons">
-      <div class="sidebar-hero">
-        <span class="sidebar-mod-emoji" aria-hidden="true">🤖</span>
-        <div class="sidebar-mod-pill">Module 1</div>
-        <div class="sidebar-mod-title">Introduction to Artificial Intelligence</div>
-        <div class="sidebar-mod-sub">8 lessons · Resource page loads here</div>
+  <div class="layout-container">
+    <nav class="sidebar" id="sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <span class="sidebar-badge">Module 1</span>
+        <div style="font-weight: 700; font-size: 1.1rem; line-height: 1.3;">Introduction to Artificial Intelligence</div>
       </div>
       <div class="sidebar-nav">
-        <div class="sidebar-nav-label">Lessons</div>
-
-      
-        <button class="nav-item" data-index="0" aria-label="AI Fundamentals"><span class="nav-item-icon" aria-hidden="true">🧠</span><span class="nav-item-text">AI Fundamentals</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="1" aria-label="Rationale for AI Integration"><span class="nav-item-icon" aria-hidden="true">💡</span><span class="nav-item-text">Rationale for AI Integration</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="2" aria-label="AI in Teaching and Learning"><span class="nav-item-icon" aria-hidden="true">🏫</span><span class="nav-item-text">AI in Teaching and Learning</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="3" aria-label="Types of AI Systems"><span class="nav-item-icon" aria-hidden="true">🔭</span><span class="nav-item-text">Types of AI Systems</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="4" aria-label="AI Vocabulary"><span class="nav-item-icon" aria-hidden="true">📖</span><span class="nav-item-text">AI Vocabulary</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="5" aria-label="Myths and Misconceptions"><span class="nav-item-icon" aria-hidden="true">🔍</span><span class="nav-item-text">Myths and Misconceptions</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="6" aria-label="AI Career Paths"><span class="nav-item-icon" aria-hidden="true">🚀</span><span class="nav-item-text">AI Career Paths</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-        <button class="nav-item" data-index="7" aria-label="Survey of AI Tools"><span class="nav-item-icon" aria-hidden="true">🗂️</span><span class="nav-item-text">Survey of AI Tools</span><span class="nav-item-dot" aria-hidden="true"></span></button>
-
-      </div>
-      <div class="sidebar-footer">
-        <a href="index.html">← Back to Course Index</a>
+        <button class="nav-btn active" data-target="overview" aria-current="page">
+          <span class="nav-icon">🎯</span> Overview
+        </button>
+        <button class="nav-btn" data-target="fundamentals">
+          <span class="nav-icon">🧠</span> AI Fundamentals
+        </button>
+        <button class="nav-btn" data-target="rationale">
+          <span class="nav-icon">💡</span> Rationale for Integration
+        </button>
+        <button class="nav-btn" data-target="teaching">
+          <span class="nav-icon">🏫</span> Teaching & Learning
+        </button>
+        <button class="nav-btn" data-target="vocabulary">
+          <span class="nav-icon">📖</span> AI Vocabulary
+        </button>
+        <button class="nav-btn" data-target="myths">
+          <span class="nav-icon">🔍</span> Myths & Misconceptions
+        </button>
       </div>
     </nav>
 
-    <main class="content-pane" id="main" aria-label="Module content">
+    <main class="content-area" id="mainContent">
+      
+      <section id="overview" class="content-section active">
+        <h1>Introduction to Artificial Intelligence</h1>
+        <p>From concept to classroom relevance. This module establishes the core foundational knowledge required to understand and integrate artificial intelligence effectively.</p>
+        
+        <div class="highlight-box">
+          <p><strong>🎯 Learning Objective:</strong> Define artificial intelligence, machine learning, and deep learning, and explain their growing role in education and the workforce.</p>
+        </div>
 
-      <!-- LANDING -->
-      <div class="module-landing" id="moduleLanding">
-        <div class="landing-hero">
-          <span class="landing-emoji" aria-hidden="true">🤖</span>
-          <div class="landing-pill">Module 1</div>
-          <h1 class="landing-title">Introduction to Artificial Intelligence</h1>
-          <p class="landing-tagline">From concept to classroom relevance</p>
-          <div class="landing-meta">
-            <span class="landing-meta-item">📚 8 Lessons</span>
+        <h2>How This Fits Your Role</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">📚</span>
+            <div class="card-title">Instructors</div>
+            <p class="card-text">Contextualize AI for your students with confidence. Answer the foundational questions they're already asking — and help them separate genuine capability from media hype.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🔬</span>
+            <div class="card-title">Professors</div>
+            <p class="card-text">Ground your teaching and research in a rigorous understanding of how AI systems work and where they fail — an essential foundation for any serious academic engagement.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🏛️</span>
+            <div class="card-title">Administrators</div>
+            <p class="card-text">Build the foundational literacy needed to lead informed conversations about AI adoption, workforce alignment, and institutional changes.</p>
           </div>
         </div>
+        <button class="action-btn" onclick="switchTab('fundamentals')">Start Learning →</button>
+      </section>
 
-        <div class="landing-body">
-
-          <section class="landing-section" aria-labelledby="lo1-heading">
-            <h2 class="landing-section-title" id="lo1-heading">🎯 Learning Objective</h2>
-            <p class="landing-objective">Define artificial intelligence, machine learning, and deep learning, and explain their growing role in education and the workforce.</p>
-          </section>
-
-          <section class="landing-section" aria-labelledby="why1-heading">
-            <h2 class="landing-section-title" id="why1-heading">💡 Why This Matters</h2>
-            <p class="landing-why">AI is transforming every sector of the economy and every level of education. Understanding the fundamentals — not just how to use the tools, but how they actually work and why they matter — positions you to make informed decisions, guide students thoughtfully, and lead institutional change instead of reacting to it.</p>
-          </section>
-
-          <section class="landing-section" aria-labelledby="roles1-heading">
-            <h2 class="landing-section-title" id="roles1-heading">👥 How This Fits Your Role</h2>
-            <div class="landing-roles">
-              <div class="role-card">
-                <div class="role-card-top">
-                  <span class="role-icon" aria-hidden="true">📚</span>
-                  <span class="role-title">Instructors</span>
-                </div>
-                <p class="role-desc">Contextualize AI for your students with confidence. Answer the foundational questions they're already asking — and help them separate genuine capability from media hype.</p>
-              </div>
-              <div class="role-card">
-                <div class="role-card-top">
-                  <span class="role-icon" aria-hidden="true">🔬</span>
-                  <span class="role-title">Professors</span>
-                </div>
-                <p class="role-desc">Ground your teaching and research in a rigorous understanding of how AI systems work and where they fail — an essential foundation for any serious academic engagement with the topic.</p>
-              </div>
-              <div class="role-card">
-                <div class="role-card-top">
-                  <span class="role-icon" aria-hidden="true">🏛️</span>
-                  <span class="role-title">Administrators</span>
-                </div>
-                <p class="role-desc">Build the foundational literacy needed to lead informed conversations about AI adoption, workforce alignment, and the institutional changes AI will drive across your campus.</p>
-              </div>
-            </div>
-          </section>
-
-          <section class="landing-section" aria-labelledby="lessons1-heading">
-            <h2 class="landing-section-title" id="lessons1-heading">📋 What You'll Explore</h2>
-            <ul class="landing-chips" role="list">
-              <li><button class="landing-chip" data-index="0">🧠 AI Fundamentals</button></li>
-              <li><button class="landing-chip" data-index="1">💡 Rationale for AI Integration</button></li>
-              <li><button class="landing-chip" data-index="2">🏫 AI in Teaching &amp; Learning</button></li>
-              <li><button class="landing-chip" data-index="3">🔭 Types of AI Systems</button></li>
-              <li><button class="landing-chip" data-index="4">📖 AI Vocabulary</button></li>
-              <li><button class="landing-chip" data-index="5">🔍 Myths &amp; Misconceptions</button></li>
-              <li><button class="landing-chip" data-index="6">🚀 AI Career Paths</button></li>
-              <li><button class="landing-chip" data-index="7">🗂️ Survey of AI Tools</button></li>
-            </ul>
-          </section>
-
-          <div class="landing-cta">
-            <button class="begin-btn" id="beginBtn">
-              Begin Module <span class="btn-arrow" aria-hidden="true">→</span>
-            </button>
+      <section id="fundamentals" class="content-section">
+        <h1>AI Fundamentals</h1>
+        <p>Artificial Intelligence (AI) is a broad branch of computer science focused on building smart machines capable of performing tasks that typically require human intelligence. While AI is an overarching concept, it encompasses several critical subfields.</p>
+        
+        <h2>Core Concepts</h2>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-title">Machine Learning (ML)</div>
+            <p class="card-text">A subset of AI that involves training algorithms to recognize patterns in data and make predictions or decisions without being explicitly programmed for every scenario.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Deep Learning (DL)</div>
+            <p class="card-text">A specialized subset of ML utilizing artificial neural networks with multiple layers (hence "deep"). It excels at processing unstructured data like images, audio, and natural language.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Generative AI</div>
+            <p class="card-text">Systems designed to generate new content—text, images, code, or audio—based on the patterns they have learned from vast training datasets.</p>
           </div>
         </div>
-      </div><!-- /landing -->
+        <button class="action-btn" onclick="switchTab('rationale')">Next: Rationale for Integration →</button>
+      </section>
 
-      <!-- TOOLBAR -->
-      <div class="toolbar hidden" id="toolbar">
-        <button class="overview-btn" id="overviewBtn" aria-label="Return to module overview">← Overview</button>
-        <div class="toolbar-icon-wrap"><span id="toolbarIcon" aria-hidden="true">🏫</span></div>
-        <div style="flex:1;min-width:0;">
-          <div class="toolbar-title" id="toolbarTitle">AI in Teaching and Learning</div>
-          <div class="toolbar-url" id="toolbarUrl">sands-mvcc.github.io</div>
+      <section id="rationale" class="content-section">
+        <h1>Rationale for AI Integration</h1>
+        <div class="highlight-box">
+          <p><strong>💡 Why This Matters:</strong> AI is transforming every sector of the economy and every level of education. Understanding the fundamentals positions you to make informed decisions and lead institutional change instead of reacting to it.</p>
         </div>
-        <div class="toolbar-right">
-          <button class="toolbar-btn" id="prevBtn" aria-label="Previous lesson">← Prev</button>
-          <button class="toolbar-btn" id="nextBtn" aria-label="Next lesson">Next →</button>
-          <a href="#" class="open-btn" id="openBtn" target="_blank" rel="noopener noreferrer" aria-label="Open in new tab">↗ Open</a>
+        
+        <h2>Driving Forces in Education</h2>
+        <p>Integrating AI into educational frameworks is no longer optional; it is a necessity driven by rapid workforce evolution. Students must be prepared for a reality where AI literacy is just as critical as computer literacy.</p>
+        <p>By bringing AI into the curriculum, institutions can:</p>
+        <ul>
+          <li><strong>Enhance Personalization:</strong> Scale individualized learning experiences for diverse student populations.</li>
+          <li><strong>Align with Industry:</strong> Ensure graduates possess the contemporary skills demanded by modern employers.</li>
+          <li><strong>Optimize Workflows:</strong> Streamline administrative and assessment processes, freeing educators to focus on high-impact instructional time.</li>
+        </ul>
+        <button class="action-btn" onclick="switchTab('teaching')">Next: Teaching & Learning →</button>
+      </section>
+
+      <section id="teaching" class="content-section">
+        <h1>AI in Teaching and Learning</h1>
+        <p>The application of Artificial Intelligence in the classroom is shifting the paradigm from passive consumption to active, dynamic exploration. We are moving beyond traditional lectures and static assignments.</p>
+        
+        <h2>Building Engaging Experiences</h2>
+        <p>Instead of relying on outdated analogies to explain the connection between technology and education, modern pedagogy utilizes AI to create <strong>interactive and engaging modules</strong>. These dynamic modules allow students to manipulate variables, receive real-time feedback, and explore complex topics in a hands-on environment.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">⚙️</span>
+            <div class="card-title">Interactive Simulations</div>
+            <p class="card-text">Deploying AI-driven environments where students can safely test hypotheses and experience complex system behaviors in real-time.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">📝</span>
+            <div class="card-title">Adaptive Assessments</div>
+            <p class="card-text">Testing systems that adjust difficulty based on student performance, providing a more accurate measure of proficiency while keeping learners engaged.</p>
+          </div>
         </div>
-      </div>
+        <button class="action-btn" onclick="switchTab('vocabulary')">Next: AI Vocabulary →</button>
+      </section>
 
-      <div class="iframe-loader hidden" id="iframeLoader" aria-hidden="true">
-        <div class="iframe-loader-bar" id="loaderBar"></div>
-      </div>
+      <section id="vocabulary" class="content-section">
+        <h1>AI Vocabulary</h1>
+        <p>Mastering the language of Artificial Intelligence is the first step toward effective implementation. Below are essential terms every educator should know.</p>
+        
+        <dl class="vocab-list">
+          <dt>Algorithm</dt>
+          <dd>A set of rules or instructions given to an AI system to help it learn from data or solve a specific problem.</dd>
+          
+          <dt>Large Language Model (LLM)</dt>
+          <dd>An AI model trained on massive amounts of text data, capable of understanding and generating human-like text (e.g., GPT-4).</dd>
+          
+          <dt>Prompt Engineering</dt>
+          <dd>The practice of designing and refining the input instructions (prompts) given to a Generative AI model to produce the most accurate and useful output.</dd>
+          
+          <dt>Hallucination</dt>
+          <dd>A phenomenon where an AI model generates false, fabricated, or logically inconsistent information presented as fact.</dd>
+        </dl>
+        <button class="action-btn" onclick="switchTab('myths')">Next: Myths & Misconceptions →</button>
+      </section>
 
-      <iframe id="content-frame" title="Lesson content" loading="lazy"></iframe>
-
-      <div class="iframe-fallback" id="iframeFallback" role="alert">
-        <span class="fallback-icon" id="fallbackIcon" aria-hidden="true">🔒</span>
-        <div class="fallback-title" id="fallbackTitle">Page blocked from embedding</div>
-        <p class="fallback-desc" id="fallbackDesc">This page cannot load in the embedded viewer. Open it directly to view the full content.</p>
-        <a href="#" class="fallback-link" id="fallbackLink" target="_blank" rel="noopener noreferrer">↗ Open Page Directly</a>
-      </div>
+      <section id="myths" class="content-section">
+        <h1>Myths and Misconceptions</h1>
+        <p>As AI adoption accelerates, it is critical to address and dismantle common misconceptions that can hinder effective integration.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI will replace teachers</div>
+            <p class="card-text"><strong>Reality:</strong> AI is a powerful tool, but it lacks empathy, contextual understanding, and the human mentorship crucial for learning. AI augments the educator; it does not replace them.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI systems are completely objective</div>
+            <p class="card-text"><strong>Reality:</strong> AI models inherit the biases present in their training data. Educators must teach students to critically evaluate AI outputs rather than accepting them as absolute truth.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI is only for Computer Science</div>
+            <p class="card-text"><strong>Reality:</strong> AI applications span across all disciplines—from analyzing historical texts in humanities to predictive modeling in healthcare and business.</p>
+          </div>
+        </div>
+      </section>
 
     </main>
   </div>
 
   <script>
-    const items = [
-      { title: 'AI Fundamentals',               icon: '🧠', url: 'https://jjirik77.github.io/ai_ncyte.html/ai_fundamentals.html' },
-      { title: 'Rationale for AI Integration',  icon: '💡', url: 'https://jjirik77.github.io/ai_ncyte.html/ai_rationale.html' },
-      { title: 'AI in Teaching and Learning',   icon: '🏫', url: 'https://sands-mvcc.github.io/MVCC/transform.html' },
-      { title: 'Types of AI Systems',           icon: '🔭', url: 'https://sands-mvcc.github.io/AI/types.html' },
-      { title: 'AI Vocabulary',                 icon: '📖', url: 'https://jjirik77.github.io/ai_ncyte.html/aiconcepts.html' },
-      { title: 'AI Myths and Misconceptions',   icon: '🔍', url: 'https://jjirik77.github.io/ai_ncyte.html/ai_myths.html' },
-      { title: 'AI Career Paths',               icon: '🚀', url: 'https://mqaissaunee-bcc.github.io/AI_Examples/ai-job-impact-dashboard.html' },
-      { title: 'Survey of AI Tools',            icon: '🗂️', url: 'https://jjirik77.github.io/ai_ncyte.html/ai_tools.html' },
-    ];
+    // Navigation Logic
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.content-section');
+    const sidebar = document.getElementById('sidebar');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
 
-    let current = 0, landingVisible = true;
-    const visited = new Set();
+    function switchTab(targetId) {
+      // Update Buttons
+      navButtons.forEach(btn => {
+        if (btn.dataset.target === targetId) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.classList.remove('active');
+          btn.removeAttribute('aria-current');
+        }
+      });
 
-    const landing      = document.getElementById('moduleLanding');
-    const toolbar      = document.getElementById('toolbar');
-    const iframeLoader = document.getElementById('iframeLoader');
-    const frame        = document.getElementById('content-frame');
-    const loaderBar    = document.getElementById('loaderBar');
-    const toolbarIcon  = document.getElementById('toolbarIcon');
-    const toolbarTitle = document.getElementById('toolbarTitle');
-    const toolbarUrl   = document.getElementById('toolbarUrl');
-    const openBtn      = document.getElementById('openBtn');
-    const prevBtn      = document.getElementById('prevBtn');
-    const nextBtn      = document.getElementById('nextBtn');
-    const fallback     = document.getElementById('iframeFallback');
-    const fallbackIcon = document.getElementById('fallbackIcon');
-    const fallbackTitle= document.getElementById('fallbackTitle');
-    const fallbackDesc = document.getElementById('fallbackDesc');
-    const fallbackLink = document.getElementById('fallbackLink');
-    const overviewBtn  = document.getElementById('overviewBtn');
-    const sidebar      = document.getElementById('sidebar');
-    const overlay      = document.getElementById('sidebarOverlay');
-    const hamburger    = document.getElementById('hamburger');
+      // Update Sections
+      sections.forEach(section => {
+        if (section.id === targetId) {
+          section.classList.add('active');
+          // Update URL hash without jumping
+          history.pushState(null, null, `#${targetId}`);
+        } else {
+          section.classList.remove('active');
+        }
+      });
 
-    const navItems = document.querySelectorAll('.nav-item[data-index]');
-
-    function showLoader(on) { loaderBar.classList.toggle('running', on); }
-
-    function showLanding() {
-      landingVisible = true;
-      landing.classList.remove('hidden');
-      toolbar.classList.add('hidden');
-      iframeLoader.classList.add('hidden');
-      frame.classList.remove('visible');
-      fallback.classList.remove('visible');
-      navItems.forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
-      if (history.pushState) history.pushState({ landing: true }, '', '#overview');
-    }
-
-    function hideLanding() {
-      landingVisible = false;
-      landing.classList.add('hidden');
-      toolbar.classList.remove('hidden');
-      iframeLoader.classList.remove('hidden');
-    }
-
-    function loadItem(index, push = true) {
-      if (index < 0 || index >= items.length) return;
-      if (landingVisible) hideLanding();
-      current = index; visited.add(index);
-      const l = items[index];
-      toolbarIcon.textContent = l.icon; toolbarTitle.textContent = l.title;
-      navItems.forEach(b => { const idx = parseInt(b.dataset.index, 10); b.classList.toggle('active', idx === index); b.classList.toggle('visited', visited.has(idx)); b.setAttribute('aria-current', idx === index ? 'page' : 'false'); });
-      prevBtn.disabled = index === 0; nextBtn.disabled = index === items.length - 1;
-      prevBtn.style.opacity = prevBtn.disabled ? '0.28' : '1'; nextBtn.style.opacity = nextBtn.disabled ? '0.28' : '1';
-      document.title = l.title + ' — Module 1 · AI for Educators';
-      if (push && history.pushState) history.pushState({ index }, '', '#lesson-' + (index + 1));
-      closeSidebar();
-      if (!l.url) {
-        showLoader(false); iframeLoader.classList.add('hidden');
-        frame.classList.remove('visible'); toolbarUrl.textContent = '';
-        openBtn.style.display = 'none';
-        fallbackIcon.textContent = l.icon; fallbackTitle.textContent = l.title;
-        fallbackDesc.textContent = 'This lesson is coming soon. Check back for updates!';
-        fallbackLink.style.display = 'none';
-        fallback.classList.add('visible');
-        fallback.style.background = 'linear-gradient(145deg, #eff6ff 0%, #e8f4fb 100%)';
-      } else {
-        openBtn.style.display = ''; fallbackLink.style.display = '';
-        fallback.style.background = '';
-        try { toolbarUrl.textContent = new URL(l.url).hostname; } catch(e) { toolbarUrl.textContent = l.url; }
-        openBtn.href = l.url; openBtn.setAttribute('aria-label', 'Open "' + l.title + '" in new tab'); fallbackLink.href = l.url;
-        showLoader(true); frame.classList.add('visible'); fallback.classList.remove('visible'); frame.src = l.url; frame.title = l.title;
-        fallbackIcon.textContent = '🔒'; fallbackTitle.textContent = 'Page blocked from embedding'; fallbackDesc.textContent = 'This page cannot load in the embedded viewer. Open it directly to view the full content.';
+      // Close mobile sidebar if open
+      if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+        toggleSidebar();
       }
+      
+      // Scroll to top of content area smoothly
+      document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    frame.addEventListener('load', () => {
-      showLoader(false);
-      try { if (frame.contentWindow.location.href === 'about:blank') { frame.classList.remove('visible'); fallback.classList.add('visible'); } } catch(e) {}
-    });
-    frame.addEventListener('error', () => { showLoader(false); frame.classList.remove('visible'); fallback.classList.add('visible'); });
-
-    navItems.forEach(btn => {
-      btn.addEventListener('click', () => loadItem(parseInt(btn.dataset.index, 10)));
-      btn.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadItem(parseInt(btn.dataset.index, 10)); }
+    // Attach click events to nav buttons
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.target);
       });
     });
 
-    document.getElementById('beginBtn').addEventListener('click', () => loadItem(0));
-    document.querySelectorAll('.landing-chip').forEach(chip => {
-      chip.addEventListener('click', () => loadItem(parseInt(chip.dataset.index, 10)));
+    // Mobile Sidebar Toggle
+    function toggleSidebar() {
+      const isOpen = sidebar.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    }
+    hamburgerBtn.addEventListener('click', toggleSidebar);
+
+    // Handle initial load from URL Hash
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.substring(1);
+      if (hash && document.getElementById(hash)) {
+        switchTab(hash);
+      }
     });
-    overviewBtn.addEventListener('click', showLanding);
 
-    prevBtn.addEventListener('click', () => loadItem(current - 1));
-    nextBtn.addEventListener('click', () => loadItem(current + 1));
-    document.addEventListener('keydown', e => {
-      if (e.altKey && e.key === 'ArrowLeft')  loadItem(current - 1);
-      if (e.altKey && e.key === 'ArrowRight') loadItem(current + 1);
-    });
-
-    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('visible'); overlay.removeAttribute('aria-hidden'); hamburger.setAttribute('aria-expanded', 'true'); }
-    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); overlay.setAttribute('aria-hidden', 'true'); hamburger.setAttribute('aria-expanded', 'false'); }
-    hamburger.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-    overlay.addEventListener('click', closeSidebar);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
-
-    (function init() {
-      const m = location.hash.match(/^#lesson-(\d+)$/);
-      if (m) { const idx = parseInt(m[1], 10) - 1; loadItem((idx >= 0 && idx < items.length) ? idx : 0, false); }
-    })();
-    window.addEventListener('popstate', e => {
-      if (e.state && e.state.landing) showLanding();
-      else if (e.state && typeof e.state.index === 'number') loadItem(e.state.index, false);
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.substring(1) || 'overview';
+      if (document.getElementById(hash)) {
+        switchTab(hash);
+      }
     });
   </script>
 </body>
 </html>
-
