@@ -1,0 +1,425 @@
+Here is the consolidated, single-page application (SPA) module.
+
+To meet your requirements, the architecture has been entirely rebuilt to remove the `iframe` dependencies, combining all requested sections into a single DOM. The styling has been updated to a clean, high-contrast white, black, and green theme to ensure WCAG 2.1 Level AA compliance, featuring fully keyboard-accessible navigation and smooth section transitions.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 1: Introduction to AI</title>
+  <meta name="description" content="Module 1 of AI Fundamentals — exploring AI in teaching, vocabulary, myths, and integration." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Theme Colors */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f4f5f7;
+      --text-primary: #000000;
+      --text-secondary: #333333;
+      --black: #000000;
+      --green-accent: #2e7d32; /* WCAG AA compliant on white */
+      --green-light: #e8f5e9;
+      --green-hover: #1b5e20;
+      --white: #ffffff;
+      --border: #e0e0e0;
+      
+      /* Layout Variables */
+      --sidebar-w: 280px;
+      --header-h: 70px;
+      --radius: 8px;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Accessibility */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    :focus-visible { outline: 3px solid var(--green-accent); outline-offset: 2px; border-radius: 2px; }
+
+    /* Top Header */
+    .top-header {
+      background: var(--bg-primary);
+      border-bottom: 2px solid var(--black);
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px;
+    }
+    .hamburger span { width: 24px; height: 2px; background: var(--black); transition: 0.3s; }
+    .header-title { font-weight: 800; font-size: 1.25rem; color: var(--black); display: flex; align-items: center; gap: 10px;}
+    .header-title span { color: var(--green-accent); }
+
+    /* Main Layout */
+    .layout-container { display: flex; flex: 1; overflow: hidden; }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      z-index: 50;
+    }
+    .sidebar-header { padding: 1.5rem; border-bottom: 1px solid #333; }
+    .sidebar-badge {
+      display: inline-block; background: var(--green-accent); color: var(--white);
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 0.5rem;
+    }
+    .sidebar-nav { padding: 1rem 0.5rem; flex: 1; overflow-y: auto; }
+    
+    .nav-btn {
+      width: 100%; text-align: left; background: transparent; border: none;
+      color: #cccccc; font-family: inherit; font-size: 0.95rem; font-weight: 600;
+      padding: 0.85rem 1rem; margin-bottom: 0.25rem; border-radius: var(--radius);
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-btn:hover { background: #222; color: var(--white); }
+    .nav-btn.active {
+      background: var(--green-accent); color: var(--white);
+    }
+    .nav-icon { font-size: 1.2rem; }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-primary);
+      padding: 2rem 3rem;
+    }
+    .content-section {
+      max-width: 900px;
+      margin: 0 auto;
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .content-section.active { display: block; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography & Content Styling */
+    h1 { font-size: 2.2rem; font-weight: 800; color: var(--black); margin-bottom: 1.5rem; line-height: 1.2; }
+    h2 { font-size: 1.5rem; font-weight: 700; color: var(--black); margin: 2rem 0 1rem; border-bottom: 2px solid var(--green-light); padding-bottom: 0.5rem; }
+    p { font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    
+    .highlight-box {
+      background: var(--green-light);
+      border-left: 5px solid var(--green-accent);
+      padding: 1.5rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.5rem 0;
+    }
+    .highlight-box p { margin: 0; color: var(--black); font-weight: 500; }
+
+    /* Grid Cards */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+    .card {
+      background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; box-shadow: var(--shadow); transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--green-accent); }
+    .card-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--black); }
+    .card-text { font-size: 0.95rem; color: var(--text-secondary); margin: 0; }
+
+    /* Definition List */
+    .vocab-list dt { font-weight: 700; font-size: 1.1rem; color: var(--green-accent); margin-top: 1.5rem; }
+    .vocab-list dd { margin-left: 0; margin-top: 0.5rem; font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+
+    /* Buttons */
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--black); color: var(--white); border: none;
+      font-size: 1rem; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 30px;
+      cursor: pointer; transition: background 0.2s; margin-top: 1rem;
+    }
+    .action-btn:hover { background: var(--green-accent); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; margin-right: 1rem; }
+      .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; transform: translateX(-100%); width: 260px; }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+      .content-area { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="header-title">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 12 2.1 7.1"></path><path d="M12 12l9.9 4.9"></path></svg>
+      AI <span>Fundamentals</span>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <nav class="sidebar" id="sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <span class="sidebar-badge">Module 1</span>
+        <div style="font-weight: 700; font-size: 1.1rem; line-height: 1.3;">Introduction to Artificial Intelligence</div>
+      </div>
+      <div class="sidebar-nav">
+        <button class="nav-btn active" data-target="overview" aria-current="page">
+          <span class="nav-icon">🎯</span> Overview
+        </button>
+        <button class="nav-btn" data-target="fundamentals">
+          <span class="nav-icon">🧠</span> AI Fundamentals
+        </button>
+        <button class="nav-btn" data-target="rationale">
+          <span class="nav-icon">💡</span> Rationale for Integration
+        </button>
+        <button class="nav-btn" data-target="teaching">
+          <span class="nav-icon">🏫</span> Teaching & Learning
+        </button>
+        <button class="nav-btn" data-target="vocabulary">
+          <span class="nav-icon">📖</span> AI Vocabulary
+        </button>
+        <button class="nav-btn" data-target="myths">
+          <span class="nav-icon">🔍</span> Myths & Misconceptions
+        </button>
+      </div>
+    </nav>
+
+    <main class="content-area" id="mainContent">
+      
+      <section id="overview" class="content-section active">
+        <h1>Introduction to Artificial Intelligence</h1>
+        <p>From concept to classroom relevance. This module establishes the core foundational knowledge required to understand and integrate artificial intelligence effectively.</p>
+        
+        <div class="highlight-box">
+          <p><strong>🎯 Learning Objective:</strong> Define artificial intelligence, machine learning, and deep learning, and explain their growing role in education and the workforce.</p>
+        </div>
+
+        <h2>How This Fits Your Role</h2>
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">📚</span>
+            <div class="card-title">Instructors</div>
+            <p class="card-text">Contextualize AI for your students with confidence. Answer the foundational questions they're already asking — and help them separate genuine capability from media hype.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🔬</span>
+            <div class="card-title">Professors</div>
+            <p class="card-text">Ground your teaching and research in a rigorous understanding of how AI systems work and where they fail — an essential foundation for any serious academic engagement.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">🏛️</span>
+            <div class="card-title">Administrators</div>
+            <p class="card-text">Build the foundational literacy needed to lead informed conversations about AI adoption, workforce alignment, and institutional changes.</p>
+          </div>
+        </div>
+        <button class="action-btn" onclick="switchTab('fundamentals')">Start Learning →</button>
+      </section>
+
+      <section id="fundamentals" class="content-section">
+        <h1>AI Fundamentals</h1>
+        <p>Artificial Intelligence (AI) is a broad branch of computer science focused on building smart machines capable of performing tasks that typically require human intelligence. While AI is an overarching concept, it encompasses several critical subfields.</p>
+        
+        <h2>Core Concepts</h2>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-title">Machine Learning (ML)</div>
+            <p class="card-text">A subset of AI that involves training algorithms to recognize patterns in data and make predictions or decisions without being explicitly programmed for every scenario.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Deep Learning (DL)</div>
+            <p class="card-text">A specialized subset of ML utilizing artificial neural networks with multiple layers (hence "deep"). It excels at processing unstructured data like images, audio, and natural language.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Generative AI</div>
+            <p class="card-text">Systems designed to generate new content—text, images, code, or audio—based on the patterns they have learned from vast training datasets.</p>
+          </div>
+        </div>
+        <button class="action-btn" onclick="switchTab('rationale')">Next: Rationale for Integration →</button>
+      </section>
+
+      <section id="rationale" class="content-section">
+        <h1>Rationale for AI Integration</h1>
+        <div class="highlight-box">
+          <p><strong>💡 Why This Matters:</strong> AI is transforming every sector of the economy and every level of education. Understanding the fundamentals positions you to make informed decisions and lead institutional change instead of reacting to it.</p>
+        </div>
+        
+        <h2>Driving Forces in Education</h2>
+        <p>Integrating AI into educational frameworks is no longer optional; it is a necessity driven by rapid workforce evolution. Students must be prepared for a reality where AI literacy is just as critical as computer literacy.</p>
+        <p>By bringing AI into the curriculum, institutions can:</p>
+        <ul>
+          <li><strong>Enhance Personalization:</strong> Scale individualized learning experiences for diverse student populations.</li>
+          <li><strong>Align with Industry:</strong> Ensure graduates possess the contemporary skills demanded by modern employers.</li>
+          <li><strong>Optimize Workflows:</strong> Streamline administrative and assessment processes, freeing educators to focus on high-impact instructional time.</li>
+        </ul>
+        <button class="action-btn" onclick="switchTab('teaching')">Next: Teaching & Learning →</button>
+      </section>
+
+      <section id="teaching" class="content-section">
+        <h1>AI in Teaching and Learning</h1>
+        <p>The application of Artificial Intelligence in the classroom is shifting the paradigm from passive consumption to active, dynamic exploration. We are moving beyond traditional lectures and static assignments.</p>
+        
+        <h2>Building Engaging Experiences</h2>
+        <p>Instead of relying on outdated analogies to explain the connection between technology and education, modern pedagogy utilizes AI to create <strong>interactive and engaging modules</strong>. These dynamic modules allow students to manipulate variables, receive real-time feedback, and explore complex topics in a hands-on environment.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">⚙️</span>
+            <div class="card-title">Interactive Simulations</div>
+            <p class="card-text">Deploying AI-driven environments where students can safely test hypotheses and experience complex system behaviors in real-time.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">📝</span>
+            <div class="card-title">Adaptive Assessments</div>
+            <p class="card-text">Testing systems that adjust difficulty based on student performance, providing a more accurate measure of proficiency while keeping learners engaged.</p>
+          </div>
+        </div>
+        <button class="action-btn" onclick="switchTab('vocabulary')">Next: AI Vocabulary →</button>
+      </section>
+
+      <section id="vocabulary" class="content-section">
+        <h1>AI Vocabulary</h1>
+        <p>Mastering the language of Artificial Intelligence is the first step toward effective implementation. Below are essential terms every educator should know.</p>
+        
+        <dl class="vocab-list">
+          <dt>Algorithm</dt>
+          <dd>A set of rules or instructions given to an AI system to help it learn from data or solve a specific problem.</dd>
+          
+          <dt>Large Language Model (LLM)</dt>
+          <dd>An AI model trained on massive amounts of text data, capable of understanding and generating human-like text (e.g., GPT-4).</dd>
+          
+          <dt>Prompt Engineering</dt>
+          <dd>The practice of designing and refining the input instructions (prompts) given to a Generative AI model to produce the most accurate and useful output.</dd>
+          
+          <dt>Hallucination</dt>
+          <dd>A phenomenon where an AI model generates false, fabricated, or logically inconsistent information presented as fact.</dd>
+        </dl>
+        <button class="action-btn" onclick="switchTab('myths')">Next: Myths & Misconceptions →</button>
+      </section>
+
+      <section id="myths" class="content-section">
+        <h1>Myths and Misconceptions</h1>
+        <p>As AI adoption accelerates, it is critical to address and dismantle common misconceptions that can hinder effective integration.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI will replace teachers</div>
+            <p class="card-text"><strong>Reality:</strong> AI is a powerful tool, but it lacks empathy, contextual understanding, and the human mentorship crucial for learning. AI augments the educator; it does not replace them.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI systems are completely objective</div>
+            <p class="card-text"><strong>Reality:</strong> AI models inherit the biases present in their training data. Educators must teach students to critically evaluate AI outputs rather than accepting them as absolute truth.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon">❌</span>
+            <div class="card-title">Myth: AI is only for Computer Science</div>
+            <p class="card-text"><strong>Reality:</strong> AI applications span across all disciplines—from analyzing historical texts in humanities to predictive modeling in healthcare and business.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Navigation Logic
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.content-section');
+    const sidebar = document.getElementById('sidebar');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+    function switchTab(targetId) {
+      // Update Buttons
+      navButtons.forEach(btn => {
+        if (btn.dataset.target === targetId) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.classList.remove('active');
+          btn.removeAttribute('aria-current');
+        }
+      });
+
+      // Update Sections
+      sections.forEach(section => {
+        if (section.id === targetId) {
+          section.classList.add('active');
+          // Update URL hash without jumping
+          history.pushState(null, null, `#${targetId}`);
+        } else {
+          section.classList.remove('active');
+        }
+      });
+
+      // Close mobile sidebar if open
+      if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+        toggleSidebar();
+      }
+      
+      // Scroll to top of content area
+      document.getElementById('mainContent').scrollTop = 0;
+    }
+
+    // Attach click events to nav buttons
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.target);
+      });
+    });
+
+    // Mobile Sidebar Toggle
+    function toggleSidebar() {
+      const isOpen = sidebar.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    }
+    hamburgerBtn.addEventListener('click', toggleSidebar);
+
+    // Handle initial load from URL Hash
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.substring(1);
+      if (hash && document.getElementById(hash)) {
+        switchTab(hash);
+      }
+    });
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.substring(1) || 'overview';
+      if (document.getElementById(hash)) {
+        switchTab(hash);
+      }
+    });
+  </script>
+</body>
+</html>
+
+```
