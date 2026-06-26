@@ -1,0 +1,934 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPNC Interactive Impact Dashboard</title>
+    <!-- Frameworks & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Section Visibility */
+        .main-content-section {
+            display: none;
+        }
+        .main-content-section.active {
+            display: block;
+        }
+
+        /* Card Transitions */
+        .card {
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+        .fade-in-delay-5 { transition-delay: 0.5s; }
+        .fade-in-delay-6 { transition-delay: 0.6s; }
+        .fade-in-delay-7 { transition-delay: 0.7s; }
+        .fade-in-delay-8 { transition-delay: 0.8s; }
+        .fade-in-delay-9 { transition-delay: 0.9s; }
+        .fade-in-delay-10 { transition-delay: 1.0s; }
+
+        /* Growth Bar Animation */
+        .growth-bar-fill {
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .growth-bar.is-visible .growth-bar-fill {
+            transform: scaleX(1);
+        }
+
+        /* Container Fix for Observer */
+        #growth-chart-container {
+            min-height: 200px;
+        }
+
+        /* Navigation Styling */
+        .nav-button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+        .nav-button:hover {
+            background-color: #1e293b;
+            color: white;
+        }
+        .nav-button.active {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Tooltip */
+        #map-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 50;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal */
+        #modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #modal-backdrop.visible #modal-content {
+            transform: scale(1);
+        }
+
+        /* Impact Data Modern Cards */
+        .stat-card {
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <nav class="md:w-64 bg-slate-900 text-white p-6 space-y-2 flex-shrink-0 flex flex-col">
+            <div class="mb-10 mt-4 px-2">
+                <div class="flex items-center space-x-3 text-blue-500 mb-2">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"></path></svg>
+                    <span class="text-xl font-extrabold tracking-tight text-white">EPNC</span>
+                </div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-widest">National Center</p>
+            </div>
+
+            <div class="flex-grow space-y-1">
+                <button class="nav-button active" data-target="overview">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    EPNC Overview
+                </button>
+                <button class="nav-button" data-target="pillars">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    Core Pillars
+                </button>
+                <button class="nav-button" data-target="dashboard">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Impact Dashboard
+                </button>
+                <button class="nav-button" data-target="vision">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Future Vision
+                </button>
+                <button class="nav-button" data-target="testimonials">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    Testimonials
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Global Header -->
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+                <div class="px-8 py-6 flex flex-col md:flex-row md:items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Education Pathway National Center (EPNC)</h1>
+                        <p class="text-slate-500 font-medium tracking-tight">NCAE-C Collaborative Strategy & Interactive Impact Dashboard</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex items-center space-x-3 text-sm text-slate-500">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full font-bold">DoD 8140 Ready</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8">
+                
+                <!-- 1. Overview Section -->
+                <section id="overview" class="main-content-section active space-y-12">
+                    <div class="max-w-4xl mx-auto text-center space-y-6 fade-in">
+                        <h2 class="text-4xl font-black text-slate-900 leading-tight">Strengthening the National Cyber Talent Pipeline</h2>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            The EPNC addresses a critical national priority by linking high schools directly to National Centers of Academic Excellence in Cybersecurity (NCAE-C). We empower local school systems with flexible, high-quality, and standards-based cybersecurity education.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="card p-8 rounded-2xl fade-in fade-in-delay-1">
+                            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Our Purpose</h3>
+                            <p class="text-slate-600 leading-relaxed">To build a sustainable and inclusive pipeline of cybersecurity talent by creating robust pathways from high school programs directly to NCAE-C designated institutions.</p>
+                        </div>
+                        <div class="card p-8 rounded-2xl fade-in fade-in-delay-2">
+                            <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z M3.6 9H20.4 M3.6 15H20.4 M12 3V21 M12 3C14.5 3 16.5 7 16.5 12C16.5 17 14.5 21 12 21 M12 3C9.5 3 7.5 7 7.5 12C7.5 17 9.5 21 12 21" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Our Scope</h3>
+                            <p class="text-slate-600 leading-relaxed">Delivering an integrated strategy blending open-source curriculum, faculty development, and a national virtual cyber range to empower educators and students nationwide.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Core Pillars Section -->
+                <section id="pillars" class="main-content-section space-y-24">
+                    <!-- Pillar 1 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center fade-in">
+                        <div class="space-y-6">
+                            <span class="text-blue-600 font-bold uppercase tracking-widest text-sm">Pillar 01</span>
+                            <h3 class="text-3xl font-extrabold text-slate-900">Curriculum & Learning</h3>
+                            <p class="text-lg text-slate-600 leading-relaxed">The foundation of our impact is a flexible, open-source curriculum aligned with NCAE-C standards. This is enhanced by a rich library of gamified, interactive modules that personalize learning and boost engagement.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="stat-card border-t-4 border-blue-500">
+                                <p class="text-4xl font-black text-slate-900 pillar-counter" data-target="1300">0</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Active Educators</p>
+                            </div>
+                            <div class="stat-card border-t-4 border-blue-500">
+                                <p class="text-4xl font-black text-slate-900 pillar-counter" data-target="3080">0</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Virtual Labs</p>
+                            </div>
+                            <div class="stat-card border-t-4 border-blue-500">
+                                <p class="text-4xl font-black text-slate-900 pillar-counter" data-target="1000000">0</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Student Interactions</p>
+                            </div>
+                            <div class="stat-card border-t-4 border-blue-500">
+                                <p class="text-4xl font-black text-slate-900 pillar-counter" data-target="193">0</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Student Completions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center fade-in">
+                        <div class="lg:order-2 space-y-6">
+                            <span class="text-orange-600 font-bold uppercase tracking-widest text-sm">Pillar 02</span>
+                            <h3 class="text-3xl font-extrabold text-slate-900">Educator Impact</h3>
+                            <p class="text-lg text-slate-600 leading-relaxed">Our workshops provide academic advisors with the technical context needed to guide students toward specialized cyber roles. The chart next to this text tracks the <b>Growth in Advisor Confidence</b> (Pre-Workshop vs. Post-Workshop), highlighting how specialized training bridges the knowledge gap in academic pathways and career guidance.</p>
+                        </div>
+                        <div class="lg:order-1 card p-8 h-80 rounded-2xl flex flex-col relative">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-sm font-bold text-slate-500 uppercase">Advisor Proficiency (%)</h4>
+                                <div class="flex space-x-4 text-[10px] uppercase font-bold">
+                                    <span class="flex items-center"><span class="w-2 h-2 bg-orange-400 rounded-full mr-1"></span> Pre</span>
+                                    <span class="flex items-center"><span class="w-2 h-2 bg-blue-600 rounded-full mr-1"></span> Post</span>
+                                </div>
+                            </div>
+                            <div id="advisor-chart-container" class="flex-1 min-h-0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center fade-in">
+                        <div class="space-y-6">
+                            <span class="text-teal-600 font-bold uppercase tracking-widest text-sm">Pillar 03</span>
+                            <h3 class="text-3xl font-extrabold text-slate-900">Collaboration & Equity</h3>
+                            <p class="text-lg text-slate-600 leading-relaxed">Our impact is amplified through a powerful network of state education agencies and local districts. We focus on increasing participation in rural and under-resourced communities to build sustainable pathways.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="card p-6 rounded-2xl">
+                                <h4 class="text-xs font-bold text-slate-400 mb-4 uppercase text-center">Rural Participation</h4>
+                                <div id="rural-chart" class="h-40"></div>
+                            </div>
+                            <div class="card p-6 rounded-2xl">
+                                <h4 class="text-xs font-bold text-slate-400 mb-4 uppercase text-center">Female Participation</h4>
+                                <div id="female-chart" class="h-40"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center fade-in">
+                        <div class="lg:order-2 space-y-6">
+                            <span class="text-emerald-600 font-bold uppercase tracking-widest text-sm">Pillar 04</span>
+                            <h3 class="text-3xl font-extrabold text-slate-900">Work-Based Learning</h3>
+                            <p class="text-lg text-slate-600 leading-relaxed">We bridge the gap between education and employment by translating classroom learning into real-world experience through strategic industry onboarding and placed internships.</p>
+                        </div>
+                        <div class="lg:order-1 grid grid-cols-3 gap-4">
+                            <div class="stat-card border-t-4 border-emerald-500">
+                                <p class="text-3xl font-black text-slate-900 pillar-counter" data-target="31">0</p>
+                                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-2">Employers</p>
+                            </div>
+                            <div class="stat-card border-t-4 border-emerald-500">
+                                <p class="text-3xl font-black text-slate-900 pillar-counter" data-target="61">0</p>
+                                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-2">Placed</p>
+                            </div>
+                            <div class="stat-card border-t-4 border-emerald-500">
+                                <p class="text-3xl font-black text-slate-900 pillar-counter" data-target="1700">0</p>
+                                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-2">Ready</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Impact Dashboard Section -->
+                <section id="dashboard" class="main-content-section space-y-12">
+                    <header class="mb-12 fade-in">
+                        <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Impact Dashboard</h2>
+                        <p class="mt-2 text-xl text-slate-500">National Reach & Growth Analytics</p>
+                    </header>
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="card kpi-card p-6 rounded-2xl border-l-4 border-blue-600 cursor-pointer fade-in" 
+                             data-metric="Student Completions / RING Online" 
+                             data-values='[{"year": 2023, "value": 42}, {"year": 2024, "value": 193}]' 
+                             data-color="#2563eb">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Completions / RING Online</p>
+                            <div class="flex items-end justify-between">
+                                <p class="text-4xl font-black kpi-value" data-target="193">0</p>
+                                <span class="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-1 rounded">+360%</span>
+                            </div>
+                        </div>
+                        <div class="card kpi-card p-6 rounded-2xl border-l-4 border-blue-600 cursor-pointer fade-in fade-in-delay-1" 
+                             data-metric="School Adoptions" 
+                             data-values='[{"year": 2023, "value": 210}, {"year": 2024, "value": 291}]' 
+                             data-color="#2563eb">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">K-12 Adoptions</p>
+                            <div class="flex items-end justify-between">
+                                <p class="text-4xl font-black kpi-value" data-target="291">0</p>
+                                <span class="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-1 rounded">+39%</span>
+                            </div>
+                        </div>
+                        <div class="card kpi-card p-6 rounded-2xl border-l-4 border-blue-600 cursor-pointer fade-in fade-in-delay-2" 
+                             data-metric="Virtual Lab Completion" 
+                             data-values='[{"year": 2023, "value": 1780}, {"year": 2024, "value": 3080}]' 
+                             data-color="#2563eb">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Virtual Labs Completion</p>
+                            <div class="flex items-end justify-between">
+                                <p class="text-4xl font-black kpi-value" data-target="3080">0</p>
+                                <span class="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-1 rounded">+73%</span>
+                            </div>
+                        </div>
+                        <div class="card kpi-card p-6 rounded-2xl border-l-4 border-blue-600 cursor-pointer fade-in fade-in-delay-3" 
+                             data-metric="Industry Partners" 
+                             data-values='[{"year": 2023, "value": 19}, {"year": 2024, "value": 31}]' 
+                             data-color="#2563eb">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Employers</p>
+                            <div class="flex items-end justify-between">
+                                <p class="text-4xl font-black kpi-value" data-target="31">0</p>
+                                <span class="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-1 rounded">+63%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map & Growth Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                        <div class="lg:col-span-3 card p-8 rounded-2xl relative overflow-hidden fade-in">
+                            <div class="flex justify-between items-center mb-8">
+                                <h3 class="text-xl font-bold">National Program Footprint</h3>
+                                <div class="flex space-x-4 text-xs font-bold">
+                                    <span class="flex items-center"><span class="w-3 h-3 bg-blue-600 rounded-full mr-2"></span> Active Participant</span>
+                                    <span class="flex items-center"><span class="w-3 h-3 bg-yellow-400 rounded-full mr-2"></span> Major Pathway Hub</span>
+                                </div>
+                            </div>
+                            <div id="map-container" class="h-96 w-full"></div>
+                            <div id="map-tooltip"></div>
+                        </div>
+
+                        <div class="lg:col-span-2 card p-8 rounded-2xl fade-in fade-in-delay-1">
+                            <h3 class="text-xl font-bold mb-8">Top Growth Areas</h3>
+                            <div id="growth-chart-container" class="space-y-8">
+                                <!-- Bars populated via script -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
+                        <div class="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                            <h4 class="font-bold text-emerald-900 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                Lessons Learned
+                            </h4>
+                            <ul class="text-sm space-y-3 text-emerald-800 font-medium">
+                                <li>• Modular curriculum works best for regional adaptations.</li>
+                                <li>• Early counselor engagement is highly effective.</li>
+                                <li>• Gamified learning significantly boosts student interest.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-amber-50 rounded-2xl border border-amber-100">
+                            <h4 class="font-bold text-amber-900 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                Key Challenges
+                            </h4>
+                            <ul class="text-sm space-y-3 text-amber-800 font-medium">
+                                <li>• High-latency internet in rural districts.</li>
+                                <li>• Recruiting technical faculty in low-income areas.</li>
+                                <li>• Scaling industry partnerships is resource-intensive.</li>
+                            </ul>
+                        </div>
+                        <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                            <h4 class="font-bold text-blue-900 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                                Recommendations
+                            </h4>
+                            <ul class="text-sm space-y-3 text-blue-800 font-medium">
+                                <li>• Renew and extend funding for long-term sustainability.</li>
+                                <li>• Develop formal recognition programs for schools.</li>
+                                <li>• Expand virtual lab access for 24/7 engagement.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Future Vision Section -->
+                <section id="vision" class="main-content-section space-y-12">
+                    <header class="mb-16 fade-in text-center max-w-4xl mx-auto">
+                        <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Future Vision: Aligning with the DoD 8140/DCWF</h2>
+                        <p class="mt-4 text-xl text-slate-500">Building a DoD-Ready Cyber Workforce: Pathways from K-12 to Federal Service</p>
+                    </header>
+                    
+                    <div class="fade-in mb-12">
+                        <p class="text-center text-lg text-slate-600 max-w-4xl mx-auto leading-relaxed">Our vision is to build a robust, scalable, and DoD-ready cyber talent pipeline. We achieve this by intentionally aligning K-12 cybersecurity education with the DoD Cyber Workforce Framework (DCWF) and creating seamless pathways for students to advance to NCAE-C institutions—the primary feeders for the federal workforce.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <!-- Card 1 -->
+                        <div class="card p-6 rounded-2xl fade-in flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z M12 6a6 6 0 106 6 6 6 0 00-6-6zm0 10a4 4 0 114-4 4 4 0 01-4 4z M12 10a2 2 0 102 2 2 2 0 00-2-2z" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">AI & DCWF Integration</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Integrate AI competencies and map all curriculum modules to DCWF work roles for <b>DoD 8140</b> focus.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-1 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 6h16M4 10h16M4 14h16M4 18h16 M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z M9 7h6 M9 11h6 M9 15h6" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Role-Focused Labs</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Broaden national range access, matching every lab and challenge to specific DCWF tasks.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-2 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12l2 2 4-4 M12 2L3 7v6a12 12 0 009 11.62A12 12 0 0021 13V7z" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Pathway Recognition</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Formal badging for programs demonstrating strong, articulated pathways to NCAE-C institutions.</p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-3 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6 M3 21h18" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">WBL Scaling</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Invest in industry onboarding to scale internship and apprenticeship occupational blends.</p>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-4 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Sustainable Funding</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Secure multi-year funding to safeguard federal investment in a future-ready workforce.</p>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-5 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z M9 14h6" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Digital Divide Bridge</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Targeted programs to address infrastructure disparities for DCWF-aligned training in rural areas.</p>
+                        </div>
+                        <!-- Card 7 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-6 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Advisor Empowerment</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Enhance training for counselors to advise on DoD cyber workforce roles and certifications.</p>
+                        </div>
+                        <!-- Card 8 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-7 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 5V7m0 0v2m0-2h2m-2 0h-2M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 13h2v2H9z" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Gamified Mastery</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Expand gamified modules and competitions to boost motivation for DCWF-aligned knowledge.</p>
+                        </div>
+                        <!-- Card 9 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-8 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Modular DCWF Curric</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Modular open-source curriculum allowing educators to adapt content while meeting DCWF standards.</p>
+                        </div>
+                        <!-- Card 10 -->
+                        <div class="card p-6 rounded-2xl fade-in fade-in-delay-9 flex flex-col items-center text-center">
+                            <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </div>
+                            <h4 class="font-bold mb-2 text-slate-800 text-sm">Adaptive DoD Needs</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">Continuous improvement cycle to keep programs responsive to evolving <b>DoD 8140</b> directives.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Testimonials Section -->
+                <section id="testimonials" class="main-content-section">
+                    <div class="max-w-4xl mx-auto space-y-8">
+                        <header class="mb-12 fade-in">
+                            <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Community Testimonials</h2>
+                            <p class="mt-2 text-xl text-slate-500">First-hand feedback from our national educator network.</p>
+                        </header>
+                        
+                        <div class="space-y-6">
+                            <!-- 1 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-blue-600 fade-in">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"The introductory two-day AI workshop provided by Mike and Jiri was terrific. As usual, their classes were packed and provided terrific insights. They showed us how THEY use GenAI to help their daily work—this was instrumental."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">M</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Mike & Jiri Workshop</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Technical Educator</p></div>
+                                </div>
+                            </div>
+                            <!-- 2 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-indigo-600 fade-in fade-in-delay-1">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"I used to see AI as just Google on steroids—a powerful tool, but nothing more. But everything changed. It was a revelation that ignited a fire within me, opening my eyes to the incredible possibilities these tools hold. It’s like shining a light into the darkness."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mr-3">R</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Revelation Participant</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Cyber Faculty</p></div>
+                                </div>
+                            </div>
+                            <!-- 3 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-emerald-600 fade-in fade-in-delay-2">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"I thought that the training was great! I learned so much about AI and how to incorporate it effectively into my work. I especially appreciated the discussions of different AI LLMs—both benefits and challenges."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold mr-3">P</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Program Coordinator</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">State Education Lead</p></div>
+                                </div>
+                            </div>
+                            <!-- 4 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-blue-600 fade-in fade-in-delay-3">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"The AI Educators Workshop conducted by Jiri and John was one of the best professional development opportunities I have ever experienced. They have the heart of educators. I highly recommend this workshop!"</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">J</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Jiri & John Workshop</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">District Specialist</p></div>
+                                </div>
+                            </div>
+                            <!-- 5 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-indigo-600 fade-in fade-in-delay-4">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"This course is outstanding. It helped me focus my message on AI to our faculty and the college. Discussion on how AI works, prompts, and limitations enhanced my understanding. We really want to engage faculty in using AI."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mr-3">O</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Course Lead</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">College Administrator</p></div>
+                                </div>
+                            </div>
+                            <!-- 6 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-emerald-600 fade-in fade-in-delay-5">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"Beyond the technical insights, the workshop fostered a deeper understanding of the ethical, intentional, and creative dimensions of AI in education. I left with a renewed sense of responsibility and curiosity."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold mr-3">E</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Ethics Panel Participant</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">NCAE-C Representative</p></div>
+                                </div>
+                            </div>
+                            <!-- 7 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-blue-600 fade-in fade-in-delay-6">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"I learned not to be afraid of AI but to use it as the tool it is intended to be. I learned valuable skills and ways to form prompts in the most effective ways for educators. Looking forward to practicing!"</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">S</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Technical Teacher</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">K-12 Pathway</p></div>
+                                </div>
+                            </div>
+                            <!-- 8 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-indigo-600 fade-in fade-in-delay-7">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"This workshop was very helpful in advancing my confidence level with AI and with reducing my fears about it. It makes a difference when experts guide you."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mr-3">C</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Faculty Member</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Moraine Valley</p></div>
+                                </div>
+                            </div>
+                            <!-- 9 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-emerald-600 fade-in fade-in-delay-8">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"One of the workshop's primary strengths was its practicality in its approach to classroom implementation, especially for teachers who came into the training with little to no prior knowledge of AI."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold mr-3">P</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Classroom Instructor</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">National Center Network</p></div>
+                                </div>
+                            </div>
+                            <!-- 10 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-blue-600 fade-in fade-in-delay-9">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"The three presenters were outstanding. They were transparent about their respective journeys of learning AI and shared things they still didn't understand. That vulnerability served to create a relaxed learning atmosphere."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">V</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Workshop Attendee</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">University Partner</p></div>
+                                </div>
+                            </div>
+                            <!-- 11 -->
+                            <div class="card p-8 rounded-2xl border-l-4 border-indigo-600 fade-in fade-in-delay-10">
+                                <blockquote class="text-lg text-slate-700 italic leading-relaxed mb-4">"This workshop opened my eyes to so many possibilities I didn’t realize about AI! While I’m an elementary teacher, I listened and used the ideas to grow my knowledge to help my students grow."</blockquote>
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold mr-3">E</div>
+                                    <div><p class="font-bold text-slate-900 text-sm">Elementary Teacher</p><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">K-5 Pathway Intro</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div id="modal-backdrop">
+        <div id="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modal-title" class="text-2xl font-black text-slate-900"></h2>
+                <button id="modal-close" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-chart" class="h-64 w-full"></div>
+            <p class="text-xs text-slate-400 mt-6 text-center italic">Calculated based on annual enrollment and completion reports.</p>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const growthData = [
+            { metric: "Student Completions", growth: "+360%", value: 360, color: "#2563eb" },
+            { metric: "Student Engagements", growth: "+300%", value: 300, color: "#2563eb" },
+            { metric: "Work-Based Learning", growth: "+85%", value: 85, color: "#2563eb" },
+            { metric: "Virtual Lab Uptime", growth: "+73%", value: 73, color: "#2563eb" },
+        ];
+
+        const statePartnerData = {
+            'HI': 'EPI Hub: University of Hawaii, Maui', 
+            'CA': 'Regional Lead: WASTC Network', 
+            'AZ': 'University of Arizona NCAE-C Center',
+            'NM': 'ENMU-Ruidoso Cyber Development', 
+            'TX': 'EPI: El Paso & Alamo College District',
+            'CO': 'UCCS National Cybersecurity Center', 
+            'FL': 'Florida Career Pathways Network', 
+            'NC': 'Fayetteville Tech Regional Hub',
+            'PR': 'Polytechnic University of PR Center',
+            'NJ': 'Brookdale Community College Hub',
+            'OH': 'Sinclair Community College Hub',
+            'AL': 'University of Alabama, Huntsville',
+            'TN': 'Tennessee Tech University Hub',
+            'KY': 'Southcentral Kentucky CTC',
+            'KS': 'Wichita State University Center',
+            'MO': 'St. Louis Community College Network',
+            'IN': 'Ivy Tech CC / Purdue NW',
+            'MN': 'Metro State University Hub',
+            'WA': 'Whatcom Community College Hub',
+            'ND': 'Minot State University Center',
+            'SD': 'Dakota State University Hub',
+            'LA': 'Bossier Parish Community College',
+            'GA': 'Georgia Leads Institutional Network',
+            'MS': 'Mississippi Technical Network',
+            'SC': 'SC Technical College System',
+            'MD': 'Maryland NCAE-C Network',
+            'PA': 'Pennsylvania Regional Hub',
+            'VA': 'Virginia Technical Center Hub',
+            'IL': 'Moraine Valley Community College',
+            'MI': 'Michigan Cyber Education Hub'
+        };
+
+        const activeStates = new Set(['AL', 'AZ', 'CA', 'CO', 'FL', 'GA', 'IL', 'IN', 'KY', 'LA', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'NJ', 'NM', 'NY', 'NC', 'OH', 'PA', 'PR', 'SC', 'TN', 'TX', 'UT', 'VA', 'WA', 'WI', 'HI', 'ND', 'SD']);
+        const majorHubs = new Set(['HI', 'TX', 'CO', 'PR', 'FL', 'NC', 'OH', 'NJ']);
+
+        const stateAbbrMap = {"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY","Puerto Rico":"PR"};
+
+        // --- Navigation ---
+        const navButtons = document.querySelectorAll('.nav-button');
+        const sections = document.querySelectorAll('.main-content-section');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                navButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                sections.forEach(s => {
+                    s.classList.remove('active');
+                    if (s.id === target) s.classList.add('active');
+                });
+
+                if (target === 'dashboard') {
+                    initGrowthBars();
+                }
+
+                initAnimations();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // --- Animations ---
+        const initAnimations = () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        if (entry.target.classList.contains('pillar-counter') || entry.target.classList.contains('kpi-value')) animateNumber(entry.target);
+                        if (entry.target.id === 'map-container' && !entry.target.innerHTML.trim()) drawMap();
+                        if (entry.target.id === 'advisor-chart-container' && !entry.target.innerHTML.trim()) drawAdvisorChart();
+                        if (entry.target.id === 'rural-chart' && !entry.target.innerHTML.trim()) drawMiniChart('rural-chart', 54, 61);
+                        if (entry.target.id === 'female-chart' && !entry.target.innerHTML.trim()) drawMiniChart('female-chart', 28, 38);
+                        if (entry.target.id === 'growth-chart-container' && !entry.target.innerHTML.trim()) initGrowthBars();
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in, .pillar-counter, .kpi-value, #map-container, #advisor-chart-container, #rural-chart, #female-chart, #growth-chart-container').forEach(el => observer.observe(el));
+        };
+
+        const animateNumber = (el) => {
+            if (el.animated) return;
+            el.animated = true;
+            const target = parseInt(el.dataset.target);
+            let current = 0;
+            const step = () => {
+                current += target / 100;
+                if (current < target) {
+                    el.innerText = Math.floor(current).toLocaleString();
+                    requestAnimationFrame(step);
+                } else el.innerText = target.toLocaleString();
+            };
+            step();
+        };
+
+        const initGrowthBars = () => {
+            const container = document.getElementById('growth-chart-container');
+            if (!container) return;
+            container.innerHTML = '';
+            growthData.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'space-y-2 growth-bar';
+                row.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold">
+                        <span class="text-slate-600">${item.metric}</span>
+                        <span class="text-blue-600">${item.growth}</span>
+                    </div>
+                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-600 growth-bar-fill rounded-full" style="width: ${(item.value/400)*100}%"></div>
+                    </div>
+                `;
+                container.appendChild(row);
+                setTimeout(() => row.classList.add('is-visible'), 50);
+            });
+        };
+
+        const drawMap = () => {
+            const container = document.getElementById('map-container');
+            const tooltip = document.getElementById('map-tooltip');
+            const width = container.clientWidth, height = container.clientHeight;
+            const svg = d3.select("#map-container").append("svg").attr("viewBox", `0 0 ${width} ${height}`);
+            const projection = d3.geoAlbersUsa().scale(width * 1.2).translate([width / 2, height / 2]);
+            const path = d3.geoPath().projection(projection);
+
+            fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(res => res.json()).then(us => {
+                svg.append("g").selectAll("path").data(topojson.feature(us, us.objects.states).features).enter().append("path")
+                    .attr("d", path).attr("class", "state transition-colors")
+                    .attr("fill", d => {
+                        const abbr = stateAbbrMap[d.properties.name];
+                        return majorHubs.has(abbr) ? "#fbbf24" : (activeStates.has(abbr) ? "#2563eb" : "#cbd5e1");
+                    })
+                    .attr("stroke", "white").attr("stroke-width", 0.5)
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).attr("fill", "#1e40af");
+                        const abbr = stateAbbrMap[d.properties.name];
+                        const partnerName = statePartnerData[abbr] || 'Strategic Expansion Phase';
+                        tooltip.style.opacity = 1;
+                        tooltip.innerHTML = `<b>${d.properties.name}</b><br><span class='text-[10px] text-blue-400 font-bold uppercase'>${partnerName}</span>`;
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style.left = (event.offsetX + 15) + "px";
+                        tooltip.style.top = (event.offsetY - 10) + "px";
+                    })
+                    .on("mouseout", function(event, d) {
+                        const abbr = stateAbbrMap[d.properties.name];
+                        d3.select(this).attr("fill", majorHubs.has(abbr) ? "#fbbf24" : (activeStates.has(abbr) ? "#2563eb" : "#cbd5e1"));
+                        tooltip.style.opacity = 0;
+                    });
+            });
+        };
+
+        const drawAdvisorChart = () => {
+            const container = document.getElementById('advisor-chart-container');
+            const width = container.clientWidth, height = container.clientHeight;
+            const margin = {top: 10, right: 30, bottom: 30, left: 110};
+            const data = [
+                {label: "Academic Pathways", pre: 32, post: 74},
+                {label: "Cyber Careers", pre: 28, post: 81},
+                {label: "Work-Ready KTS", pre: 35, post: 78}
+            ];
+
+            const svg = d3.select(container).append("svg").attr("width", width).attr("height", height)
+                .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleLinear().domain([0, 100]).range([0, width - margin.left - margin.right]);
+            const y0 = d3.scaleBand().domain(data.map(d => d.label)).range([0, height - margin.top - margin.bottom]).padding(0.3);
+            const y1 = d3.scaleBand().domain(['pre', 'post']).range([0, y0.bandwidth()]).padding(0.1);
+
+            svg.append("g").attr("transform", `translate(0, ${y0.range()[1]})`).call(d3.axisBottom(x).ticks(5).tickFormat(d => d + "%"));
+            svg.append("g").call(d3.axisLeft(y0).tickSize(0).tickPadding(10));
+
+            const category = svg.selectAll(".category").data(data).enter().append("g")
+                .attr("class", "category").attr("transform", d => `translate(0, ${y0(d.label)})`);
+
+            category.append("rect").attr("y", y1('pre')).attr("x", 0).attr("height", y1.bandwidth()).attr("fill", "#fb923c").attr("rx", 3)
+                .transition().duration(1000).attr("width", d => x(d.pre));
+
+            category.append("rect").attr("y", y1('post')).attr("x", 0).attr("height", y1.bandwidth()).attr("fill", "#2563eb").attr("rx", 3)
+                .transition().duration(1000).delay(200).attr("width", d => x(d.post));
+        };
+
+        const drawMiniChart = (id, v23, v24) => {
+            const container = document.getElementById(id);
+            const data = [{y: '23', v: v23}, {y: '24', v: v24}];
+            const width = container.clientWidth, height = container.clientHeight;
+            const margin = {top: 25, right: 10, bottom: 20, left: 35};
+            const svg = d3.select(container).append("svg").attr("width", width).attr("height", height)
+                .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+            const x = d3.scaleBand().domain(['23', '24']).range([0, width - margin.left - margin.right]).padding(0.4);
+            const y = d3.scaleLinear().domain([0, 100]).range([height - margin.top - margin.bottom, 0]);
+            
+            svg.append("g").attr("transform", `translate(0,${y.range()[0]})`).call(d3.axisBottom(x).tickSize(0));
+            
+            svg.selectAll("text.label").data(data).enter().append("text")
+                .text(d => d.v + '%')
+                .attr("x", d => x(d.y) + x.bandwidth()/2)
+                .attr("y", d => y(d.v) - 5)
+                .attr("text-anchor", "middle")
+                .attr("class", "text-[10px] font-bold fill-slate-500");
+
+            const growth = v24 - v23;
+            svg.append("text")
+                .text('Growth: +' + growth + '%')
+                .attr("x", (width - margin.left - margin.right) / 2)
+                .attr("y", -10)
+                .attr("text-anchor", "middle")
+                .attr("class", "text-[11px] font-black fill-emerald-500");
+
+            svg.selectAll("rect").data(data).enter().append("rect").attr("x", d => x(d.y)).attr("y", y(0)).attr("width", x.bandwidth())
+                .attr("fill", d => d.y === '24' ? "#14b8a6" : "#ccf2ee").attr("rx", 2).transition().duration(800).attr("y", d => y(d.v)).attr("height", d => y(0) - y(d.v));
+        };
+
+        const drawModalChart = (data, color) => {
+            const container = document.getElementById('modal-chart');
+            container.innerHTML = '';
+            const width = container.clientWidth, height = container.clientHeight;
+            const margin = {top: 20, right: 20, bottom: 40, left: 60};
+            const svg = d3.select(container).append("svg").attr("width", width).attr("height", height)
+                .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+            const x = d3.scaleBand().domain(data.map(d => d.year)).range([0, width - margin.left - margin.right]).padding(0.5);
+            const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value) * 1.2]).range([height - margin.top - margin.bottom, 0]);
+            svg.append("g").attr("transform", `translate(0,${y.range()[0]})`).call(d3.axisBottom(x));
+            svg.selectAll("rect").data(data).enter().append("rect").attr("x", d => x(d.year)).attr("y", y(0)).attr("width", x.bandwidth())
+                .attr("fill", color).attr("rx", 4).transition().duration(800).attr("y", d => y(d.value)).attr("height", d => y(0) - y(d.value));
+        };
+
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        document.querySelectorAll('.kpi-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.getElementById('modal-title').innerText = card.dataset.metric;
+                modalBackdrop.classList.add('visible');
+                setTimeout(() => drawModalChart(JSON.parse(card.dataset.values), card.dataset.color), 100);
+            });
+        });
+
+        document.getElementById('modal-close').addEventListener('click', () => modalBackdrop.classList.remove('visible'));
+        initAnimations();
+    });
+    </script>
+</body>
+</html>
