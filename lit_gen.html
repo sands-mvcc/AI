@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bard's Canvas | Shakespeare Instructional Graphic Prompt Builder</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bard: {
+                            50: '#fdf8f6',
+                            100: '#f2e8e5',
+                            200: '#e4d3cd',
+                            600: '#9b4222',
+                            700: '#7c3118',
+                            800: '#5c2210',
+                            900: '#3e1509',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 66, 34, 0.4);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 66, 34, 0.7);
+        }
+        .prose-prompt pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen transition-colors duration-200">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-bard-600 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-feather-pointed text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-lg sm:text-xl text-slate-900 dark:text-white leading-tight">Bard's Canvas</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Shakespeare Instructional Graphic Prompt Builder</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <!-- Preset Sample Button -->
+                <button id="loadSampleBtn" onclick="loadSampleMacbeth()" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-bard-700 dark:text-bard-200 bg-bard-50 dark:bg-bard-900/40 hover:bg-bard-100 dark:hover:bg-bard-900/80 border border-bard-200 dark:border-bard-800 rounded-lg transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-bard-600 dark:text-bard-400"></i>
+                    <span>Load "Macbeth" Sample</span>
+                </button>
+
+                <!-- Light/Dark Mode Toggle -->
+                <button id="themeToggle" onclick="toggleTheme()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Toggle Light/Dark Theme">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT PANEL: Builder Inputs Form -->
+            <section class="lg:col-span-7 space-y-6">
+                
+                <!-- Section Header -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <h2 class="text-xl font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-bard-600"></i> Instructional Parameters
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Configure pedagogy, Shakespeare literature context, and graphic design requirements.
+                    </p>
+                </div>
+
+                <form id="promptForm" onsubmit="event.preventDefault();" class="space-y-6">
+                    
+                    <!-- 1. Play & Character Scope -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 class="text-sm font-semibold text-bard-700 dark:text-bard-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark"></i> 1. Shakespeare Content Scope
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Play Selection -->
+                            <div>
+                                <label for="playSelect" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                    Shakespeare Play <span class="text-red-500">*</span>
+                                </label>
+                                <select id="playSelect" onchange="handlePlayChange()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="">-- Select Play --</option>
+                                    <!-- Options injected via JavaScript -->
+                                </select>
+                            </div>
+
+                            <!-- Graphic Title -->
+                            <div>
+                                <label for="graphicTitle" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                    Graphic Title <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="graphicTitle" placeholder="e.g., Macbeth: Ambition & Fate Motif Map" oninput="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Character Selection Block (Conditional on Play Selection) -->
+                        <div id="characterContainer" class="hidden border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                    Character Scope Filter
+                                </label>
+                                <div class="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 bg-slate-100 dark:bg-slate-800">
+                                    <button type="button" onclick="setCharacterFilter('major')" id="filterMajorBtn" class="px-2.5 py-1 text-xs rounded-md font-medium bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm transition-all">Major Only</button>
+                                    <button type="button" onclick="setCharacterFilter('supporting')" id="filterSupportingBtn" class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all">Supporting</button>
+                                    <button type="button" onclick="setCharacterFilter('full')" id="filterFullBtn" class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all">Full Cast</button>
+                                </div>
+                            </div>
+
+                            <!-- Character Selection Checkboxes / Chips -->
+                            <div id="characterChips" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700/60">
+                                <!-- Dynamic character checkboxes -->
+                            </div>
+
+                            <!-- Custom Character Adder -->
+                            <div class="flex items-center gap-2">
+                                <input type="text" id="customCharacterInput" placeholder="Add custom character or role..." class="flex-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-1 focus:ring-bard-600 focus:outline-none">
+                                <button type="button" onclick="addCustomCharacter()" class="px-3 py-2 text-xs font-medium bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg transition-colors">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Focus Topic -->
+                        <div>
+                            <label for="focusTopic" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Content Focus Topic
+                            </label>
+                            <input type="text" id="focusTopic" placeholder="e.g., Visualizing Lady Macbeth's psychological breakdown & supernatural agency" oninput="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- 2. Pedagogy & Learning Objectives -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 class="text-sm font-semibold text-bard-700 dark:text-bard-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap"></i> 2. Pedagogy & Audience
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="courseLevel" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Course Level</label>
+                                <select id="courseLevel" onchange="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Secondary (High School English)">Secondary (High School English)</option>
+                                    <option value="AP / IB English Literature">AP / IB English Literature</option>
+                                    <option value="Undergraduate Intro Literature">Undergraduate Intro Literature</option>
+                                    <option value="Advanced College / Seminar">Advanced College / Seminar</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="audience" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Target Audience Profile</label>
+                                <input type="text" id="audience" value="Grade 11 Honors English Students" oninput="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="learningObjectives" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Learning Objectives</label>
+                            <textarea id="learningObjectives" rows="2" placeholder="e.g., Students will analyze how Shakespeare utilizes motifs to illustrate Macbeth's tragic flaw." oninput="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="instructionalPurpose" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Instructional Purpose</label>
+                                <select id="instructionalPurpose" onchange="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Classroom Lecture Visual Aid">Classroom Lecture Visual Aid</option>
+                                    <option value="Student Revision & Review Sheet">Student Revision & Review Sheet</option>
+                                    <option value="Interactive Small Group Graphic Organizer">Interactive Small Group Graphic Organizer</option>
+                                    <option value="LMS Digital Reference Guide">LMS Digital Reference Guide</option>
+                                    <option value="Essay Planning & Synthesis Framework">Essay Planning & Synthesis Framework</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="textComplexity" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Text Complexity & Quotations</label>
+                                <select id="textComplexity" onchange="generatePrompt()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Direct Textual Quotes with Folger Citations">Direct Textual Quotes with Folger Citations</option>
+                                    <option value="Modern English Paraphrases with Key Quotes">Modern English Paraphrases with Key Quotes</option>
+                                    <option value="Key Quotation Focus (Short Line Excerpts)">Key Quotation Focus (Short Line Excerpts)</option>
+                                    <option value="Simplified Vocabulary with Visual Icons">Simplified Vocabulary with Visual Icons</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Graphic Type & Conditional Rules -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 class="text-sm font-semibold text-bard-700 dark:text-bard-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-diagram"></i> 3. Graphic Type & Specialized Logic
+                        </h3>
+
+                        <div>
+                            <label for="graphicType" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Graphic Type <span class="text-red-500">*</span>
+                            </label>
+                            <select id="graphicType" onchange="handleGraphicTypeChange()" class="w-full text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none font-medium">
+                                <option value="Motif Tracker">Motif Tracker</option>
+                                <option value="Relationship Web">Relationship Web</option>
+                                <option value="Timeline">Timeline</option>
+                                <option value="Compare/Contrast Chart">Compare/Contrast Chart</option>
+                                <option value="Infographic">Infographic</option>
+                                <option value="Character Map">Character Map</option>
+                                <option value="Act Summary">Act Summary</option>
+                                <option value="Scene Flowchart">Scene Flowchart</option>
+                            </select>
+                        </div>
+
+                        <!-- CONDITIONAL FIELD: Timeline Scope -->
+                        <div id="condTimeline" class="hidden p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-900/50 space-y-2">
+                            <span class="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Timeline Specifics:
+                            </span>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <input type="text" id="timelineActs" placeholder="Acts/Scenes (e.g., Acts I-V)" oninput="generatePrompt()" class="text-xs bg-white dark:bg-slate-800 p-2 rounded border border-amber-200 dark:border-amber-800 text-slate-900 dark:text-white">
+                                <input type="text" id="timelineSequence" placeholder="Sequence Logic (e.g., Chronological)" oninput="generatePrompt()" class="text-xs bg-white dark:bg-slate-800 p-2 rounded border border-amber-200 dark:border-amber-800 text-slate-900 dark:text-white">
+                                <input type="text" id="timelineMilestones" placeholder="Key Plot Milestones" oninput="generatePrompt()" class="text-xs bg-white dark:bg-slate-800 p-2 rounded border border-amber-200 dark:border-amber-800 text-slate-900 dark:text-white">
+                            </div>
+                        </div>
+
+                        <!-- CONDITIONAL FIELD: Relationship Labels -->
+                        <div id="condRelationship" class="hidden p-3 bg-indigo-50 dark:bg-indigo-950/30 rounded-lg border border-indigo-200 dark:border-indigo-900/50 space-y-2">
+                            <span class="text-xs font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-1">
+                                <i class="fa-solid fa-diagram-project"></i> Relationship Connection Labels:
+                            </span>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Family / Kinship" checked onchange="generatePrompt()" class="rel-check"> Family
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Betrayal / Treachery" checked onchange="generatePrompt()" class="rel-check"> Betrayal
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Loyalty / Alliance" checked onchange="generatePrompt()" class="rel-check"> Loyalty
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Rivalry & Conflict" checked onchange="generatePrompt()" class="rel-check"> Rivalry
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Romantic Love" checked onchange="generatePrompt()" class="rel-check"> Love
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-800">
+                                    <input type="checkbox" value="Comic Misunderstanding" onchange="generatePrompt()" class="rel-check"> Misunderstanding
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CONDITIONAL FIELD: Motif Selector -->
+                        <div id="condMotif" class="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-200 dark:border-emerald-900/50 space-y-2">
+                            <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+                                <i class="fa-solid fa-tags"></i> Select Play Motifs:
+                            </span>
+                            <div class="flex flex-wrap gap-2 text-xs">
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Ambition & Corruption" checked onchange="generatePrompt()" class="motif-check"> Ambition
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Fate vs. Free Will" checked onchange="generatePrompt()" class="motif-check"> Fate/Free Will
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Appearance vs. Reality" checked onchange="generatePrompt()" class="motif-check"> Appearance/Reality
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Madness & Psychological Decay" onchange="generatePrompt()" class="motif-check"> Madness
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Order vs. Chaos / Natural World" onchange="generatePrompt()" class="motif-check"> Order/Disorder
+                                </label>
+                                <label class="inline-flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-800">
+                                    <input type="checkbox" value="Revenge & Justice" onchange="generatePrompt()" class="motif-check"> Revenge
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CONDITIONAL FIELD: Compare / Contrast Subject -->
+                        <div id="condCompare" class="hidden p-3 bg-purple-50 dark:bg-purple-950/30 rounded-lg border border-purple-200 dark:border-purple-900/50 space-y-2">
+                            <span class="text-xs font-bold text-purple-800 dark:text-purple-300 flex items-center gap-1">
+                                <i class="fa-solid fa-code-compare"></i> Comparison Subject:
+                            </span>
+                            <input type="text" id="compareSubject" placeholder="Secondary play, character, or theme (e.g., Compare Macbeth vs. King Claudius)" oninput="generatePrompt()" class="w-full text-xs bg-white dark:bg-slate-800 p-2 rounded border border-purple-200 dark:border-purple-800 text-slate-900 dark:text-white">
+                        </div>
+                    </div>
+
+                    <!-- 4. Visual Design & Layout Specifications -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 class="text-sm font-semibold text-bard-700 dark:text-bard-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-palette"></i> 4. Visual Design & Aesthetic Palette
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label for="visualStyle" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Visual Style</label>
+                                <select id="visualStyle" onchange="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Modern Minimalist vector with Renaissance accents">Modern Minimalist Vector</option>
+                                    <option value="Classic Woodcut / Engraving Literary Style">Classic Renaissance Engraving</option>
+                                    <option value="Clean Academic Infographic Charting">Clean Academic Infographic</option>
+                                    <option value="High-Contrast Concept Map Layout">High-Contrast Concept Map</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="visualTone" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Tone & Atmosphere</label>
+                                <select id="visualTone" onchange="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Dramatic, Tragic, High Contrast">Dramatic & Tragic</option>
+                                    <option value="Academic, Structured, Analytical">Academic & Analytical</option>
+                                    <option value="Engaging, Accessible, Secondary School Friendly">Accessible & Engaging</option>
+                                    <option value="Ethereal, Whimsical, Renaissance Folk">Ethereal & Whimsical</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="colorPalette" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Color Palette Focus</label>
+                                <select id="colorPalette" onchange="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Crimson red, deep charcoal, gold accent, stark white">Shakespearean Dramatic (Crimson/Charcoal/Gold)</option>
+                                    <option value="Deep navy blue, slate gray, ivory white, amber gold">Academic Navy & Gold</option>
+                                    <option value="Forest green, earth terracotta, warm parchment">Renaissance Earth Tones</option>
+                                    <option value="High-contrast monochromatic black/white with red indicator">Monochrome with Red Accent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="layoutStyle" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Layout & Visual Hierarchy Structure</label>
+                            <input type="text" id="layoutStyle" value="Central thematic axis with radiating act-by-act nodes and distinct color-coded connector paths" oninput="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- 5. Technical Specifications & ADA Requirements -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 class="text-sm font-semibold text-bard-700 dark:text-bard-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-universal-access"></i> 5. Output Medium & ADA Requirements
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label for="outputMedium" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                    Output Medium <span class="text-red-500">*</span>
+                                </label>
+                                <select id="outputMedium" onchange="handleMediumChange()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Slide / Classroom Projection">Slide / Classroom Projection</option>
+                                    <option value="Print Handout (PDF / Poster)">Print Handout (PDF / Poster)</option>
+                                    <option value="Digital LMS / Web Page (SVG/PNG)">Digital LMS / Web Page</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="orientation" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Orientation</label>
+                                <select id="orientation" onchange="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                                    <option value="Landscape (16:9)">Landscape (16:9)</option>
+                                    <option value="Portrait (8.5 x 11 in)">Portrait (8.5 x 11 in)</option>
+                                    <option value="Square (1:1 Aspect)">Square (1:1)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="resolution" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Resolution & Dimensions</label>
+                                <input type="text" id="resolution" value="1920x1080 Full HD (300 DPI print-ready)" oninput="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- ADA Standards List -->
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-200 dark:border-slate-700/60 space-y-2">
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                                <i class="fa-solid fa-check-double text-emerald-500"></i> Enforced ADA Accessibility Requirements:
+                            </span>
+                            <ul class="text-xs text-slate-600 dark:text-slate-400 grid grid-cols-1 sm:grid-cols-2 gap-1 list-disc list-inside">
+                                <li>4.5:1 minimum contrast ratio</li>
+                                <li>No color-only meaning (use shapes/icons)</li>
+                                <li>Clear typography & 14pt+ body text</li>
+                                <li>Logical left-to-right reading order</li>
+                                <li>Uncluttered white space grouping</li>
+                                <li>Space for alt-text image description</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label for="citationFormat" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Citation Requirements</label>
+                                <input type="text" id="citationFormat" value="Folger Shakespeare Library Edition (Act.Scene.Line)" oninput="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label for="teacherNotes" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Teacher Pedagogical Notes</label>
+                                <input type="text" id="teacherNotes" placeholder="e.g., Include discussion prompts at footer" oninput="generatePrompt()" class="w-full text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-slate-900 dark:text-white focus:ring-2 focus:ring-bard-600 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </section>
+
+            <!-- RIGHT PANEL: Live Generated Master Prompt Blueprint -->
+            <section class="lg:col-span-5 sticky top-20 h-fit space-y-4">
+                
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg overflow-hidden">
+                    
+                    <!-- Output Header & Controls -->
+                    <div class="p-4 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <h3 class="font-serif font-bold text-slate-900 dark:text-white text-base">Generated Prompt Brief</h3>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyToClipboard()" class="px-3 py-1.5 text-xs font-semibold text-white bg-bard-600 hover:bg-bard-700 rounded-md transition-colors flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-copy"></i> <span id="copyBtnText">Copy Prompt</span>
+                            </button>
+                            <button onclick="downloadPrompt()" class="px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-300 dark:border-slate-600 rounded-md transition-colors" title="Export as Text File">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Output Content Display -->
+                    <div class="p-5 max-h-[75vh] overflow-y-auto bg-slate-900 text-slate-100 font-mono text-xs leading-relaxed prose-prompt" id="promptOutputContainer">
+                        <pre id="promptText" class="font-mono text-xs whitespace-pre-wrap break-words text-emerald-400"></pre>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 text-center">
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Ready for AI design tools (Midjourney, DALL-E, Canva, Illustrator, or ChatGPT).
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        /* CANONICAL MASTER PLAY LIST (38 PLAYS) */
+        const PLAY_DATABASE = [
+            "All’s Well That Ends Well", "Antony and Cleopatra", "As You Like It", "The Comedy of Errors",
+            "Coriolanus", "Cymbeline", "Hamlet", "Henry IV, Part 1", "Henry IV, Part 2", "Henry V",
+            "Henry VI, Part 1", "Henry VI, Part 2", "Henry VI, Part 3", "Henry VIII", "Julius Caesar",
+            "King John", "King Lear", "Love’s Labor’s Lost", "Macbeth", "Measure for Measure",
+            "The Merchant of Venice", "The Merry Wives of Windsor", "A Midsummer Night’s Dream",
+            "Much Ado About Nothing", "Othello", "Pericles", "Richard II", "Richard III",
+            "Romeo and Juliet", "The Taming of the Shrew", "The Tempest", "Timon of Athens",
+            "Titus Andronicus", "Troilus and Cressida", "Twelfth Night", "The Two Gentlemen of Verona",
+            "The Two Noble Kinsmen", "The Winter’s Tale"
+        ];
+
+        /* DETAILED CHARACTER PRESETS FOR SPECIFIED PLAYS */
+        const CHARACTER_PRESETS = {
+            "Hamlet": {
+                major: ["Hamlet", "Claudius", "Gertrude", "Ophelia", "Polonius", "Laertes", "Horatio", "Ghost"],
+                supporting: ["Rosencrantz", "Guildenstern", "Osric", "Marcellus", "Bernardo", "Gravediggers", "Fortinbras"]
+            },
+            "Macbeth": {
+                major: ["Macbeth", "Lady Macbeth", "Banquo", "Macduff", "Malcolm", "Duncan", "Witches"],
+                supporting: ["Fleance", "Lennox", "Ross", "Seyton", "Lady Macduff", "Porter", "Siward"]
+            },
+            "Romeo and Juliet": {
+                major: ["Romeo", "Juliet", "Mercutio", "Tybalt", "Nurse", "Friar Laurence", "Capulet"],
+                supporting: ["Lady Capulet", "Montague", "Lady Montague", "Paris", "Benvolio", "Balthasar"]
+            },
+            "Othello": {
+                major: ["Othello", "Desdemona", "Iago", "Cassio", "Emilia"],
+                supporting: ["Roderigo", "Brabantio", "Bianca", "Lodovico", "Gratiano"]
+            },
+            "King Lear": {
+                major: ["Lear", "Cordelia", "Goneril", "Regan", "Kent", "Gloucester", "Edgar", "Edmund"],
+                supporting: ["Fool", "Albany", "Cornwall", "Oswald", "King of France"]
+            },
+            "A Midsummer Night’s Dream": {
+                major: ["Theseus", "Hippolyta", "Hermia", "Lysander", "Helena", "Demetrius", "Oberon", "Titania", "Puck", "Bottom"],
+                supporting: ["Quince", "Flute", "Snout", "Snug", "Starveling", "Egeus"]
+            },
+            "Julius Caesar": {
+                major: ["Brutus", "Cassius", "Caesar", "Antony", "Octavius"],
+                supporting: ["Casca", "Calpurnia", "Portia", "Soothsayer", "Lepidus"]
+            },
+            "The Tempest": {
+                major: ["Prospero", "Miranda", "Ariel", "Caliban", "Ferdinand"],
+                supporting: ["Alonso", "Antonio", "Gonzalo", "Sebastian", "Stephano", "Trinculo"]
+            }
+        };
+
+        // Current application state
+        let currentFilter = 'major'; // 'major', 'supporting', 'full'
+        let selectedCharacters = new Set();
+        let customCharacters = [];
+
+        window.onload = function() {
+            populatePlaySelect();
+            // Pre-select Macbeth by default for rich context
+            document.getElementById('playSelect').value = "Macbeth";
+            handlePlayChange();
+            generatePrompt();
+        };
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                icon.className = 'fa-solid fa-moon text-lg';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-lg';
+            }
+        }
+
+        /* Populate Canonical Plays */
+        function populatePlaySelect() {
+            const select = document.getElementById('playSelect');
+            PLAY_DATABASE.forEach(play => {
+                const opt = document.createElement('option');
+                opt.value = play;
+                opt.textContent = play;
+                select.appendChild(opt);
+            });
+        }
+
+        function handlePlayChange() {
+            const play = document.getElementById('playSelect').value;
+            const container = document.getElementById('characterContainer');
+            
+            if (!play) {
+                container.classList.add('hidden');
+                selectedCharacters.clear();
+                generatePrompt();
+                return;
+            }
+
+            container.classList.remove('hidden');
+            renderCharacterChips();
+            generatePrompt();
+        }
+
+        function setCharacterFilter(filter) {
+            currentFilter = filter;
+            // Update button UI states
+            document.getElementById('filterMajorBtn').className = filter === 'major' 
+                ? 'px-2.5 py-1 text-xs rounded-md font-medium bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm transition-all'
+                : 'px-2.5 py-1 text-xs rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all';
+            document.getElementById('filterSupportingBtn').className = filter === 'supporting'
+                ? 'px-2.5 py-1 text-xs rounded-md font-medium bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm transition-all'
+                : 'px-2.5 py-1 text-xs rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all';
+            document.getElementById('filterFullBtn').className = filter === 'full'
+                ? 'px-2.5 py-1 text-xs rounded-md font-medium bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm transition-all'
+                : 'px-2.5 py-1 text-xs rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all';
+
+            renderCharacterChips();
+            generatePrompt();
+        }
+
+        function renderCharacterChips() {
+            const play = document.getElementById('playSelect').value;
+            const chipsDiv = document.getElementById('characterChips');
+            chipsDiv.innerHTML = '';
+
+            let charsToDisplay = [];
+            if (CHARACTER_PRESETS[play]) {
+                if (currentFilter === 'major') {
+                    charsToDisplay = CHARACTER_PRESETS[play].major;
+                } else if (currentFilter === 'supporting') {
+                    charsToDisplay = CHARACTER_PRESETS[play].supporting;
+                } else {
+                    charsToDisplay = [...CHARACTER_PRESETS[play].major, ...CHARACTER_PRESETS[play].supporting];
+                }
+            } else {
+                // Fallback character set for plays not explicitly defined
+                charsToDisplay = ["Protagonist", "Antagonist", "Supporting Noble", "Comic Relief / Fool", "Chorus / Narrator"];
+            }
+
+            // Combine with custom added characters
+            const allList = [...new Set([...charsToDisplay, ...customCharacters])];
+
+            allList.forEach(char => {
+                const label = document.createElement('label');
+                const isChecked = selectedCharacters.has(char) || selectedCharacters.size === 0;
+                if (isChecked && selectedCharacters.size === 0) {
+                    selectedCharacters.add(char);
+                }
+
+                label.className = `inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full cursor-pointer transition-colors border ${
+                    selectedCharacters.has(char)
+                        ? 'bg-bard-600 text-white border-bard-600'
+                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
+                }`;
+
+                label.innerHTML = `
+                    <input type="checkbox" class="hidden" value="${char}" ${selectedCharacters.has(char) ? 'checked' : ''} onchange="toggleCharacter('${char}')">
+                    <span>${char}</span>
+                `;
+                chipsDiv.appendChild(label);
+            });
+        }
+
+        function toggleCharacter(char) {
+            if (selectedCharacters.has(char)) {
+                selectedCharacters.delete(char);
+            } else {
+                selectedCharacters.add(char);
+            }
+            renderCharacterChips();
+            generatePrompt();
+        }
+
+        function addCustomCharacter() {
+            const input = document.getElementById('customCharacterInput');
+            const val = input.value.trim();
+            if (val) {
+                customCharacters.push(val);
+                selectedCharacters.add(val);
+                input.value = '';
+                renderCharacterChips();
+                generatePrompt();
+            }
+        }
+
+        function handleGraphicTypeChange() {
+            const type = document.getElementById('graphicType').value;
+            
+            // Hide all conditional blocks
+            document.getElementById('condTimeline').classList.add('hidden');
+            document.getElementById('condRelationship').classList.add('hidden');
+            document.getElementById('condMotif').classList.add('hidden');
+            document.getElementById('condCompare').classList.add('hidden');
+
+            // Show relevant block
+            if (type === 'Timeline') {
+                document.getElementById('condTimeline').classList.remove('hidden');
+            } else if (type === 'Relationship Web' || type === 'Character Map') {
+                document.getElementById('condRelationship').classList.remove('hidden');
+            } else if (type === 'Motif Tracker') {
+                document.getElementById('condMotif').classList.remove('hidden');
+            } else if (type === 'Compare/Contrast Chart') {
+                document.getElementById('condCompare').classList.remove('hidden');
+            }
+
+            generatePrompt();
+        }
+
+        function handleMediumChange() {
+            const medium = document.getElementById('outputMedium').value;
+            const resInput = document.getElementById('resolution');
+
+            if (medium.includes('Print')) {
+                resInput.value = "300 DPI High Resolution (Print Ready, Large Typography)";
+            } else if (medium.includes('Slide')) {
+                resInput.value = "1920x1080 Full HD (Strong Contrast, Minimal Dense Text)";
+            } else {
+                resInput.value = "Vector SVG / 4K PNG (High Visual Clarity)";
+            }
+            generatePrompt();
+        }
+
+        function loadSampleMacbeth() {
+            document.getElementById('playSelect').value = "Macbeth";
+            document.getElementById('graphicTitle').value = "Macbeth: Ambition, Fate, & Psychological Decay";
+            document.getElementById('focusTopic').value = "Tracing the deterioration of Macbeth and Lady Macbeth through supernatural prophecy and unchecked ambition.";
+            document.getElementById('courseLevel').value = "AP / IB English Literature";
+            document.getElementById('audience').value = "Grade 11-12 Advanced Literature Students";
+            document.getElementById('learningObjectives').value = "1. Trace the causal arc between the Witches' prophecies and Macbeth's moral decay.\n2. Contrast Lady Macbeth's initial resolve with her Act V madness.\n3. Analyze 'Blood' and 'Sleep' as recurring motifs.";
+            document.getElementById('graphicType').value = "Motif Tracker";
+            document.getElementById('instructionalPurpose').value = "Classroom Lecture Visual Aid";
+            document.getElementById('textComplexity').value = "Direct Textual Quotes with Folger Citations";
+            document.getElementById('visualStyle').value = "Modern Minimalist vector with Renaissance accents";
+            document.getElementById('visualTone').value = "Dramatic, Tragic, High Contrast";
+            document.getElementById('colorPalette').value = "Crimson red, deep charcoal, gold accent, stark white";
+            document.getElementById('layoutStyle').value = "Central tragic axis radiating outward into 3 motif tracks: Ambition, Blood, and Natural Order";
+            document.getElementById('outputMedium').value = "Slide / Classroom Projection";
+            document.getElementById('citationFormat').value = "Folger Shakespeare Library Edition (Act.Scene.Line)";
+            document.getElementById('teacherNotes').value = "Ensure clear contrast between historical context notes and direct quotes.";
+
+            // Reset character selections to Macbeth major cast
+            handlePlayChange();
+            selectedCharacters = new Set(["Macbeth", "Lady Macbeth", "Banquo", "Macduff", "Witches", "Duncan"]);
+            renderCharacterChips();
+            handleGraphicTypeChange();
+        }
+
+        function generatePrompt() {
+            const play = document.getElementById('playSelect').value || "[Play Not Selected]";
+            const title = document.getElementById('graphicTitle').value || "[Untitled Graphic]";
+            const focus = document.getElementById('focusTopic').value || "Core thematic analysis and textual exploration";
+            const course = document.getElementById('courseLevel').value;
+            const audience = document.getElementById('audience').value || "Secondary Students";
+            const objectives = document.getElementById('learningObjectives').value || "Support student analytical comprehension and textual reflection.";
+            const purpose = document.getElementById('instructionalPurpose').value;
+            const complexity = document.getElementById('textComplexity').value;
+            const graphicType = document.getElementById('graphicType').value;
+            const style = document.getElementById('visualStyle').value;
+            const tone = document.getElementById('visualTone').value;
+            const palette = document.getElementById('colorPalette').value;
+            const layout = document.getElementById('layoutStyle').value;
+            const medium = document.getElementById('outputMedium').value;
+            const orientation = document.getElementById('orientation').value;
+            const resolution = document.getElementById('resolution').value;
+            const citation = document.getElementById('citationFormat').value;
+            const notes = document.getElementById('teacherNotes').value || "None specified.";
+
+            // Characters string
+            const charArr = Array.from(selectedCharacters);
+            const charListStr = charArr.length > 0 ? charArr.join(", ") : "All primary cast members associated with " + play;
+
+            // Conditional context extraction
+            let conditionalDetails = "";
+            if (graphicType === 'Timeline') {
+                const acts = document.getElementById('timelineActs').value || "Acts I - V";
+                const seq = document.getElementById('timelineSequence').value || "Chronological plot sequence";
+                const miles = document.getElementById('timelineMilestones').value || "Key turning points and climax";
+                conditionalDetails = `\n- Timeline Scope: ${acts}\n- Sequence Logic: ${seq}\n- Plot Milestones: ${miles}`;
+            } else if (graphicType === 'Relationship Web' || graphicType === 'Character Map') {
+                const checkedRels = Array.from(document.querySelectorAll('.rel-check:checked')).map(cb => cb.value);
+                conditionalDetails = `\n- Relationship Link Categories: ${checkedRels.join(", ") || "Family, Conflict, Loyalty, Betrayal"}`;
+            } else if (graphicType === 'Motif Tracker') {
+                const checkedMotifs = Array.from(document.querySelectorAll('.motif-check:checked')).map(cb => cb.value);
+                conditionalDetails = `\n- Selected Motifs to Track: ${checkedMotifs.join(", ") || "Ambition, Fate, Madness, Order vs. Chaos"}`;
+            } else if (graphicType === 'Compare/Contrast Chart') {
+                const subj = document.getElementById('compareSubject').value || "Secondary play or tragic counterpart";
+                conditionalDetails = `\n- Comparison Subject: ${subj}`;
+            }
+
+            // Medium-specific visual enforcement
+            let mediumRules = "";
+            if (medium.includes("Print")) {
+                mediumRules = "REQUIREMENT FOR PRINT: Use generous margins, high DPI vector lines, minimum 14pt body text for readability, and printable high-contrast CMYK-friendly tones.";
+            } else if (medium.includes("Slide")) {
+                mediumRules = "REQUIREMENT FOR SLIDE PROJECTION: Optimize for distance viewing. Keep text chunked into short bite-sized bullet points, bold key terms, and maintain ultra-high contrast dark/light backdrop for classroom projection.";
+            } else {
+                mediumRules = "REQUIREMENT FOR DIGITAL/LMS: Ensure responsive SVG/PNG visual clarity, clean digital scaling, and hyper-legible iconography.";
+            }
+
+            // 16 Standard Required Sections Brief Template
+            const fullPrompt = 
+`================================================================================
+INSTRUCTIONAL GRAPHIC DESIGN BRIEF & AI GENERATION PROMPT
+================================================================================
+
+1. PROJECT OVERVIEW
+You are an expert instructional graphic designer creating an educational visual asset for a ${course} course. Your task is to produce a highly structured, visually compelling instructional graphic titled "${title}". The graphic must synthesize complex literary concepts into an intuitive diagram that supports secondary and college-level pedagogy.
+
+2. INTENDED LEARNERS
+- Primary Audience: ${audience}
+- Course Level: ${course}
+- Comprehension Target: Visual clarity for rapid analytical comprehension, close reading support, and literary discussion.
+
+3. SHAKESPEARE CONTENT SCOPE
+- Play Title: ${play} (Canonical Shakespeare Edition)
+- Focus Topic: ${focus}${conditionalDetails}
+
+4. LEARNING OBJECTIVES
+This graphic must directly enable students to fulfill the following learning objectives:
+${objectives}
+
+5. GRAPHIC TITLE
+- Main Display Title: "${title}"
+- Subtitle: A ${graphicType} for ${play}
+
+6. GRAPHIC TYPE
+- Specified Framework: ${graphicType}
+- Functional Structure: Designed specifically as a ${graphicType.toLowerCase()} to organize character interactions, thematic progression, and textual citations.
+
+7. REQUIRED TEXTUAL CONTENT
+- Text Complexity Level: ${complexity}
+- Citation Standard: All quotations and line references must follow ${citation}.
+- Text Formatting: Short textual blocks, highlighted key quotes, clear labels, and explicit analytical annotations.
+
+8. CHARACTER LIST
+- Included Characters: ${charListStr}
+- Character Role Groupings: Clearly distinguish major thematic catalysts from supporting characters through visual weight, node size, or border styling.
+
+9. VISUAL HIERARCHY
+- Primary Focal Point: Main graphic title and central play thesis/focus topic.
+- Secondary Focal Point: Major character nodes and primary thematic categories.
+- Tertiary Focal Point: Supporting textual citations, act/scene indicators, and secondary connections.
+
+10. LAYOUT AND COMPOSITION
+- Structural Grid: ${layout}
+- Spatial Organization: Logical left-to-right or top-to-bottom reading path with deliberate visual grouping.
+- Medium Optimization: ${mediumRules}
+
+11. STYLE AND TONE
+- Aesthetic Style: ${style}
+- Emotional & Literary Tone: ${tone}
+- Imagery Style: Clean vector icons, literary Renaissance embellishments, and un-cluttered visual diagrams.
+
+12. COLOR AND TYPOGRAPHY
+- Color Palette: ${palette}
+- Palette Function: Use color intentionally to categorize themes, relationships, or character arcs.
+- Typography: Strong sans-serif or crisp serif headers with highly readable body font (min 14pt scale equivalent).
+
+13. ADA AND ACCESSIBILITY REQUIREMENTS
+- Color Contrast: Minimum 4.5:1 contrast ratio between all text and background elements.
+- Multi-Modal Coding: NEVER rely solely on color to convey meaning—supplement with icons, line patterns (dashed vs. solid), or text badges.
+- Legibility & Layout: Uncluttered layout with ample negative whitespace, clear section headings, and logical focus order.
+- Alternative Text Capability: Design structured sections that easily translate into alt-text image descriptions for LMS screen readers.
+
+14. SIZE AND RESOLUTION SPECIFICATIONS
+- Target Output Medium: ${medium}
+- Canvas Orientation: ${orientation}
+- Resolution Standard: ${resolution}
+
+15. OUTPUT FORMAT
+- Deliverable: Ready-to-render digital vector illustration brief (SVG/PNG) or structured canvas layout.
+
+16. QUALITY CHECKS
+- Pedagogical Alignment: Every design decision (colors, connectors, layout) directly reinforces at least one stated learning objective.
+- Literary Accuracy: Historical and textual fidelity to Shakespeare's play and canonical text.
+- Instructional Clarity: Unambiguous visual logic that avoids dense blocks of wall-text and enables instant student insight.
+- Teacher Notes Consideration: ${notes}
+
+================================================================================`;
+
+            document.getElementById('promptText').textContent = fullPrompt;
+        }
+
+        /* Copy Prompt to Clipboard */
+        function copyToClipboard() {
+            const text = document.getElementById('promptText').textContent;
+            const copyBtnText = document.getElementById('copyBtnText');
+
+            // Copy utilizing fallback method for iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                copyBtnText.textContent = "Copied!";
+                setTimeout(() => {
+                    copyBtnText.textContent = "Copy Prompt";
+                }, 2000);
+            } catch (err) {
+                console.error("Copy failed", err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        /* Download Prompt as Text File */
+        function downloadPrompt() {
+            const text = document.getElementById('promptText').textContent;
+            const play = document.getElementById('playSelect').value || "Shakespeare";
+            const type = document.getElementById('graphicType').value || "Graphic";
+            const filename = `${play.replace(/[^a-z0-9]/gi, '_')}_${type.replace(/[^a-z0-9]/gi, '_')}_Prompt.txt`;
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
