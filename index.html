@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI for CTE Faculty | 8-Week Online Course</title>
+<style>
+:root{
+  --navy:#0047AB;--navy-mid:#003a8c;--navy-light:#1a5fc4;
+  --green:#00a86b;--green-light:#00c97e;--green-pale:#e6f9f2;
+  --warn:#c45f0e;--warn-pale:#fdf2e9;--red:#c0392b;--red-pale:#fdecea;
+  --text:#1c2a44;--text-2:#1a3a7a;--muted:#4a5f85;
+  --bg:#f0f4fa;--card:#ffffff;--alt:#e0e8f5;--border:#b8cae4;
+  --hero-text:#ffffff;--hero-sub:#c3d4f2;
+  --shadow:0 4px 14px rgba(0,40,110,.08);
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:Arial,Helvetica,sans-serif;
+  --narrow:'Arial Narrow',Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --navy:#0b3c8f;--navy-mid:#08306f;--navy-light:#2d6fd6;
+    --green:#14c487;--green-light:#3ad89e;--green-pale:#0d2a1f;
+    --warn:#f0a050;--warn-pale:#3a2410;--red:#f07a6e;--red-pale:#3a1614;
+    --text:#e2eaf8;--text-2:#a9c2ec;--muted:#8aa3cc;
+    --bg:#071430;--card:#0d1f47;--alt:#0a1a3d;--border:#24427e;
+    --hero-sub:#a9c2ec;--shadow:0 4px 14px rgba(0,0,0,.35);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --navy:#0b3c8f;--navy-mid:#08306f;--navy-light:#2d6fd6;
+  --green:#14c487;--green-light:#3ad89e;--green-pale:#0d2a1f;
+  --warn:#f0a050;--warn-pale:#3a2410;--red:#f07a6e;--red-pale:#3a1614;
+  --text:#e2eaf8;--text-2:#a9c2ec;--muted:#8aa3cc;
+  --bg:#071430;--card:#0d1f47;--alt:#0a1a3d;--border:#24427e;
+  --hero-sub:#a9c2ec;--shadow:0 4px 14px rgba(0,0,0,.35);color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65;font-size:16px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:200;background:var(--navy)}
+h1,h2,h3,h4{font-family:var(--serif);line-height:1.2}
+p{margin-bottom:.9rem}
+a{color:var(--navy-light)}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+button{font-family:var(--sans);cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 1.5rem}
+.narrow{max-width:860px}
+
+/* NAV */
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:100;background:var(--navy);border-bottom:3px solid var(--green)}
+.topnav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:#fff;min-width:0}
+.seal{width:38px;height:38px;border-radius:50%;background:var(--green);display:grid;place-items:center;font-family:var(--narrow);font-weight:900;font-size:.62rem;color:#fff;line-height:1.05;text-align:center;flex-shrink:0}
+.brand-t{font-family:var(--narrow);font-weight:700;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-r{display:flex;align-items:center;gap:1rem}
+.navlinks{display:flex;gap:1.2rem;list-style:none}
+.navlinks a{color:#c3d4f2;text-decoration:none;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.navlinks a:hover,.navlinks a.on{color:#fff;border-bottom:2px solid var(--green)}
+.prog-pill{font-size:.72rem;color:#fff;background:rgba(255,255,255,.12);border-radius:20px;padding:.25rem .7rem;white-space:nowrap}
+.theme-btn{background:var(--navy-light);border:1px solid var(--green);color:#fff;padding:.3rem .75rem;border-radius:20px;font-size:.75rem}
+.theme-btn:hover{background:var(--green)}
+@media(max-width:860px){.navlinks{display:none}}
+@media(max-width:520px){.prog-pill{display:none}.brand-t{font-size:.85rem}}
+
+/* HERO */
+.hero{background:var(--navy);position:relative;overflow:hidden;color:var(--hero-text);text-align:center;padding:4.5rem 1.5rem 3.5rem}
+.hero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 40px,rgba(0,168,107,.07) 40px,rgba(0,168,107,.07) 41px);pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green-light);margin-bottom:1rem}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);max-width:860px;margin:0 auto 1rem}
+.hero .sub{font-size:1.05rem;color:var(--hero-sub);max-width:660px;margin:0 auto 2rem;line-height:1.7}
+.cta{display:inline-block;background:var(--green);color:#fff;text-decoration:none;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;padding:.85rem 2rem;border-radius:2px;border:0}
+.cta:hover{background:var(--green-light)}
+.cta.ghost{background:transparent;border:1px solid var(--green-light);margin-left:.5rem}
+
+/* learning path (signature) */
+.path{display:flex;justify-content:center;align-items:center;margin:2.5rem auto 0;max-width:820px;padding:0 .5rem}
+.path a{position:relative;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--hero-sub);flex:1;min-width:0}
+.path .dot{width:40px;height:40px;border-radius:50%;border:2px solid var(--green-light);display:grid;place-items:center;font-family:var(--narrow);font-weight:900;color:#fff;background:var(--navy-mid);z-index:1;transition:transform .15s}
+.path a:hover .dot{transform:scale(1.12)}
+.path a.done .dot{background:var(--green);border-color:var(--green)}
+.path a:not(:last-child)::after{content:"";position:absolute;top:20px;left:50%;width:100%;height:2px;background:rgba(195,212,242,.35)}
+.path a.done:not(:last-child)::after{background:var(--green)}
+.path .lbl{font-size:.66rem;margin-top:.45rem;text-align:center;line-height:1.2;padding:0 2px}
+@media(max-width:600px){.path .lbl{display:none}.path .dot{width:30px;height:30px;font-size:.8rem}.path a:not(:last-child)::after{top:15px}}
+
+.stats{background:var(--navy);border-top:1px solid rgba(255,255,255,.12);border-bottom:3px solid var(--green);display:flex;justify-content:center;flex-wrap:wrap;padding:1rem}
+.stat{display:flex;align-items:center;gap:.5rem;padding:.3rem 1.6rem;border-right:2px solid rgba(0,168,107,.3)}
+.stat:last-child{border-right:0}
+.stat b{font-family:var(--narrow);font-size:1.6rem;color:var(--green-light);line-height:1}
+.stat span{font-size:.68rem;font-weight:700;color:var(--hero-sub);letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
+
+/* SECTIONS */
+.section{padding:3.5rem 0}
+.section.alt{background:var(--alt)}
+.s-eyebrow{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:.4rem}
+.s-title{font-size:clamp(1.5rem,3vw,2rem);color:var(--text);margin-bottom:.4rem}
+.rule{width:48px;height:3px;background:var(--green);margin:.7rem 0 1.4rem}
+.s-desc{color:var(--text-2);max-width:680px;margin-bottom:2rem}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.4rem}
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1.4rem;display:flex;flex-direction:column;gap:.7rem;position:relative;overflow:hidden}
+.mcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--green)}
+.mcard:hover{box-shadow:var(--shadow)}
+.mc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.badge{background:var(--navy);color:#fff;font-family:var(--narrow);font-weight:900;font-size:.74rem;letter-spacing:.1em;padding:.25rem .6rem;border-radius:2px;white-space:nowrap}
+.mc-ico{font-size:1.7rem;line-height:1}
+.tag{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:.12rem .6rem;width:fit-content}
+.tag.ok{color:#fff;background:var(--green);border-color:var(--green)}
+.mc-title{font-family:var(--serif);font-size:1.12rem;font-weight:700;line-height:1.3}
+.mc-desc{font-size:.86rem;color:var(--text-2);flex:1}
+.mc-foot{border-top:1px solid var(--border);padding-top:.7rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.launch{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;font-weight:700;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1.1rem;border-radius:2px}
+.launch:hover{background:var(--navy-light)}
+.mini{font-size:.75rem;color:var(--muted)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px;margin:1rem 0 1.4rem;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th{background:var(--navy);color:#fff;text-align:left;padding:.65rem .8rem;font-weight:700;font-size:.8rem;letter-spacing:.03em}
+td{padding:.6rem .8rem;border-top:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--alt)}
+td.c,th.c{text-align:center}
+.dotm{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--green)}
+.dotm.p{background:transparent;border:2px solid var(--green)}
+
+/* MODULE PAGE */
+.crumb{background:var(--card);border-bottom:1px solid var(--border);padding:.55rem 0;font-size:.83rem;color:var(--muted)}
+.crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--navy-light)}
+.crumb span.sep{margin:0 .45rem}
+.crumb b{color:var(--navy-light)}
+.mhero{padding:2.8rem 1.5rem 2.4rem}
+.wk{display:inline-block;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;padding:.35rem .95rem;border-radius:50px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+.mhero h1{font-size:clamp(1.8rem,4.2vw,2.7rem);margin-bottom:.5rem}
+.mhero .sub{font-family:var(--serif);font-style:italic;font-size:1.15rem;margin-bottom:1.2rem}
+.sbadges{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem}
+.sbadge{background:rgba(255,255,255,.14);padding:.4rem .9rem;border-radius:4px;font-size:.86rem}
+.subnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 63px);z-index:90;background:var(--card);border-bottom:1px solid var(--border)}
+.subnav .wrap{display:flex;gap:.3rem;overflow-x:auto;padding-top:.45rem;padding-bottom:.45rem}
+.subnav a{font-size:.8rem;text-decoration:none;color:var(--text-2);padding:.35rem .8rem;border-radius:20px;white-space:nowrap;border:1px solid transparent}
+.subnav a:hover{border-color:var(--border);background:var(--alt)}
+.msec{padding:2.4rem 0 .5rem}
+.h2{font-size:1.75rem;color:var(--navy-light);text-align:center;margin-bottom:1.4rem}
+.h2::after{content:"";display:block;width:60px;height:4px;background:var(--green);margin:.5rem auto 0;border-radius:2px}
+:root[data-theme="dark"] .h2{color:var(--text)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .h2{color:var(--text)}}
+
+.obj{background:var(--card);border:1px solid var(--border);border-left:5px solid var(--green);border-radius:8px;padding:1.6rem 1.9rem;box-shadow:var(--shadow)}
+.obj .lead{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:1.08rem;margin-bottom:.8rem}
+.obj ul{list-style:none}
+.obj li{padding:.55rem 0 .55rem 1.8rem;position:relative;border-bottom:1px solid var(--border);font-size:.96rem}
+.obj li:last-child{border-bottom:0}
+.obj li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+
+/* accordion */
+.acc{border:1px solid var(--border);border-radius:8px;background:var(--card);margin-bottom:1rem;overflow:hidden}
+.acc>button{width:100%;display:flex;justify-content:space-between;align-items:center;background:var(--card);border:0;padding:1rem 1.3rem;font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--text);text-align:left}
+.acc>button:hover{background:var(--alt)}
+.acc>button .pm{font-family:var(--sans);font-size:1.3rem;color:var(--green);transition:transform .2s}
+.acc.open>button .pm{transform:rotate(45deg)}
+.acc .panel{display:none;padding:0 1.3rem 1.3rem}
+.acc.open .panel{display:block}
+
+/* flip cards */
+.flipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:.6rem}
+.flip{perspective:1000px;height:190px;background:none;border:0;padding:0;text-align:inherit;color:inherit}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.ff,.fb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:8px;padding:1rem;display:flex;flex-direction:column;justify-content:center}
+.ff{background:var(--card);border:1px solid var(--border);border-top:4px solid var(--navy-light);align-items:center;text-align:center}
+.ff .t{font-family:var(--serif);font-size:1.08rem;font-weight:700;margin-bottom:.4rem}
+.ff .h{font-size:.72rem;color:var(--muted)}
+.fb{background:var(--navy);color:#fff;transform:rotateY(180deg);font-size:.84rem;line-height:1.5;overflow:auto;justify-content:flex-start}
+.fb b{display:block;color:var(--green-light);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+@media (prefers-reduced-motion:reduce){.flip-in{transition:none}html{scroll-behavior:auto}}
+
+/* tabs */
+.tabs{background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.tabbar{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--alt)}
+.tabbar button{border:0;background:none;padding:.85rem 1.15rem;font-size:.86rem;font-weight:700;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent}
+.tabbar button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--green);background:var(--card)}
+.tabpane{padding:1.6rem 1.8rem;display:none}
+.tabpane.on{display:block}
+.tabpane h3{font-size:1.22rem;margin:1.2rem 0 .6rem;color:var(--text)}
+.tabpane h3:first-child{margin-top:0}
+.tabpane ul,.tabpane ol{margin:0 0 1rem 1.3rem}
+.tabpane li{margin-bottom:.35rem}
+.steps{list-style:none;margin:1rem 0!important;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:.2rem 0 .9rem 3rem;margin:0!important}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:2.1rem;height:2.1rem;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:1.02rem;top:2.2rem;bottom:0;width:2px;background:var(--border)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1rem 0}
+.box{border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;background:var(--card)}
+.box h4{font-size:1rem;margin-bottom:.4rem}
+.box p,.box li{font-size:.88rem}
+.box.g{border-left:4px solid var(--green)}.box.w{border-left:4px solid var(--warn)}.box.n{border-left:4px solid var(--navy-light)}
+.callout{border-radius:8px;padding:1rem 1.2rem;margin:1.2rem 0;border-left:5px solid var(--green);background:var(--green-pale)}
+.callout.w{border-left-color:var(--warn);background:var(--warn-pale)}
+.callout b.ct{display:block;margin-bottom:.25rem}
+
+/* interactives */
+.lab{background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);margin-bottom:1.8rem;overflow:hidden}
+.lab-h{background:var(--navy);color:#fff;padding:1rem 1.4rem;display:flex;gap:.8rem;align-items:center}
+.lab-h .i{font-size:1.5rem}
+.lab-h h3{font-size:1.18rem}
+.lab-h p{margin:0;font-size:.84rem;color:var(--hero-sub)}
+.lab-b{padding:1.4rem}
+.btn{border:1px solid var(--navy-light);background:var(--card);color:var(--text);padding:.5rem .95rem;border-radius:4px;font-size:.86rem;font-weight:700}
+.btn:hover{background:var(--alt)}
+.btn.pri{background:var(--navy-light);color:#fff;border-color:var(--navy-light)}
+.btn.pri:hover{background:var(--navy)}
+.btn.go{background:var(--green);border-color:var(--green);color:#fff}
+.btn.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.right{background:var(--green);color:#fff;border-color:var(--green)}
+.btn.wrong{background:var(--red);color:#fff;border-color:var(--red)}
+.btnrow{display:flex;flex-wrap:wrap;gap:.5rem;margin:.7rem 0}
+.fb-msg{margin-top:.8rem;padding:.75rem 1rem;border-radius:6px;font-size:.9rem;display:none}
+.fb-msg.show{display:block}
+.fb-msg.ok{background:var(--green-pale);border-left:4px solid var(--green)}
+.fb-msg.no{background:var(--red-pale);border-left:4px solid var(--red)}
+.fb-msg.info{background:var(--alt);border-left:4px solid var(--navy-light)}
+label.f{display:block;font-size:.8rem;font-weight:700;color:var(--text-2);margin:.8rem 0 .3rem}
+input[type=text],textarea,select{width:100%;padding:.6rem .7rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:.92rem}
+textarea{min-height:90px;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--green)}
+.out{background:var(--bg);border:1px dashed var(--navy-light);border-radius:8px;padding:1rem 1.1rem;white-space:pre-wrap;font-size:.9rem;line-height:1.6;min-height:3rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+@media(max-width:760px){.two{grid-template-columns:1fr}.tabpane{padding:1.2rem}}
+.bar{display:flex;align-items:center;gap:.6rem;margin:.35rem 0;font-size:.88rem}
+.bar .w{width:110px;flex-shrink:0;text-align:right}
+.bar .track{flex:1;height:22px;background:var(--alt);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--navy-light);transition:width .4s}
+.bar .fill.pick{background:var(--green)}
+.bar .pct{width:44px;font-size:.8rem;color:var(--muted)}
+.meter{height:12px;border-radius:6px;background:var(--alt);overflow:hidden;margin:.4rem 0}
+.meter>div{height:100%;transition:width .3s}
+.chip{display:inline-block;font-size:.72rem;padding:.15rem .55rem;border-radius:20px;background:var(--alt);color:var(--text-2);margin:0 .25rem .25rem 0}
+.sentence{display:block;width:100%;text-align:left;padding:.55rem .8rem;margin:.3rem 0;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:.92rem}
+.sentence.flag{border-color:var(--warn);background:var(--warn-pale)}
+.sentence.hit{border-color:var(--green);background:var(--green-pale)}
+.sentence.miss{border-color:var(--red);background:var(--red-pale)}
+.sentence .why{display:block;font-size:.8rem;margin-top:.3rem;color:var(--text-2)}
+
+/* AIAS scale */
+.aias{display:flex;flex-direction:column;gap:.5rem}
+.aias button{display:flex;align-items:center;gap:1rem;border:0;border-radius:6px;padding:.8rem 1rem;color:#fff;text-align:left;font-size:.95rem;font-weight:700;transition:transform .15s}
+.aias button:hover,.aias button.on{transform:translateX(8px)}
+.aias button .n{font-family:var(--narrow);font-size:1.5rem;width:2rem;text-align:center}
+.lv1{background:#b3261e}.lv2{background:#c8650d}.lv3{background:#8a7b00}.lv4{background:#1f7a3d}.lv5{background:#1a5fc4}
+
+/* quiz */
+.q{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1rem}
+.q .stem{font-weight:700;margin-bottom:.7rem}
+.q .opts{display:flex;flex-direction:column;gap:.45rem}
+.q .opts button{text-align:left;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:.6rem .9rem;border-radius:6px;font-size:.92rem}
+.q .opts button:hover:not(:disabled){border-color:var(--navy-light)}
+.q .opts button.right{background:var(--green-pale);border-color:var(--green);font-weight:700}
+.q .opts button.wrong{background:var(--red-pale);border-color:var(--red)}
+.q .opts button:disabled{cursor:default}
+.score{text-align:center;font-family:var(--serif);font-size:1.2rem;margin:.6rem 0 1rem}
+
+/* apply */
+.apply{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem}
+.apply .box h4{display:flex;gap:.5rem;align-items:center}
+.complete-row{text-align:center;margin:2rem 0 1rem}
+.bnav{display:flex;justify-content:space-between;gap:.7rem;margin:2rem 0 3rem;flex-wrap:wrap}
+.bnav a{flex:1;min-width:150px;text-align:center;text-decoration:none;padding:.8rem 1rem;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-weight:700;font-size:.88rem}
+.bnav a:hover{border-color:var(--navy-light);background:var(--alt)}
+.bnav a.dis{opacity:.4;pointer-events:none}
+footer{background:var(--navy);color:var(--hero-sub);text-align:center;padding:1.8rem 1rem;font-size:.82rem;border-top:3px solid var(--green)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--green);color:#fff;padding:.6rem 1.2rem;border-radius:6px;font-weight:700;font-size:.88rem;display:none;z-index:300}
+.rings{display:flex;justify-content:center;margin:.5rem 0 1rem}
+.ring{border-radius:50%;border:2px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer;background:none}
+.ring:focus-visible{outline-offset:-6px}
+.ctx-msgs{display:flex;flex-direction:column;gap:4px;margin:.8rem 0}
+.ctx-msg{padding:.35rem .7rem;border-radius:4px;font-size:.8rem;transition:opacity .3s}
+.ctx-msg.u{background:var(--alt);align-self:flex-start;max-width:80%}
+.ctx-msg.a{background:var(--green-pale);align-self:flex-end;max-width:80%}
+.ctx-msg.out{opacity:.25;text-decoration:line-through}
+.chk{display:flex;gap:.6rem;align-items:flex-start;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.92rem}
+.chk input{margin-top:.3rem;accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const COURSE = "AI for CTE Faculty";
+const M = {};
+
+/* ================= MODULE 1 ================= */
+M[1] = {
+ icon:"🧠", title:"AI Fundamentals", short:"Fundamentals",
+ sub:"What AI is, how it learns, and why it now belongs in every career and technical program",
+ card:"Build a working mental model of AI, machine learning, and large language models, and map where AI already shows up in your occupational field.",
+ stats:["⏱ 3–4 hours","📋 5 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Distinguish artificial intelligence, machine learning, deep learning, and generative AI, and explain how they nest inside each other.",
+  "Explain in plain language how a large language model produces text by predicting the next token.",
+  "Describe supervised, unsupervised, and reinforcement learning using examples from CTE fields.",
+  "Identify AI already embedded in the tools, equipment, and software of your occupational area.",
+  "Summarize what current AI does well and where it fails, including hallucination and knowledge cutoffs.",
+  "Make the case to students and colleagues that AI literacy is a workforce competency."
+ ],
+ terms:[
+  ["Artificial Intelligence","The broad field of building computer systems that perform tasks normally requiring human intelligence: recognizing patterns, making predictions, understanding language, and making decisions."],
+  ["Machine Learning","A subset of AI in which systems learn patterns from data instead of following hand-written rules. The model improves as it sees more examples."],
+  ["Deep Learning","Machine learning that uses many-layered neural networks. It powers image recognition, speech recognition, and modern language models."],
+  ["Generative AI","AI that creates new content — text, images, audio, video, or code — based on patterns learned from training data."],
+  ["Large Language Model (LLM)","A deep learning model trained on very large amounts of text to predict the next token. ChatGPT, Claude, Gemini, and Copilot are built on LLMs."],
+  ["Token","The unit of text an LLM reads and writes, often a word or part of a word. Roughly 100 tokens ≈ 75 English words."],
+  ["Training Data","The examples a model learns from. Its quality, coverage, and bias shape everything the model later produces."],
+  ["Parameters","The internal numeric weights a model adjusts during training. Large models have billions of them."],
+  ["Inference","Using a trained model to produce an output, such as answering your prompt. Training happens once; inference happens every time you use it."],
+  ["Hallucination","Output that sounds confident and plausible but is false or fabricated, such as an invented statistic or citation."],
+  ["Supervised Learning","Learning from labeled examples (input + correct answer), such as photos of welds labeled “acceptable” or “defective.”"],
+  ["Knowledge Cutoff","The date after which a model has no training data. Without web search, it cannot know about later events, codes, or standards."]
+ ],
+ tabs:[
+  ["The AI family tree",`<h3>Four nested ideas</h3>
+<p>People use “AI” to mean very different things. A clear vocabulary helps you explain it to students and evaluate vendor claims. Think of four nested circles: <strong>artificial intelligence</strong> is the whole field; <strong>machine learning</strong> is the part that learns from data; <strong>deep learning</strong> is machine learning with large neural networks; <strong>generative AI</strong> is deep learning that creates new content.</p>
+<div class="tbl-wrap"><table><tr><th>Era</th><th>Approach</th><th>Example you’d recognize</th></tr>
+<tr><td>1950s–1980s</td><td>Rule-based “expert systems”: if–then logic written by people</td><td>Early diagnostic software, troubleshooting decision trees</td></tr>
+<tr><td>1990s–2000s</td><td>Statistical machine learning</td><td>Spam filters, credit scoring, recommendation engines</td></tr>
+<tr><td>2012 onward</td><td>Deep learning with neural networks</td><td>Image recognition, speech-to-text, lane-keeping assist</td></tr>
+<tr><td>2017 onward</td><td>Transformer architecture</td><td>The design behind today’s language models</td></tr>
+<tr><td>2022 onward</td><td>Generative AI goes mainstream</td><td>ChatGPT, Claude, Gemini, Copilot, image and video generators</td></tr></table></div>
+<div class="callout"><b class="ct">Faculty tip</b>Use the lab below in your first class session. Students consistently overestimate what counts as AI (“the calculator is AI”) and underestimate where it hides (their phone’s keyboard, their car’s braking system).</div>`],
+  ["How machines learn",`<h3>Three ways a machine learns</h3>
+<div class="tbl-wrap"><table><tr><th>Type</th><th>How it learns</th><th>CTE example</th></tr>
+<tr><td><strong>Supervised</strong></td><td>From labeled examples with known answers</td><td>A vision system trained on thousands of labeled weld photos flags porosity and undercut on a production line.</td></tr>
+<tr><td><strong>Unsupervised</strong></td><td>Finds patterns and groupings in unlabeled data</td><td>Clustering HVAC sensor readings to discover unusual operating patterns no one had named yet.</td></tr>
+<tr><td><strong>Reinforcement</strong></td><td>Tries actions and is rewarded or penalized</td><td>A warehouse robot learns efficient pick paths; a building system learns to cut energy use while holding temperature.</td></tr></table></div>
+<p>Large language models combine these: they first learn from enormous amounts of unlabeled text (self-supervised), then are refined with human feedback so their answers are more helpful and safer.</p>
+<div class="callout w"><b class="ct">Why this matters for your students</b>Every model is only as good as its training data. A defect-detection model trained only on steel will struggle on aluminum. That is a concept your students can test, explain, and troubleshoot — exactly the kind of judgment employers want.</div>`],
+  ["How an LLM works",`<h3>From your prompt to its answer</h3>
+<ol class="steps">
+<li><strong>Tokenize.</strong> Your prompt is split into tokens — words and word pieces.</li>
+<li><strong>Represent.</strong> Each token becomes a list of numbers (an embedding) that captures meaning and relationships.</li>
+<li><strong>Pay attention.</strong> The transformer weighs how every token relates to every other token in the context.</li>
+<li><strong>Predict.</strong> The model calculates a probability for every possible next token.</li>
+<li><strong>Sample and repeat.</strong> One token is chosen, added to the text, and the process repeats until the answer is complete.</li></ol>
+<p>The key insight: an LLM is not looking facts up in a database. It is generating the most plausible continuation. That is why it can write fluently about almost anything, and also why it can be fluently wrong. Try the next-word predictor in the Interact section to see this happen.</p>`],
+  ["AI in CTE fields",`<h3>AI is already on the job</h3>
+<div class="cols">
+<div class="box n"><h4>🚗 Automotive</h4><p>Advanced driver-assistance systems, AI-assisted diagnostics, predictive fleet maintenance.</p></div>
+<div class="box n"><h4>🏥 Health sciences</h4><p>Imaging triage, ambient clinical documentation, early-warning scores for patient deterioration.</p></div>
+<div class="box n"><h4>🏭 Manufacturing</h4><p>Machine-vision quality inspection, predictive maintenance, collaborative robots.</p></div>
+<div class="box n"><h4>🔥 Welding</h4><p>Automated weld inspection, AI-guided welding simulators, adaptive robotic welding.</p></div>
+<div class="box n"><h4>❄️ HVAC & energy</h4><p>Fault detection and diagnostics, smart thermostats, building energy optimization.</p></div>
+<div class="box n"><h4>🍽 Hospitality</h4><p>Demand forecasting, inventory and menu optimization, guest-service chat agents.</p></div>
+<div class="box n"><h4>💼 Business</h4><p>Forecasting, document drafting, customer-service agents, fraud detection.</p></div>
+<div class="box n"><h4>🛡 IT & cybersecurity</h4><p>Threat detection, log analysis, AI coding assistants, and new attacks that use AI.</p></div>
+<div class="box n"><h4>🌾 Agriculture</h4><p>Precision spraying, yield prediction, drone and satellite crop monitoring.</p></div>
+</div>`],
+  ["Capabilities & limits",`<div class="two">
+<div class="box g"><h4>What current AI does well</h4><ul>
+<li>Drafting, summarizing, and rewriting text at many reading levels</li>
+<li>Generating examples, scenarios, and practice questions</li>
+<li>Explaining concepts several different ways</li>
+<li>Writing and explaining code</li>
+<li>Recognizing patterns in images, audio, and sensor data</li>
+<li>Brainstorming and organizing ideas quickly</li></ul></div>
+<div class="box w"><h4>Where it fails</h4><ul>
+<li>Inventing facts, specifications, and citations (hallucination)</li>
+<li>Outdated information past its knowledge cutoff</li>
+<li>Arithmetic and multi-step calculations without tools</li>
+<li>Reflecting bias in its training data</li>
+<li>Knowing your local codes, equipment, and shop procedures</li>
+<li>Accountability — it cannot sign off on safety-critical work</li></ul></div></div>
+<div class="callout w"><b class="ct">The rule for this course</b>AI drafts; qualified humans decide. You will build on this idea in Module 5.</div>`]
+ ],
+ quiz:[
+  ["Which statement best describes how AI terms relate to one another?",["Generative AI and machine learning are separate, unrelated fields","Generative AI is a subset of deep learning, which is a subset of machine learning, which is part of AI","Machine learning is a subset of generative AI","Deep learning is the broadest category and includes all AI"],1,"The circles nest: AI ⊃ machine learning ⊃ deep learning ⊃ generative AI."],
+  ["When an LLM answers a question, it is fundamentally…",["Looking the answer up in a verified database","Searching the internet every time","Predicting likely next tokens from patterns learned in training","Running a rule set written by experts"],2,"LLMs generate the most plausible continuation token by token. Some tools add web search, but the core model predicts text."],
+  ["A predictive-maintenance model is trained on years of motor sensor data labeled “failed within 30 days” or “did not fail.” What type of learning is this?",["Supervised learning","Unsupervised learning","Reinforcement learning","Rule-based programming"],0,"Labeled examples with known outcomes are the defining feature of supervised learning."],
+  ["A chatbot gives a student a confident torque specification and cites a service bulletin that does not exist. This is an example of…",["A knowledge cutoff","Reinforcement learning","Hallucination","Tokenization"],2,"Plausible but fabricated facts and sources are hallucinations — the reason every safety-critical value must be verified against the manufacturer’s documentation."],
+  ["Which is the strongest reason AI literacy belongs in CTE programs?",["AI will replace the need for technical skills","Employers are embedding AI into the tools and workflows graduates will use, and graduates must be able to use and evaluate it","Accreditors require a standalone AI course","Students already know how to use AI well"],1,"AI is becoming part of everyday occupational tools. Graduates need to use it productively and judge when it is wrong."]
+ ],
+ apply:{
+  assign:"<strong>AI in My Field Scan.</strong> Find three concrete examples of AI used in your occupation: one from a job posting, one from an industry publication or equipment vendor, and one from a conversation with an advisory board member or employer. For each, note what the AI does, what humans still do, and one skill your students would need.",
+  discuss:"Share the most surprising example from your scan. What does it suggest you should add to, or remove from, your current curriculum?",
+  capstone:"Choose the course you will redesign during these eight weeks. Write a short context statement: course title, students served, two or three key outcomes, and where AI already touches that occupation.",
+  journal:"Before this week, how would you have defined AI for a student? How would you define it now?"
+ }
+};
+
+/* ================= MODULE 2 ================= */
+M[2] = {
+ icon:"💬", title:"Using LLMs", short:"Using LLMs",
+ sub:"Choosing, configuring, and working productively with ChatGPT, Claude, Gemini, Copilot, and their peers",
+ card:"Compare the major chat assistants, learn how context windows and power features work, and set up FERPA-aware habits before you use AI with course materials.",
+ stats:["⏱ 3–4 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Compare major LLM platforms by strengths, data practices, and availability through your institution.",
+  "Explain context windows, model versions, and knowledge cutoffs, and how each affects results.",
+  "Manage conversations deliberately: iterate, branch, and start fresh when a thread drifts.",
+  "Use file uploads, projects, custom instructions, and web search appropriately.",
+  "Apply FERPA-aware practices and privacy settings when using LLMs with course content.",
+  "Select an appropriate assistant and feature for a given teaching task."
+ ],
+ terms:[
+  ["Context Window","The amount of text (in tokens) a model can consider at once — your prompts, uploaded files, and its own replies. Beyond it, earlier material drops out."],
+  ["Custom Instructions","Standing guidance you give an assistant (your role, audience, tone) that is applied to every conversation."],
+  ["Project / Workspace","A space that keeps reference files and instructions together so every chat inside it starts with that context."],
+  ["Multimodal","Able to work with more than text — reading images and PDFs, listening to audio, or producing images."],
+  ["Reasoning Mode","A setting in which the model works through a problem step by step before answering. Slower, often more accurate on complex tasks."],
+  ["Web Search / Grounding","A feature that lets the assistant retrieve current web pages and cite them, reducing reliance on training data alone."],
+  ["Temperature","A setting controlling randomness. Low = consistent and predictable; high = more varied and creative."],
+  ["RAG","Retrieval-augmented generation: the system pulls relevant passages from your documents and feeds them to the model before it answers."],
+  ["Enterprise / Education License","An institutional agreement that typically adds data protections, such as not using your conversations to train models."],
+  ["Data Retention","How long a provider stores your conversations and files, and who can access them. Check before uploading anything sensitive."]
+ ],
+ tabs:[
+  ["The landscape",`<h3>The major assistants</h3>
+<p>All of these are capable; differences are in features, integrations, and data terms. Plans and features change every few months, so treat this as orientation and check what your institution licenses.</p>
+<div class="tbl-wrap"><table><tr><th>Assistant</th><th>Often chosen for</th><th>Teaching fit</th><th>Check before use</th></tr>
+<tr><td><strong>ChatGPT</strong> (OpenAI)</td><td>Broad features, image generation, custom GPTs</td><td>General drafting, tutoring bots, image creation</td><td>Whether chats are used for training on your plan</td></tr>
+<tr><td><strong>Claude</strong> (Anthropic)</td><td>Long documents, careful writing, building interactive artifacts and code</td><td>Analyzing syllabi and standards, building interactive learning tools</td><td>Plan features and data settings</td></tr>
+<tr><td><strong>Gemini</strong> (Google)</td><td>Google Workspace integration</td><td>Docs, Slides, and Classroom-centered courses</td><td>Workspace admin settings at your college</td></tr>
+<tr><td><strong>Microsoft Copilot</strong></td><td>Microsoft 365 integration</td><td>Word, PowerPoint, Excel, and Teams workflows</td><td>Which Copilot your account includes</td></tr>
+<tr><td><strong>Perplexity</strong></td><td>Search-first answers with citations</td><td>Quick research with sources to verify</td><td>Citations still need checking</td></tr>
+<tr><td><strong>Open-weight models</strong> (Llama, Mistral, others)</td><td>Running locally or on your own servers</td><td>Privacy-sensitive data, IT and programming courses</td><td>Hardware needs and capability gaps</td></tr></table></div>
+<div class="callout"><b class="ct">Start here</b>Ask your IT or teaching and learning center which tools your college licenses. A licensed tool with education data terms is almost always the right default for faculty work.</div>`],
+  ["Anatomy of a session",`<h3>Working memory, not permanent memory</h3>
+<p>Everything in a conversation — your instructions, files, and every reply — shares one context window. Long, wandering threads cause trouble: early instructions get diluted, details get mixed up, and quality drops.</p>
+<ol class="steps">
+<li><strong>Set the frame.</strong> State your role, audience, and goal in the first message.</li>
+<li><strong>Iterate in place.</strong> Refine with specific feedback: “Make question 3 harder and add a distractor about voltage drop.”</li>
+<li><strong>Branch.</strong> Edit an earlier message to try a different direction without polluting the thread.</li>
+<li><strong>Start fresh.</strong> When the topic changes or answers drift, open a new chat and paste a short summary of what matters.</li>
+<li><strong>Reuse context.</strong> Put recurring files (syllabus, outcomes, standards) in a project so you don’t re-upload every time.</li></ol>`],
+  ["Power features",`<div class="cols">
+<div class="box n"><h4>📎 File upload</h4><p>Analyze a syllabus, standards document, lab manual, or spreadsheet. Ask for alignment gaps or a summary for students.</p></div>
+<div class="box n"><h4>🗂 Projects</h4><p>Keep course files and instructions in one place so every chat starts informed.</p></div>
+<div class="box n"><h4>⚙️ Custom instructions</h4><p>“I teach first-year HVAC students; write at an 8th–10th grade reading level and use shop examples.”</p></div>
+<div class="box n"><h4>🌐 Web search</h4><p>Current regulations, recent product information, and sources you can verify.</p></div>
+<div class="box n"><h4>🖼 Image input</h4><p>Photograph a wiring diagram, failed part, or whiteboard and ask questions about it.</p></div>
+<div class="box n"><h4>🎙 Voice</h4><p>Practice interviews or customer conversations; talk through ideas while commuting.</p></div>
+<div class="box n"><h4>🧩 Artifacts / canvas</h4><p>Build documents, quizzes, and small interactive web tools side by side with the chat.</p></div>
+<div class="box n"><h4>🧠 Reasoning modes</h4><p>Complex troubleshooting, calculations, and multi-step planning.</p></div></div>`],
+  ["Privacy & FERPA",`<div class="two">
+<div class="box g"><h4>Do</h4><ul>
+<li>Use institution-licensed tools with education data terms</li>
+<li>Remove names, IDs, and other identifiers before pasting student work</li>
+<li>Turn off model training on your data where the setting exists</li>
+<li>Tell students which tools are approved and why</li>
+<li>Keep a record of how AI was used to make course materials</li></ul></div>
+<div class="box w"><h4>Don’t</h4><ul>
+<li>Paste grades, accommodations, or identifiable student work into consumer tools</li>
+<li>Upload copyrighted textbooks or paid content you aren’t licensed to share</li>
+<li>Require students to create accounts on tools that haven’t been vetted</li>
+<li>Assume “private” mode means data isn’t stored</li></ul></div></div>
+<div class="callout w"><b class="ct">Check your local policy</b>FERPA sets the baseline, but your college may have stricter AI and data policies. This module is not legal advice; your compliance office has the final word.</div>`]
+ ],
+ quiz:[
+  ["Halfway through a long chat, the assistant starts ignoring the reading-level instruction you gave at the start. What is the most likely cause?",["The model was updated mid-conversation","The original instruction is losing influence as the context fills","Reading-level instructions are not supported","The assistant is refusing on purpose"],1,"Long threads dilute early instructions. Restate the requirement or start a fresh chat with a summary."],
+  ["You need the current NFPA 70E requirements summarized with sources. Which feature matters most?",["Image generation","Voice mode","Web search with citations","High temperature"],2,"Current standards may post-date the model’s training. Web search with citations lets you verify against the source."],
+  ["Which practice is most consistent with FERPA?",["Pasting a student’s graded essay with name into a free consumer chatbot","Using a licensed tool and removing identifiers before analyzing anonymized work samples","Uploading the class roster to generate personalized emails","Sharing accommodation letters to get teaching suggestions"],1,"De-identify and use institution-approved tools. Identifiable education records don’t belong in unvetted tools."],
+  ["What does a project or workspace give you that a single chat does not?",["Guaranteed accuracy","Persistent reference files and instructions applied to every chat in it","Unlimited context","Automatic citation checking"],1,"Projects keep course context in one place so you don’t re-upload your syllabus and outcomes every time."],
+  ["You want the same quiz-generation output each time for consistency. Which setting helps?",["Higher temperature","Lower temperature","A longer prompt","Voice mode"],1,"Lower temperature makes outputs more consistent. Where you can’t set it directly, ask for a fixed format and give an example."]
+ ],
+ apply:{
+  assign:"<strong>Same task, three models.</strong> Give the same request to two or three assistants — for example, “Create 10 scenario-based practice questions on lockout/tagout for first-year students, with answer explanations.” Score each on accuracy, alignment, reading level, and usefulness, and note which errors you had to catch.",
+  discuss:"Which assistant would you recommend to a colleague in your program, and for what kind of task? Where did all of them struggle?",
+  capstone:"Set up a project or workspace for your capstone course. Add your de-identified syllabus, outcomes, and any industry standards, and write custom instructions describing your students.",
+  journal:"What privacy practice will you change starting this week?"
+ }
+};
+/* ================= MODULE 3 ================= */
+M[3] = {
+ icon:"🧰", title:"Overview of Other AI Tools", short:"Other AI tools",
+ sub:"Beyond chat: image, audio, video, research, coding, and agentic tools for the CTE classroom and workplace",
+ card:"Survey the wider AI toolbox, vet tools before adopting them, and identify the industry AI your students will meet on the job.",
+ stats:["⏱ 3–4 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Categorize AI tools by what they take in and what they produce.",
+  "Evaluate a tool with a vetting scorecard covering privacy, accessibility, accuracy, cost, and support.",
+  "Identify occupation-specific AI tools students will encounter in industry.",
+  "Use source-grounded research assistants and verify the sources they cite.",
+  "Explain what AI agents are and why actions require more oversight than answers.",
+  "Assemble a short, vetted tool list for one course."
+ ],
+ terms:[
+  ["Text-to-Image","Tools that generate images from a written description. Useful for scenario visuals; risky for technical accuracy."],
+  ["Speech-to-Text","Transcription tools that turn audio into text — lecture captions, meeting notes, and interview transcripts."],
+  ["Text-to-Speech","Tools that read text aloud in natural voices. Valuable for accessibility and narrated demonstrations."],
+  ["Voice Cloning","Synthesizing speech in a specific person’s voice. Requires consent and raises fraud and deepfake concerns."],
+  ["AI Video","Tools that generate video from text or create presenter-style videos from a script."],
+  ["Source-Grounded Assistant","A tool that answers only from documents you provide and cites where in them each answer came from."],
+  ["Coding Assistant","AI that writes, explains, and debugs code inside an editor or chat."],
+  ["AI Agent","A system that can plan and take actions — browse, click, send, file — toward a goal, not just answer questions."],
+  ["Deepfake","Realistic synthetic media depicting someone saying or doing something they did not."],
+  ["Accessibility AI","Tools that generate alt text, captions, transcripts, and simplified versions of content."]
+ ],
+ tabs:[
+  ["Tool categories",`<p>Names change quickly; categories don’t. Learn the categories and you can evaluate whatever appears next semester. Tool names below are common examples, not endorsements.</p>
+<div class="tbl-wrap"><table><tr><th>Category</th><th>Examples</th><th>Classroom use</th></tr>
+<tr><td>Research with citations</td><td>Perplexity, Elicit, Consensus</td><td>Finding sources to read and verify</td></tr>
+<tr><td>Source-grounded notebooks</td><td>NotebookLM</td><td>Study guides and audio overviews from your own course documents</td></tr>
+<tr><td>Images & design</td><td>Adobe Firefly, Canva, ChatGPT images</td><td>Scenario illustrations, slide visuals, signage</td></tr>
+<tr><td>Presentations</td><td>Gamma, Copilot in PowerPoint</td><td>First-draft decks you then correct and brand</td></tr>
+<tr><td>Audio & voice</td><td>ElevenLabs, Descript</td><td>Narration, podcast-style reviews, editing recorded demos</td></tr>
+<tr><td>Transcription</td><td>Otter, Microsoft Teams, Zoom AI</td><td>Captions, meeting notes, lecture transcripts</td></tr>
+<tr><td>Video</td><td>Synthesia, Descript, Runway</td><td>Short explainer and safety-briefing videos</td></tr>
+<tr><td>Coding</td><td>GitHub Copilot, Claude Code, Cursor</td><td>Programming courses; building your own interactive tools</td></tr>
+<tr><td>Agents</td><td>Browser and desktop agents</td><td>Multi-step tasks; requires close supervision</td></tr></table></div>`],
+  ["Industry AI",`<h3>The tools on the job site</h3>
+<p>Your students need practice with the AI built into occupational equipment and software, not only chat assistants. Ask your advisory board which of these they use.</p>
+<div class="cols">
+<div class="box n"><h4>Automotive</h4><p>Scan tools with guided diagnostics; ADAS calibration systems.</p></div>
+<div class="box n"><h4>Health sciences</h4><p>Ambient documentation in the EHR; clinical decision support alerts.</p></div>
+<div class="box n"><h4>Manufacturing</h4><p>Vision inspection, predictive maintenance dashboards, cobot programming.</p></div>
+<div class="box n"><h4>Construction</h4><p>Drone surveying, BIM clash detection, AI-based estimating.</p></div>
+<div class="box n"><h4>Business & office</h4><p>Copilot or Gemini in office suites, CRM assistants, AI bookkeeping.</p></div>
+<div class="box n"><h4>IT & cybersecurity</h4><p>AI-enabled security monitoring, help-desk agents, code assistants.</p></div></div>`],
+  ["Vetting a tool",`<h3>Before you adopt — and before students sign up</h3>
+<ol class="steps">
+<li><strong>Purpose.</strong> Does it serve a specific learning outcome better than what you already have?</li>
+<li><strong>Privacy.</strong> What data does it collect? Is it trained on user content? Is there an education agreement?</li>
+<li><strong>Accessibility.</strong> Does it work with screen readers and keyboards? Does it caption?</li>
+<li><strong>Accuracy.</strong> Test it on content you know well. How often is it wrong, and how obviously?</li>
+<li><strong>Cost and equity.</strong> Can every student use it without paying or owning special hardware?</li>
+<li><strong>Durability.</strong> Is the company stable? Can you export your work if it disappears?</li></ol>
+<p>Use the scorecard in the Interact section to rate a tool in about five minutes.</p>`],
+  ["Agents",`<h3>From answers to actions</h3>
+<p>A chatbot gives you text to review. An agent <em>does</em> things: it browses, fills in forms, edits files, sends messages, or runs code. That shift raises the stakes, because mistakes happen in the real world before a person sees them.</p>
+<div class="tbl-wrap"><table><tr><th>Autonomy</th><th>What the AI does</th><th>Human role</th></tr>
+<tr><td>Assist</td><td>Suggests; you act</td><td>Decides and does everything</td></tr>
+<tr><td>Act with approval</td><td>Proposes an action and waits</td><td>Approves each step</td></tr>
+<tr><td>Act, then report</td><td>Acts and shows a log</td><td>Reviews and can undo</td></tr>
+<tr><td>Fully autonomous</td><td>Acts without review</td><td>Sets goals and limits only</td></tr></table></div>
+<div class="callout w"><b class="ct">Rule of thumb</b>The more irreversible or safety-critical the action, the closer the human needs to be. Module 5 develops this idea.</div>`]
+ ],
+ quiz:[
+  ["You want students to create a study guide that draws only on your lab manual and lecture notes, with references to where each answer came from. Which tool type fits best?",["Text-to-image generator","Source-grounded notebook assistant","Voice cloning tool","General chatbot with high temperature"],1,"Source-grounded tools answer from the documents you provide and point to where each answer came from."],
+  ["Which question belongs first on a vetting checklist before asking students to create accounts?",["Does it have a dark mode?","What student data it collects and whether it’s used for training","How many features it has","Whether it’s popular on social media"],1,"Privacy and data use come before convenience, especially when students must sign up."],
+  ["What most distinguishes an AI agent from a chatbot?",["It uses a larger model","It can take actions in other systems, not just generate text","It always has web search","It never makes mistakes"],1,"Agents act — browsing, editing, sending — which is why they need tighter human oversight."],
+  ["An image generator produces a clean diagram of a refrigeration cycle for your slides. What should you do before using it?",["Use it as is — images are reliable","Check every component, label, and flow direction against a trusted source","Lower the resolution","Add a watermark"],1,"Image generators often mislabel parts and invent connections. Technical visuals need SME verification."],
+  ["Why include industry-specific AI tools in a CTE course, not just chat assistants?",["They are cheaper","Students will meet AI embedded in occupational equipment and software and must use it competently","Chat assistants are banned in most workplaces","Accreditors require it"],1,"Workforce readiness means competence with the AI in their field’s actual tools."]
+ ],
+ apply:{
+  assign:"<strong>Vet and pilot.</strong> Use the scorecard to evaluate two non-chat AI tools relevant to your course. Pilot the higher-scoring tool to create one real resource (a narrated demonstration, a source-grounded study guide, a visual), and document what you had to correct.",
+  discuss:"Post your tool’s scorecard result and the resource you made. Would you let students use it? Under what conditions?",
+  capstone:"List the AI tools — chat and non-chat — that your capstone module will use, with one sentence on the purpose of each and your vetting result.",
+  journal:"Which tool category surprised you most, and what is one risk you hadn’t considered?"
+ }
+};
+
+/* ================= MODULE 4 ================= */
+M[4] = {
+ icon:"✍️", title:"Prompt Engineering", short:"Prompting",
+ sub:"Structured techniques for prompts that are reliable, reusable, and teachable",
+ card:"Learn a six-part prompt framework and core techniques, diagnose weak prompts, and build a reusable prompt library for your teaching.",
+ stats:["⏱ 4 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Construct prompts using six building blocks: role, task, context, format, constraints, and examples.",
+  "Apply few-shot, step-by-step, persona, format-enforcement, and prompt-chaining techniques.",
+  "Diagnose weak prompts and revise them systematically.",
+  "Build reusable prompt templates for recurring teaching tasks.",
+  "Teach students a simple, transferable prompting framework."
+ ],
+ terms:[
+  ["Zero-Shot Prompt","A request with no examples. Fine for simple tasks; results vary for complex ones."],
+  ["Few-Shot Prompt","A prompt that includes one or more examples of the output you want, so the model can match the pattern."],
+  ["Role / Persona","Telling the model whose perspective to take: “You are a master electrician mentoring apprentices.”"],
+  ["Step-by-Step Reasoning","Asking the model to work through a problem in steps before answering. Improves calculations and troubleshooting logic."],
+  ["Prompt Chaining","Breaking a large task into a sequence of prompts, where each output feeds the next."],
+  ["Format Specification","Stating exactly how the output should be structured: a table with given columns, JSON, a numbered list, a word limit."],
+  ["Constraints","Boundaries on the output: reading level, length, what to exclude, which sources to use."],
+  ["Delimiters","Markers such as triple quotes or tags that separate your instructions from pasted material."],
+  ["Iterative Refinement","Improving output through targeted follow-up rather than starting over or accepting the first draft."],
+  ["Prompt Template","A reusable prompt with blanks for the parts that change, such as topic, level, or number of items."]
+ ],
+ tabs:[
+  ["The six building blocks",`<p>Most disappointing AI output comes from prompts that leave the model guessing. These six elements remove the guessing. Not every prompt needs all six, but every strong prompt for instructional materials uses most of them.</p>
+<div class="tbl-wrap"><table><tr><th>Block</th><th>Question it answers</th><th>Example</th></tr>
+<tr><td><strong>Role</strong></td><td>Who should the AI be?</td><td>You are an experienced automotive instructor and ASE Master Technician.</td></tr>
+<tr><td><strong>Task</strong></td><td>What exactly should it do?</td><td>Write a diagnostic case study on a charging-system failure.</td></tr>
+<tr><td><strong>Context</strong></td><td>Who is it for, and why?</td><td>For second-semester students who have completed basic electrical; used in a 50-minute lab.</td></tr>
+<tr><td><strong>Format</strong></td><td>What should the output look like?</td><td>Customer complaint, symptoms, three test readings in a table, and five guiding questions.</td></tr>
+<tr><td><strong>Constraints</strong></td><td>What are the limits?</td><td>10th-grade reading level, under 400 words, no brand names, flag any values I should verify.</td></tr>
+<tr><td><strong>Examples</strong></td><td>What does good look like?</td><td>Here is a case study from last semester in the format I like: “…”</td></tr></table></div>`],
+  ["Techniques",`<div class="cols">
+<div class="box n"><h4>Few-shot</h4><p>Paste one or two examples of finished questions in your style. Output immediately matches your voice and difficulty.</p></div>
+<div class="box n"><h4>Step by step</h4><p>“Before writing the answer key, solve each calculation step by step and show your work.” Catches arithmetic errors.</p></div>
+<div class="box n"><h4>Format enforcement</h4><p>“Return a table with exactly these columns: Question | Correct answer | Distractors | Rationale.”</p></div>
+<div class="box n"><h4>Prompt chaining</h4><p>Outcome → outline → lesson → practice questions → rubric. Review each link before moving on.</p></div>
+<div class="box n"><h4>Ask me first</h4><p>“Before you begin, ask me up to five questions about my students and goals.” Turns the AI into an interviewer.</p></div>
+<div class="box n"><h4>Self-critique</h4><p>“Review your draft against the outcome and list three weaknesses, then revise.”</p></div></div>`],
+  ["Iterate like a technician",`<h3>Diagnose, then adjust one variable</h3>
+<p>Treat a weak response the way you would troubleshoot equipment: identify the symptom, find the likely cause, change one thing, and test again.</p>
+<div class="tbl-wrap"><table><tr><th>Symptom</th><th>Likely missing block</th><th>Fix</th></tr>
+<tr><td>Too generic</td><td>Context</td><td>Describe your students, program, and setting</td></tr>
+<tr><td>Wrong level</td><td>Constraints</td><td>Specify reading level, prior knowledge, and length</td></tr>
+<tr><td>Messy structure</td><td>Format</td><td>Specify sections, a table, or a template</td></tr>
+<tr><td>Not your style</td><td>Examples</td><td>Paste a sample of your own work</td></tr>
+<tr><td>Shallow or off-target</td><td>Role and task</td><td>Name the expertise and the precise deliverable</td></tr>
+<tr><td>Confident but wrong</td><td>Verification step</td><td>Ask it to flag uncertain claims; verify yourself (Module 5)</td></tr></table></div>`],
+  ["Teaching students to prompt",`<h3>A framework students can remember</h3>
+<p>Students don’t need jargon; they need a habit. Teach a short version of the building blocks and make them show their prompts.</p>
+<ol class="steps">
+<li><strong>Who?</strong> Give the AI a role related to your field.</li>
+<li><strong>What?</strong> Say exactly what you need.</li>
+<li><strong>Why and for whom?</strong> Add context.</li>
+<li><strong>How?</strong> Describe the format and limits.</li>
+<li><strong>Check.</strong> Verify the answer against a trusted source before using it.</li></ol>
+<div class="callout"><b class="ct">Activity idea</b>Give teams the same weak prompt. Each team improves one building block. Compare outputs side by side and vote on which change mattered most.</div>`]
+ ],
+ quiz:[
+  ["An AI’s quiz questions are accurate but far too advanced for your first-semester students. Which building block most needs strengthening?",["Role","Context and constraints","Examples","Format"],1,"State who the students are, what they already know, and the reading level you need."],
+  ["Which is an example of few-shot prompting?",["“Write 10 quiz questions.”","“You are a nursing instructor.”","Including two finished questions in your style and asking for eight more like them","Asking the model to think step by step"],2,"Few-shot means giving examples of the output you want."],
+  ["You need a lesson outline, then readings, then practice questions, then a rubric. The best approach is…",["One very long prompt asking for everything","Prompt chaining — one step at a time, reviewing each output","Asking for everything at high temperature","Using voice mode"],1,"Chaining keeps each step focused and gives you checkpoints to correct errors before they compound."],
+  ["What is the main purpose of delimiters such as triple quotes around pasted text?",["To make the prompt shorter","To separate instructions from the material the AI should work on","To increase creativity","To enable web search"],1,"Delimiters keep the model from confusing your pasted content with your instructions."],
+  ["A student says, “I asked AI and it told me the answer, so it’s right.” Which step of the student framework are they missing?",["Who?","What?","How?","Check"],3,"Every prompting habit ends with verification against a trusted source."]
+ ],
+ apply:{
+  assign:"<strong>Build a prompt library.</strong> Create five reusable prompt templates for tasks you do every term (for example: case study, practice questions with rationales, lab safety briefing, rubric, parent or employer communication). Test each, revise, and record what you changed.",
+  discuss:"Share your single best template and the before-and-after outputs. Which building block made the biggest difference?",
+  capstone:"Write the prompts you will use to draft your capstone module’s materials, using the prompt builder.",
+  journal:"Which of your old prompting habits will you drop, and which technique will you use most?"
+ }
+};
+/* ================= MODULE 5 ================= */
+M[5] = {
+ icon:"🔍", title:"Human in the Loop & Data Validation", short:"Human in the loop",
+ sub:"Keeping qualified human judgment in charge — and verifying AI output before it reaches students",
+ card:"Place human checkpoints where they matter, recognize the patterns of AI error, and practice verifying content, data, and citations.",
+ stats:["⏱ 3–4 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Explain the human-in-the-loop model and decide where human checkpoints belong in a workflow.",
+  "Recognize common AI error types: fabrication, outdated information, calculation errors, bias, unsafe procedures, and misattribution.",
+  "Apply a verification routine — SIFT, lateral reading, and SME review — to AI-generated content.",
+  "Validate AI-produced data, units, and calculations.",
+  "Match the depth of review to the stakes of the content.",
+  "Design student activities that require verification and documentation of AI use."
+ ],
+ terms:[
+  ["Human in the Loop (HITL)","A workflow in which a qualified person reviews and approves AI output before it is used or acted on."],
+  ["Human on the Loop","A person monitors an AI system and can intervene, but does not approve each output."],
+  ["Automation Bias","The tendency to trust automated output over our own judgment, even when the output is wrong."],
+  ["Fabricated Citation","A reference the AI invented — plausible authors, journal, and year for a paper that doesn’t exist."],
+  ["Lateral Reading","Checking a claim by leaving the source and seeing what other trustworthy sources say about it."],
+  ["SIFT","Stop; Investigate the source; Find better coverage; Trace claims to their origin. A fast verification routine developed by Mike Caulfield."],
+  ["Ground Truth","The verified, authoritative answer — the manufacturer’s spec, the code book, the lab measurement."],
+  ["Data Validation","Checking data for correct ranges, units, formats, and internal consistency before using it."],
+  ["Provenance","The documented origin and history of a piece of content, including whether and how AI was involved."],
+  ["Spot-Checking","Verifying a sample of AI outputs in depth to estimate overall reliability."]
+ ],
+ tabs:[
+  ["The HITL loop",`<p>Human in the loop is not a single review at the end. It is a set of deliberate checkpoints where qualified people make the decisions that matter.</p>
+<ol class="steps">
+<li><strong>Define.</strong> A human sets the goal, outcome, audience, and acceptable sources.</li>
+<li><strong>Generate.</strong> AI drafts content, data, or code.</li>
+<li><strong>Verify.</strong> A subject-matter expert checks facts, values, procedures, and citations against ground truth.</li>
+<li><strong>Revise.</strong> The human corrects, localizes, and adapts the draft to the course and shop.</li>
+<li><strong>Approve.</strong> A named person takes responsibility before students see it.</li>
+<li><strong>Monitor.</strong> Student questions and results reveal remaining errors; fix and document them.</li></ol>
+<div class="callout w"><b class="ct">Non-negotiable</b>Anything involving safety, health, electrical work, chemical handling, dosage, structural loads, or legal compliance requires verification against the authoritative source — every time.</div>`],
+  ["Error patterns",`<div class="tbl-wrap"><table><tr><th>Error type</th><th>What it looks like</th><th>CTE example</th></tr>
+<tr><td>Fabrication</td><td>Invented facts, specs, quotes, or sources</td><td>A torque value or part number that doesn’t exist</td></tr>
+<tr><td>Outdated</td><td>Was true before the knowledge cutoff</td><td>A superseded code edition or refrigerant rule</td></tr>
+<tr><td>Calculation</td><td>Wrong arithmetic, units, or conversions</td><td>Ohm’s law answer off by a factor; psi vs. kPa confusion</td></tr>
+<tr><td>Overgeneralization</td><td>A general rule applied where it doesn’t fit</td><td>Advice that ignores manufacturer-specific procedures</td></tr>
+<tr><td>Bias</td><td>Stereotyped or one-sided content</td><td>Scenarios that always cast nurses as women and welders as men</td></tr>
+<tr><td>Misattribution</td><td>Real information credited to the wrong source</td><td>A real statistic attributed to the wrong agency</td></tr>
+<tr><td>Unsafe omission</td><td>Missing a critical step or warning</td><td>A repair procedure without lockout/tagout</td></tr></table></div>`],
+  ["Verification toolkit",`<div class="cols">
+<div class="box n"><h4>S — Stop</h4><p>Pause before using it. Ask: do I know this to be true? What would happen if it’s wrong?</p></div>
+<div class="box n"><h4>I — Investigate the source</h4><p>Does the cited source exist? Is it authoritative for this claim?</p></div>
+<div class="box n"><h4>F — Find better coverage</h4><p>Read laterally: manufacturer documentation, code books, agency sites, textbooks.</p></div>
+<div class="box n"><h4>T — Trace claims</h4><p>Follow statistics and quotes back to the original publication.</p></div></div>
+<h3>Practical habits</h3><ul>
+<li>Ask the AI to list every factual claim and number it used, then check that list.</li>
+<li>Search each citation by exact title; fabricated papers usually return nothing.</li>
+<li>Recompute every calculation yourself or with a spreadsheet.</li>
+<li>Have a colleague or advisory board member review high-stakes content.</li></ul>`],
+  ["Validating data",`<h3>When AI produces numbers, tables, or analyses</h3>
+<ol class="steps">
+<li><strong>Check ranges.</strong> Are values physically plausible? A 120 V branch circuit drawing 400 A is not.</li>
+<li><strong>Check units.</strong> Consistent throughout? Conversions correct?</li>
+<li><strong>Recompute a sample.</strong> Work several rows by hand or in a spreadsheet.</li>
+<li><strong>Check totals and consistency.</strong> Do parts add up to the whole? Do related values agree?</li>
+<li><strong>Compare to ground truth.</strong> Check against measured data or the manufacturer’s spec sheet.</li>
+<li><strong>Document.</strong> Record what you checked and what you corrected.</li></ol>`]
+ ],
+ quiz:[
+  ["Where does the human checkpoint matter most in an AI-assisted workflow for lab safety procedures?",["Only at the start, when writing the prompt","Verification against the authoritative source before students see it","After the semester ends","It doesn’t matter if the AI is a premium model"],1,"Safety content must be verified against ground truth by a qualified person before use."],
+  ["A colleague trusts an AI-generated wiring table because “it looked professional.” This illustrates…",["Lateral reading","Automation bias","Prompt chaining","Spot-checking"],1,"Automation bias is the pull to trust machine output because it looks authoritative."],
+  ["What is the fastest reliable way to detect a fabricated citation?",["Ask the AI if it’s real","Search for the exact title in a library database or search engine","Check whether the journal name sounds credible","Count the authors"],1,"Fabricated papers usually return nothing when you search the exact title. Asking the AI isn’t verification."],
+  ["Which content needs the deepest review?",["A brainstormed list of icebreaker questions","A study-guide summary of a chapter you wrote","Dosage calculation practice problems for nursing students","Discussion-board prompts"],2,"Review depth should match stakes. Health and safety calculations need full verification."],
+  ["In SIFT, the T stands for…",["Test the AI again","Trace claims to their original source","Trust the top result","Type a better prompt"],1,"Trace statistics, quotes, and claims back to the original publication."]
+ ],
+ apply:{
+  assign:"<strong>Verification audit.</strong> Generate a one-page technical handout for your course with AI. Then audit it: list every factual claim, value, and citation; verify each against ground truth; and submit the handout with your audit log showing what was correct, corrected, or removed.",
+  discuss:"What percentage of claims needed correction? What kinds of errors did you find, and how would you teach students to find them?",
+  capstone:"Add a verification plan to your capstone module: which materials need SME review, what sources you’ll check against, and who will approve them.",
+  journal:"Where in your own practice have you shown automation bias, with AI or other tools?"
+ }
+};
+
+/* ================= MODULE 6 ================= */
+M[6] = {
+ icon:"🛠", title:"Creating Instructional Materials & AI Projects", short:"Materials & projects",
+ sub:"From course outcome to finished, verified materials — and authentic AI projects for your students",
+ card:"Use a repeatable workflow to draft lessons, labs, case studies, and interactive tools, and design student projects that use AI the way your industry does.",
+ stats:["⏱ 4–5 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Use AI to draft outcome-aligned lesson plans, labs, case studies, rubrics, and practice questions.",
+  "Apply a three-perspective workflow — subject-matter expert, instructional designer, designer — to AI-assisted materials.",
+  "Produce accessible materials with alt text, captions, plain language, and UDL options.",
+  "Design student AI projects tied to authentic occupational tasks.",
+  "Build simple interactive content, such as quizzes and simulations, with AI coding help.",
+  "Keep alignment and quality consistent across an AI-assisted module."
+ ],
+ terms:[
+  ["Backward Design","Start with outcomes, then decide on evidence of learning, then plan instruction."],
+  ["Constructive Alignment","Outcomes, activities, and assessments all target the same skills at the same level."],
+  ["UDL","Universal Design for Learning: multiple means of engagement, representation, and action and expression."],
+  ["Scenario-Based Learning","Instruction built around realistic workplace situations that students must analyze or resolve."],
+  ["Three-Perspective Workflow","Reviewing AI drafts in turn as the subject-matter expert (accuracy), the instructional designer (alignment), and the designer (clarity and accessibility)."],
+  ["WCAG","Web Content Accessibility Guidelines, the standard for accessible digital content."],
+  ["Alt Text","A text description of an image that conveys its meaning to people using screen readers."],
+  ["Single-File Interactive","A self-contained HTML page — quiz, flashcards, simulator — that runs in any browser with no installation."],
+  ["Project-Based Learning","Students learn by completing an extended, authentic project that produces a real product."],
+  ["Industry-Validated Task","A project or assessment reviewed by employers to confirm it reflects real work."]
+ ],
+ tabs:[
+  ["The workflow",`<ol class="steps">
+<li><strong>Start from the outcome.</strong> Paste the measurable outcome and industry standard. Everything follows from it.</li>
+<li><strong>Draft with structured prompts.</strong> Use your Module 4 templates to generate a first draft.</li>
+<li><strong>Review as the expert.</strong> Verify every fact, value, and procedure (Module 5).</li>
+<li><strong>Review as the designer of learning.</strong> Check alignment, sequencing, practice, and feedback.</li>
+<li><strong>Review for access.</strong> Check reading level, alt text, captions, contrast, and keyboard use.</li>
+<li><strong>Localize.</strong> Add your shop’s equipment, procedures, photos, and employer examples.</li>
+<li><strong>Pilot and revise.</strong> Watch where students struggle and refine.</li></ol>
+<div class="callout"><b class="ct">Time budget</b>Expect AI to save time on drafting, not on judgment. A realistic split is about 20% generating and 80% reviewing, localizing, and improving.</div>`],
+  ["What AI can draft",`<div class="tbl-wrap"><table><tr><th>Material</th><th>Prompt starter</th><th>Review focus</th></tr>
+<tr><td>Lesson plan</td><td>“Create a 50-minute lesson on [topic] for [students] aligned to [outcome], with an opener, demo, guided practice, and exit ticket.”</td><td>Pacing, realistic shop logistics</td></tr>
+<tr><td>Lab or job sheet</td><td>“Write a lab sheet for [task] with tools, PPE, numbered steps, checkpoints, and reflection questions.”</td><td>Safety steps, equipment accuracy</td></tr>
+<tr><td>Case study</td><td>“Write a workplace case in which a [role] faces [problem], with data to analyze and decision questions.”</td><td>Realism, bias in characters</td></tr>
+<tr><td>Practice questions</td><td>“Write 10 scenario-based questions with plausible distractors and rationales.”</td><td>Correct keys, one defensible answer</td></tr>
+<tr><td>Rubric</td><td>“Create an analytic rubric with four levels for [task], using observable behaviors.”</td><td>Measurable, aligned criteria</td></tr>
+<tr><td>Accessible versions</td><td>“Rewrite at a 7th-grade level, keep technical terms, add a glossary.”</td><td>No loss of accuracy</td></tr>
+<tr><td>Interactive tool</td><td>“Build a single-file HTML flashcard set and quiz on [topic] with immediate feedback.”</td><td>Content accuracy, accessibility</td></tr></table></div>`],
+  ["Student AI projects",`<p>The best student AI projects mirror how AI is actually used in the occupation. Aim for three levels of engagement over a program:</p>
+<div class="cols">
+<div class="box n"><h4>Use</h4><p>Students use AI tools to complete a realistic task and document their process.</p></div>
+<div class="box n"><h4>Evaluate</h4><p>Students test AI output against professional standards and report errors and risks.</p></div>
+<div class="box n"><h4>Create</h4><p>Students build or configure an AI-enabled solution for a workplace problem.</p></div></div>
+<p>Use the project idea generator in the Interact section to get starting points for your program.</p>`],
+  ["Building interactive tools",`<h3>You can build what you used to buy</h3>
+<p>Chat assistants with coding and artifact features can produce working single-file web tools: flashcards, drag-and-drop matching, calculators, troubleshooting simulators, and practice exams. These run in any browser and can be hosted free on GitHub Pages or in your LMS.</p>
+<ol class="steps">
+<li><strong>Describe the learning goal</strong> before the features.</li>
+<li><strong>Specify the content</strong> or paste it, so the AI isn’t inventing it.</li>
+<li><strong>Specify the design</strong>: colors, fonts, light and dark mode, mobile use, accessibility.</li>
+<li><strong>Test like a student.</strong> Click everything, try wrong answers, use only the keyboard.</li>
+<li><strong>Iterate</strong> with specific bug reports: “When I select B on question 3, the feedback shows for question 2.”</li></ol>`]
+ ],
+ quiz:[
+  ["What should come first when using AI to create a new lesson?",["Choosing a slide template","The measurable outcome the lesson must achieve","Generating images","Writing the quiz"],1,"Backward design starts with the outcome; AI drafts are only useful when aligned to it."],
+  ["In the three-perspective review, the subject-matter expert pass focuses on…",["Color contrast","Technical accuracy of facts, values, and procedures","Pacing of activities","Font choices"],1,"The expert pass verifies accuracy; the other passes check alignment and accessibility."],
+  ["Which student project is at the “Evaluate” level?",["Students use AI to draft a customer estimate","Students compare AI-generated repair procedures to the service manual and report discrepancies","Students build a chatbot for the shop","Students watch a video about AI"],1,"Evaluate-level projects test AI output against professional standards."],
+  ["A realistic expectation of AI-assisted materials development is…",["AI does everything; faculty publish","Most time shifts from drafting to reviewing, localizing, and improving","It takes longer than writing from scratch every time","Review is optional for low-stakes content only"],1,"AI accelerates drafting. Your expertise goes into review and adaptation."],
+  ["Before publishing an AI-built interactive quiz, the most important test is…",["Checking that the colors match your brand","Working through it as a student, including wrong answers and keyboard-only use","Making sure it loads quickly","Adding more questions"],1,"Test the learner experience and accessibility, not just the appearance."]
+ ],
+ apply:{
+  assign:"<strong>Build three materials.</strong> Using the workflow, create three materials for your capstone module — for example, a lesson plan, a lab sheet, and one interactive tool or case study. Submit each with a brief log of the prompts you used and what you changed in review.",
+  discuss:"Share your interactive tool or case study. Ask a colleague from a different program to try it and give feedback.",
+  capstone:"Design one student AI project for your module at the Use, Evaluate, or Create level, including the deliverable and how it will be assessed.",
+  journal:"What did you change most often in AI drafts? What does that tell you about your expertise?"
+ }
+};
+/* ================= MODULE 7 ================= */
+M[7] = {
+ icon:"📊", title:"AI Assessment Scale V2", short:"Assessment (AIAS)",
+ sub:"Designing assessments for an AI-present world with the revised AI Assessment Scale",
+ card:"Apply the five levels of the AI Assessment Scale (Version 2), redesign an assessment, and communicate AI expectations clearly to students.",
+ stats:["⏱ 4 hours","📋 4 topics","🧪 3 interactive labs","✅ 5-question check"],
+ obj:[
+  "Describe the five levels of the AI Assessment Scale (AIAS) Version 2 and what changed from the original.",
+  "Explain why AI detectors are unreliable and why only supervised settings can secure a “No AI” assessment.",
+  "Select an appropriate AIAS level for an assessment based on its outcomes.",
+  "Redesign an existing assessment for an AI-present world.",
+  "Collect process evidence that shows student learning, not just a final product.",
+  "Use AI to support feedback and grading while keeping human judgment in charge."
+ ],
+ terms:[
+  ["AI Assessment Scale (AIAS)","A five-level framework (Perkins, Furze, Roe, and MacVaugh) for deciding and communicating how AI may be used in an assessment. Version 2 was released in 2024."],
+  ["Level 1 — No AI","Completed without AI, in a supervised setting that relies on students’ own knowledge and skills."],
+  ["Level 2 — AI Planning","AI may be used for brainstorming, outlining, and initial research; the final work shows how the student developed those ideas."],
+  ["Level 3 — AI Collaboration","AI may help with drafting and feedback; students critically evaluate and modify AI suggestions and show their understanding."],
+  ["Level 4 — Full AI","AI may be used for any part of the task, with the student directing the AI to meet the assessment goals."],
+  ["Level 5 — AI Exploration","AI is used creatively to solve problems or generate new insights; may be co-designed by students and instructor."],
+  ["Secure Assessment","An assessment in a supervised setting — practical demonstration, in-class work, oral exam — where AI use can actually be controlled."],
+  ["AI Detector","Software claiming to identify AI-written text. Error rates are high, and non-native English writers are disproportionately flagged."],
+  ["Process Evidence","Drafts, prompt logs, reflections, version history, and checkpoints showing how work was produced."],
+  ["Authentic Assessment","An assessment that mirrors real professional tasks and conditions."]
+ ],
+ tabs:[
+  ["What changed in V2",`<p>The original AI Assessment Scale (2023) gave educators a shared language for AI permissions. The revised version (2024) kept five levels but reframed them based on classroom experience.</p>
+<div class="cols">
+<div class="box n"><h4>Not a ladder</h4><p>The levels are not a hierarchy of better or worse. Each is a design choice matched to what you need to assess.</p></div>
+<div class="box n"><h4>Honest about enforcement</h4><p>Outside supervised settings, you cannot reliably prevent AI use. Only Level 1 can truly restrict AI, and only when it is supervised.</p></div>
+<div class="box n"><h4>From rules to design</h4><p>The emphasis shifts from policing permission to designing assessments where the evidence of learning is valid at the chosen level.</p></div>
+<div class="box n"><h4>New Level 5</h4><p>The top level became AI Exploration — creative, novel uses of AI, sometimes co-designed with students.</p></div></div>
+<div class="callout w"><b class="ct">Read the source</b>Look up Perkins, Furze, Roe, and MacVaugh’s work on the AI Assessment Scale and the AIAS website for the authors’ full descriptions and visuals. The descriptions here are a faculty-training summary; check them against the original.</div>`],
+  ["Why detection fails",`<h3>Detection is not a strategy</h3>
+<ul>
+<li>AI detectors produce false positives, which means students can be accused of misconduct they didn’t commit.</li>
+<li>Research has found detectors disproportionately flag writing by non-native English speakers.</li>
+<li>Light editing or paraphrasing tools defeat most detectors.</li>
+<li>A detector score is not evidence on its own. A conversation with the student about their work is far more informative.</li></ul>
+<div class="callout"><b class="ct">CTE advantage</b>Career and technical programs already assess performance: a weld, a diagnosis, a patient interaction, a configured network. Hands-on demonstration is naturally secure and authentic. Lean into it.</div>`],
+  ["Levels in CTE",`<div class="tbl-wrap"><table><tr><th>Level</th><th>Automotive</th><th>Nursing / allied health</th><th>Business / IT</th></tr>
+<tr><td><strong>1 No AI</strong></td><td>Practical diagnosis on a live vehicle with instructor observation</td><td>Skills check-off; supervised dosage calculation exam</td><td>Proctored configuration lab</td></tr>
+<tr><td><strong>2 Planning</strong></td><td>AI helps plan a diagnostic strategy; student performs and documents tests</td><td>AI helps outline a care-plan approach; student writes the plan</td><td>AI brainstorms marketing angles; student writes the plan</td></tr>
+<tr><td><strong>3 Collaboration</strong></td><td>Student drafts a customer repair explanation with AI, then corrects it against the service manual</td><td>Student uses AI to draft patient education, then verifies and adapts it</td><td>Student and AI co-write a script; student debugs and explains it</td></tr>
+<tr><td><strong>4 Full AI</strong></td><td>Student directs AI to produce a shop-efficiency analysis and defends recommendations</td><td>Student directs AI to compile a literature summary, verifying every source</td><td>Student directs AI to build a dashboard and presents insights</td></tr>
+<tr><td><strong>5 Exploration</strong></td><td>Student builds an AI-assisted diagnostic decision aid and tests it</td><td>Student evaluates an AI documentation tool for clinical risk</td><td>Student prototypes an AI help-desk agent</td></tr></table></div>`],
+  ["Process evidence & AI grading",`<h3>Assess the process, not just the product</h3>
+<div class="cols">
+<div class="box g"><h4>Collect</h4><ul><li>Prompt and response logs</li><li>Drafts or version history</li><li>Verification notes</li><li>Short reflections on AI use</li><li>Oral check-ins or demonstrations</li></ul></div>
+<div class="box n"><h4>AI can help you</h4><ul><li>Draft feedback comments from your rubric</li><li>Spot common misconceptions across a class</li><li>Generate differentiated practice</li></ul></div>
+<div class="box w"><h4>Keep for humans</h4><ul><li>Final grades and pass/fail decisions</li><li>Academic integrity judgments</li><li>Anything involving identifiable student data in unapproved tools</li></ul></div></div>`]
+ ],
+ quiz:[
+  ["According to the revised AIAS, which level can restrict AI use reliably?",["Level 1, when completed in a supervised setting","Level 2, if students sign a pledge","Level 3, with an AI detector","Any level, with a clear syllabus statement"],0,"Only supervised Level 1 assessments can practically prevent AI use."],
+  ["A student uses AI to brainstorm and outline, then writes the final report independently and explains how ideas developed. Which level?",["Level 1 No AI","Level 2 AI Planning","Level 4 Full AI","Level 5 AI Exploration"],1,"Planning-stage AI use with the student producing the final work is Level 2."],
+  ["Why shouldn’t an AI detector score alone be used to sanction a student?",["Detectors are expensive","Detectors have significant error rates and can disproportionately flag non-native English writers","Detectors only work on code","Students can request a refund"],1,"False positives and bias make detector scores unreliable evidence."],
+  ["In V2, the five levels are best understood as…",["A ladder where higher is better","Design choices matched to what the assessment needs to show","Punishment tiers","Only for writing courses"],1,"The levels are not a hierarchy; each is chosen for the learning evidence required."],
+  ["Which is the strongest process evidence for a Level 3 assignment?",["The final submission only","Prompt logs, the AI draft, the student’s revisions, and a note on what was verified and why","A detector report","The student’s grade on the previous assignment"],1,"Level 3 asks students to critically evaluate and modify AI output, so collect evidence of that."]
+ ],
+ apply:{
+  assign:"<strong>Assessment redesign.</strong> Choose one existing assessment from your course. Assign it an AIAS level based on the outcome, redesign it using the redesigner tool, and write the student-facing instructions, including what AI use is expected and what process evidence to submit.",
+  discuss:"Post your before-and-after assessment. Did the level you chose change what the assessment measures? Ask a peer to try to “break” it.",
+  capstone:"Assign an AIAS level to every assessment in your capstone module, and include the student-facing AI statement for each.",
+  journal:"Which of your current assessments is most vulnerable to AI, and what does that reveal about what it actually measures?"
+ }
+};
+
+/* ================= MODULE 8 ================= */
+M[8] = {
+ icon:"⚖️", title:"Ethics", short:"Ethics",
+ sub:"Modeling and teaching responsible, transparent, and equitable use of AI",
+ card:"Work through realistic ethical dilemmas, write your course AI policy, and plan how you will teach students to use AI ethically in their occupation.",
+ stats:["⏱ 4 hours","📋 4 topics","🧪 2 interactive labs","✅ 5-question check"],
+ obj:[
+  "Identify core ethical issues in AI: bias, privacy, intellectual property, integrity, transparency, equity of access, environmental impact, and workforce effects.",
+  "Apply FERPA and institutional policy to classroom AI decisions.",
+  "Analyze ethical dilemmas with a structured decision framework.",
+  "Write a clear course AI policy with disclosure expectations.",
+  "Design lessons that teach students the ethical use of AI in their occupation.",
+  "Model transparent AI use in your own teaching."
+ ],
+ terms:[
+  ["Algorithmic Bias","Systematic unfairness in AI output, often inherited from skewed or incomplete training data."],
+  ["Transparency / Disclosure","Being open about when and how AI was used to create work, by faculty and by students."],
+  ["FERPA","The U.S. Family Educational Rights and Privacy Act, which protects the privacy of student education records."],
+  ["Intellectual Property","Legal rights over creative and technical work. AI raises unsettled questions about training data and ownership of outputs."],
+  ["Academic Integrity","Honest representation of one’s own work. With AI, integrity depends on clear expectations and disclosure."],
+  ["Equity of Access","Whether every student can use the same tools, regardless of cost, device, connectivity, or disability."],
+  ["Accountability","A named human remains responsible for decisions made with AI assistance."],
+  ["Explainability","The degree to which people can understand why an AI system produced a particular output."],
+  ["Environmental Footprint","The energy and water used to train and run AI models."],
+  ["Deepfake","Synthetic media that realistically depicts a person saying or doing something they did not."]
+ ],
+ tabs:[
+  ["Core issues",`<div class="cols">
+<div class="box n"><h4>⚖️ Bias & fairness</h4><p>AI can reproduce stereotypes in scenarios, images, and decisions. Check who appears in AI-generated examples and how.</p></div>
+<div class="box n"><h4>🔒 Privacy</h4><p>Student records, health information, and customer data don’t belong in unapproved tools.</p></div>
+<div class="box n"><h4>©️ Intellectual property</h4><p>Copyright rules for AI training and outputs are still being decided in courts. Don’t upload what you aren’t licensed to share; credit sources.</p></div>
+<div class="box n"><h4>🎓 Academic integrity</h4><p>Clear expectations prevent most problems. Students need to know what is allowed and how to disclose it.</p></div>
+<div class="box n"><h4>🌍 Equity of access</h4><p>Paid tiers, devices, and connectivity vary. Require only tools all students can use.</p></div>
+<div class="box n"><h4>🔋 Environmental impact</h4><p>AI uses significant energy and water. Use it where it adds real value.</p></div>
+<div class="box n"><h4>👷 Workforce impact</h4><p>AI changes tasks within jobs. Prepare students to adapt, not to fear or ignore it.</p></div>
+<div class="box n"><h4>🧭 Accountability</h4><p>AI cannot be responsible. A person signs off — on grades, on repairs, on patient care.</p></div></div>`],
+  ["Decision framework",`<p>When a situation isn’t covered by policy, work through these steps — alone, with colleagues, or with students as a class activity.</p>
+<ol class="steps">
+<li><strong>Name the decision.</strong> What exactly is being decided, and by whom?</li>
+<li><strong>Identify stakeholders.</strong> Students, employers, patients or customers, colleagues, the public.</li>
+<li><strong>Check the rules.</strong> Law (FERPA, HIPAA, copyright), licensing and accreditation standards, institutional policy.</li>
+<li><strong>Weigh benefits and harms.</strong> Who gains, who could be hurt, and how badly? Is the harm reversible?</li>
+<li><strong>Consider alternatives.</strong> Is there a way to get the benefit with less risk?</li>
+<li><strong>Decide and disclose.</strong> Act, be transparent about AI’s role, and document the reasoning.</li></ol>`],
+  ["Ethics on the job",`<div class="tbl-wrap"><table><tr><th>Field</th><th>Ethical question students should be ready for</th></tr>
+<tr><td>Health sciences</td><td>Can I paste patient information into an AI tool to help with charting? (HIPAA, employer policy)</td></tr>
+<tr><td>Automotive</td><td>Who is responsible if I follow an AI-suggested repair that causes a failure?</td></tr>
+<tr><td>Construction & drones</td><td>What consent is needed when AI analyzes images of people and property?</td></tr>
+<tr><td>Cosmetology & design</td><td>Can I show a client an AI-edited image of a result I can’t actually achieve?</td></tr>
+<tr><td>Business</td><td>Should customers be told they are talking to an AI agent?</td></tr>
+<tr><td>IT & cybersecurity</td><td>Is it acceptable to use AI to test systems I don’t have written permission to test?</td></tr>
+<tr><td>Early childhood</td><td>Should AI tools collect data on young children’s learning?</td></tr></table></div>`],
+  ["Teaching ethics",`<h3>Make ethics a practice, not a lecture</h3>
+<div class="cols">
+<div class="box g"><h4>Disclosure habit</h4><p>Require a short AI-use statement on assignments: tool, purpose, what was changed, what was verified.</p></div>
+<div class="box g"><h4>Bias hunt</h4><p>Students generate images or scenarios for their occupation and analyze who is represented and how.</p></div>
+<div class="box g"><h4>Dilemma debates</h4><p>Use the scenarios in the Interact section as structured debates with the decision framework.</p></div>
+<div class="box g"><h4>Employer panel</h4><p>Ask advisory board members how their workplaces govern AI use.</p></div>
+<div class="box g"><h4>Model it</h4><p>Disclose your own AI use in course materials. Students follow what you do.</p></div></div>`]
+ ],
+ quiz:[
+  ["A faculty member wants AI to write individualized feedback emails, including each student’s grade and accommodations, using a free consumer chatbot. The primary concern is…",["Email length","FERPA and privacy of education records","The model’s writing style","Cost"],1,"Grades and accommodations are protected education records; they don’t belong in unapproved tools."],
+  ["Which practice best supports academic integrity with AI?",["Banning AI without explanation","Clear expectations by assignment plus a required disclosure statement","Relying on AI detectors","Allowing all AI use without discussion"],1,"Clear, assignment-level expectations and disclosure prevent most integrity problems."],
+  ["AI-generated scenario images for your program show only one gender in a particular role. This is an example of…",["Hallucination","Algorithmic bias","Data retention","Prompt chaining"],1,"Skewed representation in outputs reflects bias inherited from training data."],
+  ["In the decision framework, which step comes right after identifying stakeholders?",["Decide and disclose","Check the rules: law, standards, and policy","Consider alternatives","Name the decision"],1,"After naming the decision and stakeholders, check what law and policy require."],
+  ["Requiring students to use a paid AI tier for an assignment primarily raises a concern about…",["Explainability","Equity of access","Environmental footprint","Deepfakes"],1,"Not all students can afford paid tools; required tools must be accessible to everyone."]
+ ],
+ apply:{
+  assign:"<strong>Course AI policy.</strong> Use the policy builder to draft your course AI policy, then revise it in your own voice. Include your default AIAS level, disclosure requirements, privacy expectations, and how violations will be handled, consistent with your college’s policy.",
+  discuss:"Post your policy. Respond to two colleagues: would a first-semester student understand exactly what is allowed?",
+  capstone:"Finalize and submit your capstone: the AI-integrated module, verification plan, AIAS-labeled assessments, student AI project, and course AI policy.",
+  journal:"What will you tell students on the first day about AI, and how will you model it?"
+ }
+};
+/* ================= INTERACTIVES ================= */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = (r, s) => r.querySelector(s), $$ = (r, s) => [...r.querySelectorAll(s)];
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",1800);}
+function copyText(txt){
+  const done=()=>toast("Copied to clipboard");
+  const fallback=()=>{const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){toast("Select the text and copy it manually");}ta.remove();};
+  try{navigator.clipboard.writeText(txt).then(done,fallback);}catch(e){fallback();}
+}
+/* generic single-choice sorter: items [{q, a(index), why}], choices [labels] */
+function sorterHTML(items, choices){
+  return items.map((it,i)=>`<div class="q" data-i="${i}"><div class="stem">${it.q}</div><div class="btnrow">${choices.map((c,j)=>`<button class="btn" data-j="${j}">${c}</button>`).join("")}</div><div class="fb-msg"></div></div>`).join("")+`<div class="score" aria-live="polite"></div>`;
+}
+function sorterInit(root, items, choices){
+  let right=0, done=0;
+  $$(root,".q").forEach(qe=>{
+    const it=items[+qe.dataset.i];
+    $$(qe,".btn").forEach(b=>b.addEventListener("click",()=>{
+      if(qe.dataset.done) return; qe.dataset.done=1; done++;
+      const j=+b.dataset.j, ok = j===it.a;
+      if(ok) right++;
+      b.classList.add(ok?"right":"wrong");
+      if(!ok) $$(qe,".btn")[it.a].classList.add("right");
+      const m=$(qe,".fb-msg"); m.className="fb-msg show "+(ok?"ok":"no");
+      m.innerHTML=`<strong>${ok?"Correct.":"Not quite — it’s “"+choices[it.a]+".”"}</strong> ${it.why}`;
+      if(done===items.length) $(root,".score").textContent=`You sorted ${right} of ${items.length} correctly.`;
+    }));
+  });
+}
+
+const LABS = {};
+
+/* ---------- M1 ---------- */
+LABS[1] = [
+{ icon:"🎯", title:"AI nesting explorer", desc:"Select each ring to see what it means and where you meet it.",
+  html:()=>`<div class="two"><div class="rings"><div style="position:relative;width:300px;height:300px;max-width:100%">
+  ${[["AI",300,"#0047AB"],["Machine learning",235,"#1a5fc4"],["Deep learning",170,"#00a86b"],["Generative AI",105,"#00744a"]].map((r,i)=>`<button class="ring" data-r="${i}" aria-label="${r[0]}" style="position:absolute;left:${(300-r[1])/2}px;bottom:0;width:${r[1]}px;height:${r[1]}px;background:${r[2]}">${r[0]}</button>`).join("")}
+  </div></div><div class="out" id="ringOut" aria-live="polite">Select a ring to begin. Each ring sits inside the one around it.</div></div>`,
+  init:root=>{
+    const info=[
+     ["Artificial intelligence","The whole field: any technique that lets computers perform tasks that normally take human intelligence — including old-fashioned rule-based systems.","Example: a rule-based troubleshooting flowchart built into older diagnostic equipment."],
+     ["Machine learning","Systems that learn patterns from data instead of following hand-written rules.","Example: a predictive-maintenance model that learns which vibration patterns come before a motor failure."],
+     ["Deep learning","Machine learning with many-layered neural networks, especially good with images, audio, and language.","Example: a camera system that spots weld porosity on a production line."],
+     ["Generative AI","Deep learning models that create new text, images, audio, video, or code.","Example: ChatGPT or Claude drafting a lab sheet; an image tool creating a scenario illustration."]];
+    $$(root,".ring").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const d=info[+b.dataset.r];
+      $(root,"#ringOut").innerHTML=`<strong style="font-size:1.1rem">${d[0]}</strong>\n${d[1]}\n\n${d[2]}`;}));
+  }},
+{ icon:"🔮", title:"Next-word predictor", desc:"See how an LLM chooses its next token, and how temperature changes the choice.",
+  html:()=>`<label class="f" for="nwP">Choose a sentence</label><select id="nwP">
+   <option value="0">The technician replaced the worn brake …</option>
+   <option value="1">Before servicing the unit, always disconnect the …</option>
+   <option value="2">The patient’s blood pressure was …</option></select>
+   <label class="f" for="nwT">Temperature: <span id="nwTv">0.7</span></label><input type="range" id="nwT" min="0.1" max="2" step="0.1" value="0.7">
+   <div id="nwBars" style="margin:1rem 0"></div>
+   <div class="btnrow"><button class="btn pri" id="nwGo">Generate next word</button><button class="btn" id="nwGo10">Generate 10 times</button></div>
+   <div class="out" id="nwOut" aria-live="polite">Press “Generate” to sample a word.</div>`,
+  init:root=>{
+    const P=[{w:["pads","rotors","lines","caliper","shoes","bananas"],l:[3.2,2.3,1.2,1.4,1.0,-2.5]},
+             {w:["power","battery","breaker","refrigerant","customer","ladder"],l:[3.0,1.6,1.9,0.6,-1.5,-2.2]},
+             {w:["elevated","normal","stable","120/80","low","purple"],l:[2.6,2.3,1.6,1.4,1.2,-3]}];
+    const sel=$(root,"#nwP"),T=$(root,"#nwT");
+    const probs=()=>{const p=P[+sel.value],t=+T.value,e=p.l.map(x=>Math.exp(x/t)),s=e.reduce((a,b)=>a+b,0);return e.map(x=>x/s);};
+    const draw=(pick)=>{const p=P[+sel.value],pr=probs();
+      $(root,"#nwBars").innerHTML=p.w.map((w,i)=>`<div class="bar"><span class="w">${w}</span><div class="track"><div class="fill ${pick===i?"pick":""}" style="width:${(pr[i]*100).toFixed(1)}%"></div></div><span class="pct">${(pr[i]*100).toFixed(0)}%</span></div>`).join("");};
+    const sample=()=>{const pr=probs();let r=Math.random(),i=0;for(;i<pr.length-1;i++){r-=pr[i];if(r<=0)break;}return i;};
+    T.addEventListener("input",()=>{$(root,"#nwTv").textContent=(+T.value).toFixed(1);draw();});
+    sel.addEventListener("change",()=>{draw();$(root,"#nwOut").textContent="Press “Generate” to sample a word.";});
+    $(root,"#nwGo").addEventListener("click",()=>{const i=sample();draw(i);$(root,"#nwOut").innerHTML=`The model picked <strong>“${P[+sel.value].w[i]}.”</strong> It didn’t look anything up — it sampled from these probabilities.`;});
+    $(root,"#nwGo10").addEventListener("click",()=>{const c={};for(let k=0;k<10;k++){const w=P[+sel.value].w[sample()];c[w]=(c[w]||0)+1;}draw();
+      $(root,"#nwOut").innerHTML=`Ten runs: ${Object.entries(c).map(([w,n])=>`<strong>${w}</strong> ×${n}`).join(", ")}.\n\n${+T.value>1.2?"At high temperature, unlikely — even absurd — words start appearing. That is one reason creative settings can produce errors.":"At low temperature, the most likely word wins almost every time. Output is consistent, but not necessarily correct."}`;});
+    draw();
+  }},
+{ icon:"🗂", title:"Is it AI?", desc:"Sort each technology. Students often get these wrong in surprising ways.",
+  html:()=>sorterHTML(LAB_ISAI,["AI","Not AI","Depends"]),
+  init:root=>sorterInit(root,LAB_ISAI,["AI","Not AI","Depends"]) }
+];
+const LAB_ISAI=[
+ {q:"A calculator computing a voltage drop",a:1,why:"It follows fixed arithmetic rules; it doesn’t learn or infer."},
+ {q:"Your phone’s keyboard suggesting the next word",a:0,why:"Predictive text uses a language model trained on typing data."},
+ {q:"A thermostat that turns on heat below 68°F",a:1,why:"A simple set-point rule is control logic, not AI."},
+ {q:"A smart thermostat that learns your schedule and adjusts itself",a:0,why:"It learns patterns from your behavior — machine learning."},
+ {q:"A scan tool that suggests the most likely fault from symptoms and codes",a:2,why:"Some use fixed lookup tables; newer ones use machine learning on repair data. Ask the vendor how it works."},
+ {q:"A car’s automatic emergency braking",a:0,why:"Camera and radar perception typically uses deep learning to detect vehicles and pedestrians."},
+ {q:"A spreadsheet macro that formats a parts list",a:1,why:"It runs fixed instructions someone wrote."},
+ {q:"A chatbot on a parts supplier’s website",a:2,why:"Older chatbots follow scripted menus; newer ones use LLMs. The difference matters for accuracy."}
+];
+
+/* ---------- M2 ---------- */
+const CTX_MSGS=[["u","Instruction: write everything at an 8th-grade reading level for HVAC students.",120],["a","Understood. I’ll keep language clear and use shop examples.",60],["u","Uploaded: 40-page refrigeration chapter.",3200],["a","Summary of the chapter’s key sections.",700],["u","Make 10 practice questions on superheat.",80],["a","Ten practice questions with answers.",900],["u","Now a lab sheet on charging a system.",70],["a","Lab sheet with steps and PPE.",1100],["u","Now a customer-service role-play.",60],["a","Role-play script.",1000],["u","Now a quiz on the role-play.",50],["a","Quiz…",800]];
+const FEAT=[
+ {q:"You need a summary of this year’s changes to an industry standard, with sources.",a:0,why:"Current information plus citations you can verify points to web search."},
+ {q:"You want every chat about your welding course to start with your syllabus and outcomes.",a:1,why:"A project or workspace keeps reference files and instructions available to every chat."},
+ {q:"A student shows you a photo of a scorched relay and asks what failed.",a:2,why:"Image input lets the assistant analyze the photo — then you verify."},
+ {q:"You want to check a 60-page program review for alignment gaps.",a:3,why:"File upload and analysis handles long documents."},
+ {q:"You want students to rehearse a job interview out loud.",a:4,why:"Voice mode supports spoken practice."},
+ {q:"You need a multi-step load calculation with the work shown.",a:5,why:"Reasoning modes work step by step; still recompute key values yourself."}];
+const FEATC=["Web search","Project","Image input","File upload","Voice","Reasoning mode"];
+LABS[2]=[
+{ icon:"🪟", title:"Context window visualizer", desc:"Shrink the window and watch the earliest messages — including your key instruction — fall out of view.",
+  html:()=>`<label class="f" for="cwS">Context window: <span id="cwV"></span> tokens</label><input type="range" id="cwS" min="1000" max="9000" step="250" value="9000">
+  <div class="ctx-msgs" id="cwM"></div><div class="fb-msg info show" id="cwN" aria-live="polite"></div>`,
+  init:root=>{const s=$(root,"#cwS");const draw=()=>{const lim=+s.value;$(root,"#cwV").textContent=lim.toLocaleString();let used=0;const inWin=new Array(CTX_MSGS.length).fill(false);
+    for(let i=CTX_MSGS.length-1;i>=0;i--){used+=CTX_MSGS[i][2];if(used<=lim)inWin[i]=true;}
+    $(root,"#cwM").innerHTML=CTX_MSGS.map((m,i)=>`<div class="ctx-msg ${m[0]} ${inWin[i]?"":"out"}">${m[0]==="u"?"You":"AI"}: ${m[1]} <span class="mini">(${m[2]} tokens)</span></div>`).join("");
+    const total=CTX_MSGS.reduce((a,m)=>a+m[2],0);
+    $(root,"#cwN").innerHTML=!inWin[0]?`<strong>Your reading-level instruction is no longer in the window.</strong> The AI can’t see it anymore, so later outputs may drift. Fix: restate key instructions, put them in custom instructions or a project, or start a new chat with a summary.`:`The whole conversation (${total.toLocaleString()} tokens) fits. Real windows are far larger, but long files and long chats still crowd out early instructions.`;};
+    s.addEventListener("input",draw);draw();}},
+{ icon:"🧭", title:"Pick the right feature", desc:"Match each teaching task to the assistant feature that fits best.",
+  html:()=>sorterHTML(FEAT,FEATC), init:root=>sorterInit(root,FEAT,FEATC) }
+];
+
+/* ---------- M3 ---------- */
+const TOOLS=[
+ ["research","Research with citations","Perplexity, Elicit","Finding current sources on an industry topic","Open and read every cited source"],
+ ["research","Source-grounded notebook","NotebookLM","Study guides and audio reviews from your lab manual","Only as good as the documents you add"],
+ ["media","Image generation","Adobe Firefly, ChatGPT images","Scenario illustrations and signage","Technical details are often wrong"],
+ ["media","Presentation drafting","Gamma, Copilot in PowerPoint","First-draft slide decks","Generic visuals; verify every claim"],
+ ["audio","Text-to-speech narration","ElevenLabs","Narrated procedures; accessibility","Voice cloning requires consent"],
+ ["audio","Transcription & captions","Otter, Teams, Zoom AI","Lecture captions; meeting notes","Check technical terms and names"],
+ ["media","Video creation","Synthesia, Descript","Short safety briefings and explainers","Avatar realism can mislead"],
+ ["code","Coding assistant","GitHub Copilot, Claude","Programming courses; building interactive tools","Test everything; review for security"],
+ ["agent","Browser & desktop agents","Agent modes in major assistants","Multi-step research and form filling","Approve every consequential action"],
+ ["access","Accessibility support","Alt text and reading-level tools","Accessible versions of materials","Check meaning isn’t lost"],
+ ["industry","Industry-embedded AI","Diagnostics, vision QC, EHR scribes","Workplace-realistic practice","Requires employer partnerships"],
+ ["research","Data analysis","Assistants with code execution","Analyzing lab or sensor data","Recompute key results"]];
+const TCATS=[["all","All"],["research","Research"],["media","Images & video"],["audio","Audio"],["code","Coding"],["agent","Agents"],["access","Accessibility"],["industry","Industry"]];
+const VET=[["Purpose","Serves a specific outcome better than current tools"],["Privacy","Clear data terms; no training on user content, or an education agreement"],["Accessibility","Works with screen readers and keyboards; captions where relevant"],["Accuracy","Tested on content you know; errors are rare and catchable"],["Cost & equity","Free or licensed for all students; runs on common devices"],["Durability","Stable vendor; you can export your work"]];
+LABS[3]=[
+{ icon:"🧰", title:"AI tool explorer", desc:"Filter by category to see what each kind of tool is good for, and what to watch.",
+  html:()=>`<div class="btnrow" role="group" aria-label="Filter tools">${TCATS.map((c,i)=>`<button class="btn ${i===0?"sel":""}" data-c="${c[0]}">${c[1]}</button>`).join("")}</div><div class="cols" id="tlG"></div>`,
+  init:root=>{const draw=c=>{$(root,"#tlG").innerHTML=TOOLS.filter(t=>c==="all"||t[0]===c).map(t=>`<div class="box n"><h4>${t[1]}</h4><p class="mini">${t[2]}</p><p><strong>Use:</strong> ${t[3]}</p><p style="margin:0"><strong>Watch:</strong> ${t[4]}</p></div>`).join("");};
+    $$(root,"[data-c]").forEach(b=>b.addEventListener("click",()=>{$$(root,"[data-c]").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");draw(b.dataset.c);}));draw("all");}},
+{ icon:"📝", title:"Tool vetting scorecard", desc:"Rate a tool on six criteria for an adopt, pilot, or avoid recommendation.",
+  html:()=>`<label class="f" for="vtN">Tool name</label><input type="text" id="vtN" placeholder="e.g., a transcription tool">
+  ${VET.map((v,i)=>`<label class="f" for="vt${i}">${v[0]} — <span style="font-weight:400">${v[1]}</span></label><select id="vt${i}" data-v><option value="0">0 — No / unknown</option><option value="1">1 — Partly</option><option value="2" selected>2 — Mostly</option><option value="3">3 — Fully</option></select>`).join("")}
+  <div class="meter" style="margin-top:1rem"><div id="vtM"></div></div><div class="out" id="vtO" aria-live="polite"></div>`,
+  init:root=>{const draw=()=>{const vals=$$(root,"[data-v]").map(s=>+s.value),tot=vals.reduce((a,b)=>a+b,0),pct=tot/18*100,name=$(root,"#vtN").value.trim()||"This tool";
+    let rec,col;if(vals[1]===0){rec="Avoid for now — privacy is unknown or unacceptable. Don’t ask students to sign up until data terms are clear.";col="var(--red)";}
+    else if(pct>=75){rec="Adopt — strong on all criteria. Document how you’ll use it and tell students why.";col="var(--green)";}
+    else if(pct>=50){rec="Pilot — try it yourself or with a small group, and fix the weak criteria first.";col="var(--warn)";}
+    else{rec="Avoid — too many gaps. Look for an alternative.";col="var(--red)";}
+    const weak=VET.filter((v,i)=>vals[i]<2).map(v=>v[0]);
+    $(root,"#vtM").style.cssText=`width:${pct}%;background:${col}`;
+    $(root,"#vtO").innerHTML=`<strong>${esc(name)}: ${tot}/18</strong>\n${rec}${weak.length?`\n\nWeak areas: ${weak.join(", ")}.`:""}`;};
+    $$(root,"select,input").forEach(e=>e.addEventListener("input",draw));draw();}}
+];
+
+/* ---------- M4 ---------- */
+const PRESETS={
+ auto:["You are an experienced automotive instructor and ASE Master Technician.","Write a diagnostic case study about a vehicle with a charging-system failure.","For second-semester automotive students who have completed basic electrical. It will be used in a 50-minute lab session.","Sections: customer complaint, symptoms, a table of three test readings, five guiding questions, and an instructor answer key.","10th-grade reading level, under 450 words, no brand names. Flag any specification I should verify against a service manual.",""],
+ nurse:["You are a nursing educator with medical-surgical experience.","Write 8 scenario-based practice questions on recognizing early signs of sepsis.","For first-year practical nursing students preparing for clinical rotations.","A numbered list. Each item: scenario, four options, correct answer, and a two-sentence rationale.","One clearly best answer per question. Plausible distractors. Avoid trick wording. Note any values I should verify against current guidelines.",""],
+ weld:["You are a certified welding inspector and welding instructor.","Create a lab job sheet for practicing a fillet weld in the horizontal position.","For beginning welding students in their first semester, working in a shop with standard equipment.","Sections: objective, PPE, tools and materials, numbered steps, instructor checkpoints, visual inspection criteria, and reflection questions.","Safety steps must be explicit. Plain language. Fits on two pages.",""],
+ biz:["You are a small-business consultant who teaches entrepreneurship.","Write a case study about a local café deciding whether to use an AI ordering assistant.","For an introductory business course at a community college.","A one-page narrative, a table of costs and benefits, and four discussion questions.","Balanced perspective, including customer privacy and staff impact. Under 500 words.",""]};
+const BLOCKS=["Role","Task","Context","Format","Constraints","Examples"];
+const FIXES=[
+ {q:"Prompt: “Make a quiz about electrical safety.” — Output: twenty college-level questions on arc-flash calculations for engineers.",a:2,why:"The AI had to guess the audience. Add context: who the students are, what they’ve learned, and how the quiz will be used.",fix:"…for first-semester electrical students who have learned basic circuits, used as a 10-minute warm-up."},
+ {q:"Prompt: “Write practice questions on HVAC refrigerants for my students, first-year.” — Output: a long essay-style paragraph with questions buried inside.",a:3,why:"Nothing said what the output should look like. Specify the format.",fix:"Return a numbered list of 10 multiple-choice questions, each with four options, the answer, and a one-sentence rationale."},
+ {q:"Prompt: “Write a case study for my students about customer service in an auto shop.” — Output: generic, and nothing like your usual style or difficulty.",a:5,why:"Show the AI what good looks like by pasting one of your own case studies.",fix:"Here is a case study I wrote last term, in the style and length I want: “…”"},
+ {q:"Prompt: “Explain lockout/tagout to first-year students in a short handout.” — Output: three pages long, at a graduate reading level.",a:4,why:"Set limits on length and reading level.",fix:"…under 300 words, 8th-grade reading level, with a five-step checklist."}];
+LABS[4]=[
+{ icon:"🏗", title:"Prompt builder", desc:"Fill in the six building blocks, or load an example, and watch the prompt assemble.",
+  html:()=>`<label class="f" for="pbP">Load an example</label><select id="pbP"><option value="">Start blank</option><option value="auto">Automotive case study</option><option value="nurse">Nursing practice questions</option><option value="weld">Welding lab job sheet</option><option value="biz">Business case study</option></select>
+  <div class="two"><div>${BLOCKS.map((b,i)=>`<label class="f" for="pb${i}">${b}</label><textarea id="pb${i}" data-b="${i}" rows="2" style="min-height:58px"></textarea>`).join("")}</div>
+  <div><label class="f">Prompt strength</label><div class="meter"><div id="pbM"></div></div><div class="mini" id="pbS"></div><label class="f">Assembled prompt</label><div class="out" id="pbO" aria-live="polite"></div><div class="btnrow"><button class="btn pri" id="pbC">Copy prompt</button><button class="btn" id="pbX">Clear</button></div></div></div>`,
+  init:root=>{const fs=$$(root,"[data-b]");
+    const draw=()=>{const v=fs.map(f=>f.value.trim());const filled=v.filter(Boolean).length;
+      const parts=v.map((x,i)=>x?(i===5?`Example of the output I want:\n"""\n${x}\n"""`:x):"").filter(Boolean);
+      $(root,"#pbO").textContent=parts.length?parts.join("\n\n"):"Your prompt will appear here.";
+      const pct=filled/6*100;$(root,"#pbM").style.cssText=`width:${pct}%;background:${pct>=66?"var(--green)":pct>=33?"var(--warn)":"var(--red)"}`;
+      const miss=BLOCKS.filter((b,i)=>!v[i]);$(root,"#pbS").textContent=miss.length?`Missing: ${miss.join(", ")}${miss.length===1&&miss[0]==="Examples"?" — optional, but it often helps most with style.":""}`:"All six blocks included.";};
+    fs.forEach(f=>f.addEventListener("input",draw));
+    $(root,"#pbP").addEventListener("change",e=>{const p=PRESETS[e.target.value]||["","","","","",""];fs.forEach((f,i)=>f.value=p[i]);draw();});
+    $(root,"#pbC").addEventListener("click",()=>copyText($(root,"#pbO").textContent));
+    $(root,"#pbX").addEventListener("click",()=>{fs.forEach(f=>f.value="");$(root,"#pbP").value="";draw();});draw();}},
+{ icon:"🔧", title:"Fix this prompt", desc:"Each prompt produced a bad result. Which building block is missing?",
+  html:()=>sorterHTML(FIXES,BLOCKS),
+  init:root=>{sorterInit(root,FIXES,BLOCKS);$$(root,".q").forEach(qe=>$$(qe,".btn").forEach(b=>b.addEventListener("click",()=>{const m=$(qe,".fb-msg");if(!m.dataset.x){m.dataset.x=1;m.innerHTML+=`<br><em>Try adding:</em> ${FIXES[+qe.dataset.i].fix}`;}})));}}
+];
+/* ---------- M5 ---------- */
+const SPOT=[
+ ["Ohm’s law states that voltage equals current multiplied by resistance (V = I × R).",0,"Correct."],
+ ["A 12-volt circuit with a 4-ohm load draws 48 amps.",1,"Calculation error: I = V ÷ R = 12 ÷ 4 = 3 A. The AI multiplied instead of dividing."],
+ ["Power in watts can be calculated by multiplying voltage by current.",0,"Correct: P = V × I."],
+ ["Copper is common in building wiring partly because it has lower resistance than aluminum for the same conductor size.",0,"Correct."],
+ ["The National Electrical Code is published by OSHA and updated every year.",1,"Misattribution and fabrication: the NEC (NFPA 70) is published by the National Fire Protection Association on a three-year cycle."],
+ ["A GFCI trips when it detects an imbalance between current on the hot and neutral conductors.",0,"Correct."],
+ ["According to Smith and Rivera (2021) in the Journal of Applied Electrical Safety, 92% of residential shocks occur in kitchens.",1,"Fabricated citation and statistic. A search for the exact title and journal turns up nothing. Never pass along an unverified statistic."],
+ ["Before working on a circuit, verify it is de-energized using a meter you have tested on a known live source.",0,"Correct — the live-dead-live test."]];
+const DEPTH=[
+ {q:"Icebreaker questions for the first day of class",a:0,why:"Low stakes. A quick read for tone and inclusiveness is enough."},
+ {q:"A summary of a chapter you wrote, for a study guide",a:1,why:"Check the summary against your chapter for accuracy and omissions."},
+ {q:"Dosage calculation practice problems for nursing students",a:2,why:"Health-critical. Recompute every answer and verify against current references."},
+ {q:"A lockout/tagout procedure handout",a:2,why:"Safety-critical. Verify against OSHA requirements and your shop’s written program."},
+ {q:"Discussion prompts about workplace communication",a:0,why:"Low stakes. Check for clarity and bias."},
+ {q:"A table of torque specifications for a lab",a:2,why:"Specifications must come from the manufacturer’s service information, not AI."},
+ {q:"A first draft of a course announcement",a:1,why:"Check dates, policies, and tone before sending."}];
+const DEPTHC=["Light review","Standard check","Full SME verification"];
+LABS[5]=[
+{ icon:"🕵️", title:"Spot the errors", desc:"An AI wrote this handout for an introductory electrical course. Flag every sentence you think contains an error, then check your work.",
+  html:()=>`<div id="spS">${SPOT.map((s,i)=>`<button class="sentence" data-i="${i}" aria-pressed="false">${s[0]}</button>`).join("")}</div>
+  <div class="btnrow"><button class="btn pri" id="spC">Check my flags</button><button class="btn" id="spR">Reset</button></div><div class="fb-msg" id="spO" aria-live="polite"></div>`,
+  init:root=>{let checked=false;
+    $$(root,".sentence").forEach(b=>b.addEventListener("click",()=>{if(checked)return;const on=b.classList.toggle("flag");b.setAttribute("aria-pressed",on);}));
+    $(root,"#spC").addEventListener("click",()=>{checked=true;let hit=0,fa=0,miss=0;
+      $$(root,".sentence").forEach(b=>{const s=SPOT[+b.dataset.i],f=b.classList.contains("flag");b.classList.remove("flag");
+        if(s[1]&&f){hit++;b.classList.add("hit");}else if(s[1]&&!f){miss++;b.classList.add("miss");}else if(!s[1]&&f){fa++;b.classList.add("miss");}
+        if(s[1]||f)b.insertAdjacentHTML("beforeend",`<span class="why">${s[1]?(f?"✔ Found: ":"✘ Missed: "):"✘ This one is accurate. "}${s[2]}</span>`);});
+      const o=$(root,"#spO");o.className="fb-msg show "+(miss===0&&fa===0?"ok":"no");
+      o.innerHTML=`<strong>You found ${hit} of 3 errors${fa?`, with ${fa} false alarm${fa>1?"s":""}`:""}.</strong> Notice that the errors sit between accurate sentences and sound just as confident. That is why sentence-level verification matters.`;});
+    $(root,"#spR").addEventListener("click",()=>{checked=false;$$(root,".sentence").forEach(b=>{b.className="sentence";b.setAttribute("aria-pressed","false");const w=$(b,".why");if(w)w.remove();});$(root,"#spO").className="fb-msg";});}},
+{ icon:"⚖️", title:"Match review depth to stakes", desc:"How much human review does each AI-generated item need?",
+  html:()=>sorterHTML(DEPTH,DEPTHC), init:root=>sorterInit(root,DEPTH,DEPTHC) }
+];
+
+/* ---------- M6 ---------- */
+const PROJ={
+ "Automotive":["Students use AI to translate a technical diagnosis into a plain-language customer explanation and estimate, then role-play delivering it.","Students compare an AI-generated repair procedure with the official service information and log every discrepancy and its risk.","Teams build a simple AI-assisted symptom checker for common no-start conditions and test it against instructor-created cases."],
+ "Nursing & allied health":["Students use AI to draft patient-education handouts at different reading levels, then verify and adapt them.","Students evaluate AI responses to clinical questions against current evidence-based references and rate their safety.","Teams design a policy and training brief for safe use of ambient AI documentation on a clinical unit."],
+ "Welding & manufacturing":["Students use AI to draft a weld procedure summary from a WPS, then verify each parameter.","Students test an image-classification tool on photos of their own welds and analyze where it agrees with inspector judgment.","Teams train a simple image classifier with a no-code tool to sort acceptable and defective parts, and report its accuracy."],
+ "HVAC & energy":["Students use AI to create a customer maintenance plan and seasonal checklist for a residential system.","Students check AI troubleshooting advice against manufacturer fault-code documentation.","Teams analyze building-sensor data with AI help to find energy waste and propose fixes."],
+ "Business & entrepreneurship":["Students use AI to draft a marketing plan for a local business and document every prompt and revision.","Students audit AI-generated market research for fabricated statistics and sources.","Teams prototype an AI customer-service assistant for a campus office and test it with real questions."],
+ "IT & cybersecurity":["Students use AI to write and explain scripts for routine administration tasks, then test them in a lab.","Students evaluate AI-written code for security flaws.","Teams build a help-desk chatbot grounded in a knowledge base and red-team it for unsafe answers."],
+ "Culinary & hospitality":["Students use AI to scale recipes and create costed menus, then verify math and food-safety steps.","Students compare AI-generated allergen information to labels and food-safety codes.","Teams design an AI-assisted demand forecast to reduce food waste in the campus kitchen."],
+ "Early childhood education":["Students use AI to draft developmentally appropriate activity plans, then adapt them for their classroom.","Students evaluate AI-generated parent communications for tone, accuracy, and cultural responsiveness.","Teams create guidance for families on children’s use of AI-enabled toys and apps."]};
+const PLV=["Use","Evaluate","Create"],PAIAS=["Level 3 (AI Collaboration)","Level 3 (AI Collaboration) with a Level 1 verification check","Level 4 (Full AI) or Level 5 (AI Exploration)"];
+const MATS=[["Lesson plan","Create a 50-minute lesson plan on {topic} for {students}, aligned to this outcome: {outcome}. Include an opener, a demonstration, guided practice, independent practice, and an exit ticket."],
+ ["Lab or job sheet","Write a lab job sheet on {topic} for {students}. Include the objective ({outcome}), PPE, tools and materials, numbered steps with safety notes, instructor checkpoints, and reflection questions. Flag any values I must verify."],
+ ["Case study","Write a realistic workplace case study on {topic} for {students}. Include a scenario, data to analyze, and four decision questions that assess: {outcome}. Use diverse, non-stereotyped characters."],
+ ["Practice questions","Write 10 scenario-based multiple-choice questions on {topic} for {students}, assessing: {outcome}. Return a table: Question | Options A–D | Correct answer | Rationale."],
+ ["Rubric","Create an analytic rubric with four performance levels for a task on {topic}, assessing: {outcome}. Use observable, measurable behaviors for each criterion."],
+ ["Interactive tool","Build a single-file HTML practice tool on {topic} for {students}: 10 flip cards and a 5-question quiz with immediate feedback, keyboard accessible, with light and dark mode."]];
+LABS[6]=[
+{ icon:"💡", title:"Student AI project generator", desc:"Pick your program and a level of engagement for a project starting point.",
+  html:()=>`<div class="two"><div><label class="f" for="pgP">Program</label><select id="pgP">${Object.keys(PROJ).map(k=>`<option>${k}</option>`).join("")}</select></div>
+  <div><label class="f">Level of engagement</label><div class="btnrow" role="group" aria-label="Level of engagement">${PLV.map((l,i)=>`<button class="btn ${i===0?"sel":""}" data-l="${i}">${l}</button>`).join("")}</div></div></div><div class="out" id="pgO" aria-live="polite"></div>`,
+  init:root=>{let lv=0;const draw=()=>{const p=$(root,"#pgP").value;$(root,"#pgO").innerHTML=`<strong>${p} — ${PLV[lv]} project</strong>\n${PROJ[p][lv]}\n\n<strong>Suggested AIAS level:</strong> ${PAIAS[lv]}\n<strong>Deliverables:</strong> the product, a prompt and process log, a verification record, and a short reflection on what AI did well and poorly.\n<strong>Make it authentic:</strong> ask an advisory board member to review the project brief and the final products.`;};
+    $(root,"#pgP").addEventListener("change",draw);$$(root,"[data-l]").forEach(b=>b.addEventListener("click",()=>{$$(root,"[data-l]").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");lv=+b.dataset.l;draw();}));draw();}},
+{ icon:"📦", title:"Module prompt pack", desc:"Enter your topic, students, and outcome, choose materials, and get a set of ready-to-use prompts.",
+  html:()=>`<div class="two"><div><label class="f" for="mpT">Topic</label><input type="text" id="mpT" placeholder="e.g., refrigerant recovery"><label class="f" for="mpS">Students</label><input type="text" id="mpS" placeholder="e.g., first-year HVAC students"></div>
+  <div><label class="f" for="mpO">Measurable outcome</label><textarea id="mpO" placeholder="e.g., Recover refrigerant from a residential system following EPA Section 608 requirements"></textarea></div></div>
+  <label class="f">Materials</label><div class="btnrow">${MATS.map((m,i)=>`<label class="chip" style="cursor:pointer"><input type="checkbox" data-m="${i}" ${i<4?"checked":""}> ${m[0]}</label>`).join("")}</div>
+  <div class="btnrow"><button class="btn pri" id="mpG">Generate prompt pack</button><button class="btn" id="mpC">Copy all</button></div><div class="out" id="mpOut" aria-live="polite">Your prompts will appear here.</div>`,
+  init:root=>{const gen=()=>{const t=$(root,"#mpT").value.trim()||"[topic]",s=$(root,"#mpS").value.trim()||"[students]",o=$(root,"#mpO").value.trim()||"[outcome]";
+    const role="You are an experienced career and technical education instructor and instructional designer.";
+    const sel=$$(root,"[data-m]").filter(c=>c.checked).map(c=>MATS[+c.dataset.m]);
+    if(!sel.length){$(root,"#mpOut").textContent="Select at least one material.";return;}
+    $(root,"#mpOut").textContent=sel.map((m,i)=>`${i+1}. ${m[0].toUpperCase()}\n${role} ${m[1].replace(/{topic}/g,t).replace(/{students}/g,s).replace(/{outcome}/g,o)} Before you finish, list any facts or values I should verify.`).join("\n\n");};
+    $(root,"#mpG").addEventListener("click",gen);$(root,"#mpC").addEventListener("click",()=>{gen();copyText($(root,"#mpOut").textContent);});}}
+];
+
+/* ---------- M7 ---------- */
+const AIAS=[
+ ["No AI","The assessment is completed entirely without AI assistance, in a controlled or supervised environment, so students rely on their own knowledge, understanding, and skills.","You may not use AI tools for any part of this assessment. It will be completed in class under supervision.","Direct observation, practical demonstration, in-class or oral responses.","Skills check-off on a live engine; proctored network configuration; supervised dosage exam."],
+ ["AI Planning","AI may be used for pre-task activities such as brainstorming, outlining, and initial research. The final work shows how the student developed and refined those ideas.","You may use AI to brainstorm, outline, or find starting points. The final product must be your own work. Submit your AI chat log and a short note on how your ideas developed.","Chat log, outline, final work, and a reflection connecting the two.","Using AI to plan a diagnostic strategy, then performing and documenting the tests yourself."],
+ ["AI Collaboration","AI may be used to help complete the task, including drafting and feedback. Students critically evaluate and modify the AI’s suggestions and demonstrate their understanding.","You may use AI to draft and get feedback. You must check, correct, and improve what it produces. Submit the AI draft, your revised version, and a list of what you verified and changed.","AI draft, revision with tracked changes, verification notes.","Drafting a patient-education sheet with AI, then verifying it against clinical references."],
+ ["Full AI","AI may be used to complete any element of the task, with students directing the AI to achieve the assessment goals.","You may use AI throughout this task. You are responsible for the quality and accuracy of the result. Be ready to explain and defend every part of it.","Final product, prompt log, oral defense or presentation.","Directing AI to produce a shop-efficiency analysis, then defending the recommendations to a panel."],
+ ["AI Exploration","AI is used creatively to solve the task, generate new insights, or build innovative solutions; students and instructor may co-design the assessment.","This project asks you to explore what AI can do in our field. We will set the goals and evaluation criteria together.","Prototype, testing data, design log, presentation to stakeholders.","Prototyping and testing an AI-assisted diagnostic aid or help-desk agent."]];
+const CLASSIFY=[
+ {q:"Students perform a supervised hands-on brake inspection while the instructor observes.",a:0,why:"Supervised practical demonstration is a secure Level 1 assessment."},
+ {q:"Students use AI to generate questions to ask an employer, then conduct and write up the interview themselves.",a:1,why:"AI supports planning only; the final work is the student’s."},
+ {q:"Students draft a customer email with AI, then correct errors and justify each change.",a:2,why:"Drafting with AI plus critical revision is Level 3 collaboration."},
+ {q:"Students direct AI to produce a complete marketing plan, then defend it to a panel of local business owners.",a:3,why:"AI may complete any part; students direct and defend it — Level 4."},
+ {q:"Students and the instructor co-design a project testing whether AI can predict equipment failures from shop data.",a:4,why:"Creative, novel use of AI with co-designed goals is Level 5."},
+ {q:"A take-home essay with a syllabus line saying “No AI allowed.”",a:2,why:"Trick question: unsupervised work cannot be secured as Level 1. Realistically, design it as Level 2 or 3 with process evidence, or move it into a supervised setting."}];
+const LVC=["Level 1","Level 2","Level 3","Level 4","Level 5"];
+LABS[7]=[
+{ icon:"🪜", title:"Explore the scale", desc:"Select a level to see its description, sample student instructions, evidence to collect, and a CTE example.",
+  html:()=>`<div class="two"><div class="aias">${AIAS.map((l,i)=>`<button class="lv${i+1}" data-a="${i}"><span class="n">${i+1}</span>${l[0]}</button>`).join("")}</div><div class="out" id="asO" aria-live="polite">Select a level.</div></div>`,
+  init:root=>{$$(root,"[data-a]").forEach(b=>b.addEventListener("click",()=>{$$(root,"[data-a]").forEach(x=>x.classList.remove("on"));b.classList.add("on");const l=AIAS[+b.dataset.a];
+    $(root,"#asO").innerHTML=`<strong style="font-size:1.1rem">Level ${+b.dataset.a+1}: ${l[0]}</strong>\n${l[1]}\n\n<strong>Student-facing statement</strong>\n“${l[2]}”\n\n<strong>Evidence to collect</strong>\n${l[3]}\n\n<strong>CTE example</strong>\n${l[4]}`;}));}},
+{ icon:"🏷", title:"Classify the assessment", desc:"Which AIAS level does each assessment represent?",
+  html:()=>sorterHTML(CLASSIFY,LVC), init:root=>sorterInit(root,CLASSIFY,LVC) },
+{ icon:"♻️", title:"Assessment redesigner", desc:"Describe an assessment, choose a target level, and get a redesign plan with student instructions.",
+  html:()=>`<label class="f" for="rdA">Current assessment</label><textarea id="rdA" placeholder="e.g., A take-home written report explaining how a heat pump works"></textarea>
+  <label class="f" for="rdO">What must it show students can do?</label><input type="text" id="rdO" placeholder="e.g., Explain the refrigeration cycle and diagnose a common fault">
+  <label class="f" for="rdL">Target level</label><select id="rdL">${AIAS.map((l,i)=>`<option value="${i}" ${i===2?"selected":""}>Level ${i+1}: ${l[0]}</option>`).join("")}</select>
+  <div class="btnrow"><button class="btn pri" id="rdG">Build redesign plan</button><button class="btn" id="rdC">Copy</button></div><div class="out" id="rdOut" aria-live="polite">Your plan will appear here.</div>`,
+  init:root=>{const ideas=["Move the core performance into a supervised setting: a practical demonstration, in-class problem, or short oral check. Keep any take-home part for practice only.","Allow AI for brainstorming and research. Add a checkpoint where students submit their outline and AI log before writing the final work themselves.","Require students to start from an AI draft and improve it. Grade the quality of their corrections and verification, not just the final text.","Let students use AI freely, and raise the bar: grade the quality of their direction, the accuracy of the result, and an oral defense.","Turn it into an open-ended challenge in which students test what AI can and can’t do for this task, and set criteria together."];
+    const gen=()=>{const a=$(root,"#rdA").value.trim()||"[your assessment]",o=$(root,"#rdO").value.trim()||"[the outcome]",i=+$(root,"#rdL").value,l=AIAS[i];
+      $(root,"#rdOut").textContent=`REDESIGN PLAN — Level ${i+1}: ${l[0]}\n\nOriginal: ${a}\nOutcome to evidence: ${o}\n\nDesign move: ${ideas[i]}\n\nProcess evidence to collect: ${l[3]}\n\nStudent instructions:\n“For this assessment, AI use is at Level ${i+1} (${l[0]}). ${l[2]} This assessment measures whether you can ${o.charAt(0).toLowerCase()+o.slice(1)}.”\n\nCheck: does the evidence you collect still show the outcome, even if a student used AI as much as this level allows?`;};
+    $(root,"#rdG").addEventListener("click",gen);$(root,"#rdC").addEventListener("click",()=>{gen();copyText($(root,"#rdOut").textContent);});}}
+];
+
+/* ---------- M8 ---------- */
+const DILEMMAS=[
+ {s:"A student in your medical assisting program pasted notes from her clinical rotation, including a patient’s name and diagnosis, into a free chatbot to help write her reflection.",c:[["Grade the reflection normally; the writing is good.",2,"This misses a serious privacy breach that could also violate the clinical site’s policies and HIPAA. Students need to learn this before they’re employed."],["Meet privately, explain the privacy issue, have her de-identify and resubmit, and teach the class a de-identification rule.",0,"Best. It treats it as a teachable moment, protects the patient, and prevents repeats. Check whether your clinical agreement requires reporting."],["Fail the assignment and report her for academic dishonesty.",1,"The concern is privacy, not cheating. A punitive response may be disproportionate if she wasn’t taught the rule."]]},
+ {s:"Your dean suggests using an AI detector on every submission and treating scores above 80% as misconduct.",c:[["Agree; it’s efficient.",2,"Detectors have meaningful false-positive rates and bias against non-native English writers. A score alone isn’t evidence."],["Propose clear AIAS levels by assignment, process evidence, and conversations with students when there’s a concern.",0,"Best. It’s fairer and more reliable, and it focuses on learning."],["Ignore AI entirely.",1,"Avoids harm from detectors but leaves students without guidance."]]},
+ {s:"AI-generated images for your construction safety slides show only men on the job site.",c:[["Use them; they’re just illustrations.",2,"Representation shapes who students believe belongs in the field."],["Regenerate with explicit diversity instructions, review the results, and discuss the bias with students.",0,"Best. It fixes the material and turns bias into a lesson."],["Stop using images.",1,"Avoids the issue but loses the benefit of visuals and the teaching moment."]]},
+ {s:"You used AI to draft most of your new lab manual. A colleague asks whether you need to say so.",c:[["No — you reviewed it, so it’s your work.",1,"Your review matters, but transparency builds trust and models the disclosure you expect from students."],["Yes — add a short statement describing how AI was used and that content was verified by you.",0,"Best. Model the disclosure you ask of students. Check your college’s guidance as well."],["Remove the AI content to avoid the question.",2,"Throws away useful work instead of using it responsibly."]]},
+ {s:"An assignment requires a premium AI subscription that costs about $20 a month. Several students can’t afford it.",c:[["Keep it; it’s industry standard.",2,"Creates an equity barrier tied to students’ finances."],["Redesign it to use a free or college-licensed tool, or provide campus access.",0,"Best. It preserves the learning goal and ensures equal access."],["Make the assignment optional.",1,"Reduces harm but leaves some students without the learning experience."]]}];
+LABS[8]=[
+{ icon:"🧭", title:"Dilemma simulator", desc:"Choose how you’d respond to each situation and see the reasoning.",
+  html:()=>DILEMMAS.map((d,i)=>`<div class="q" data-d="${i}"><div class="stem">Scenario ${i+1}. ${d.s}</div><div class="opts">${d.c.map((c,j)=>`<button data-j="${j}">${c[0]}</button>`).join("")}</div><div class="fb-msg"></div></div>`).join(""),
+  init:root=>{$$(root,"[data-d]").forEach(qe=>{const d=DILEMMAS[+qe.dataset.d];$$(qe,"[data-j]").forEach(b=>b.addEventListener("click",()=>{const c=d.c[+b.dataset.j];$$(qe,"[data-j]").forEach(x=>x.classList.remove("right","wrong"));b.classList.add(c[1]===0?"right":"wrong");
+    const m=$(qe,".fb-msg");m.className="fb-msg show "+(c[1]===0?"ok":c[1]===1?"info":"no");m.innerHTML=`<strong>${["Strong choice.","Partly right.","Reconsider."][c[1]]}</strong> ${c[2]}${c[1]?" Try another option.":""}`;}));});}},
+{ icon:"📜", title:"Course AI policy builder", desc:"Choose your positions and generate a draft syllabus policy to revise in your own voice.",
+  html:()=>`<div class="two"><div>
+  <label class="f" for="plC">Course</label><input type="text" id="plC" placeholder="e.g., HVAC 101">
+  <label class="f" for="plS">Overall stance</label><select id="plS"><option value="0">AI is encouraged when used responsibly</option><option value="1" selected>AI is allowed as specified for each assignment</option><option value="2">AI is limited to specific assignments</option></select>
+  <label class="f" for="plL">Default AIAS level when not specified</label><select id="plL">${AIAS.map((l,i)=>`<option value="${i}" ${i===1?"selected":""}>Level ${i+1}: ${l[0]}</option>`).join("")}</select>
+  <label class="f" for="plD">Disclosure required</label><select id="plD"><option value="0">A short AI-use statement on every assignment that used AI</option><option value="1">Statement plus chat logs when requested</option><option value="2">Statement plus chat logs always</option></select>
+  <label class="f">Also include</label>
+  <label class="chk"><input type="checkbox" id="plP" checked> Privacy rule (no personal, patient, or customer data)</label>
+  <label class="chk"><input type="checkbox" id="plV" checked> Verification responsibility</label>
+  <label class="chk"><input type="checkbox" id="plA" checked> Approved and free tools only</label>
+  <label class="chk"><input type="checkbox" id="plF" checked> How concerns will be handled</label>
+  <label class="chk"><input type="checkbox" id="plW" checked> Workplace connection</label></div>
+  <div><label class="f">Draft policy</label><div class="out" id="plO" aria-live="polite"></div><div class="btnrow"><button class="btn pri" id="plCp">Copy policy</button></div></div></div>`,
+  init:root=>{const draw=()=>{const c=$(root,"#plC").value.trim()||"this course",s=+$(root,"#plS").value,l=+$(root,"#plL").value,d=+$(root,"#plD").value;
+    const st=["In "+c+", you are encouraged to use AI tools to support your learning, as long as you use them responsibly and honestly.","In "+c+", AI use is allowed as specified for each assignment. Each assignment will state its AI level.","In "+c+", AI tools may be used only on assignments that specifically allow them."][s];
+    const ds=["If you use AI on an assignment, include a short statement naming the tool, what you used it for, and what you changed or verified.","If you use AI, include a short statement naming the tool, what you used it for, and what you changed or verified. Be ready to share your chat log if asked.","If you use AI, include a short statement naming the tool, what you used it for, and what you changed or verified, and attach your chat log."][d];
+    let t=`AI USE POLICY — ${c.toUpperCase()}\n\n${st}\n\nWe use the AI Assessment Scale. When an assignment doesn’t state a level, the default is Level ${l+1} (${AIAS[l][0]}): ${AIAS[l][2]}\n\nDisclosure: ${ds}`;
+    if($(root,"#plP").checked)t+=`\n\nPrivacy: Never enter personal information about yourself, classmates, patients, clients, or customers into an AI tool.`;
+    if($(root,"#plV").checked)t+=`\n\nVerification: You are responsible for everything you submit. AI can be wrong — verify facts, values, and procedures against trusted sources, especially anything involving safety.`;
+    if($(root,"#plA").checked)t+=`\n\nTools: Use only approved tools that are free or provided by the college. You will never be required to pay for an AI tool.`;
+    if($(root,"#plF").checked)t+=`\n\nConcerns: If I have questions about how work was produced, I will talk with you first. Using AI in ways an assignment doesn’t allow, or without disclosure, will be handled under the college’s academic integrity policy.`;
+    if($(root,"#plW").checked)t+=`\n\nWhy this matters: Employers in our field use AI. Learning to use it skillfully, honestly, and safely is part of becoming a professional.`;
+    $(root,"#plO").textContent=t;};
+    $$(root,"input,select").forEach(e=>e.addEventListener("input",draw));$$(root,"input[type=checkbox]").forEach(e=>e.addEventListener("change",draw));
+    $(root,"#plCp").addEventListener("click",()=>copyText($(root,"#plO").textContent));draw();}}
+];
+/* ================= STATE ================= */
+const KEY="aicte-progress";
+let S={done:{},quiz:{},journal:{},cap:{}};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const nDone=()=>Object.values(S.done).filter(Boolean).length;
+const LABCOUNT=Object.values(LABS).reduce((a,l)=>a+l.length,0);
+
+/* ================= THEME ================= */
+(function(){let t=null;try{t=localStorage.getItem("aicte-theme");}catch(e){}if(t)document.documentElement.setAttribute("data-theme",t);})();
+function toggleTheme(){const r=document.documentElement;const cur=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");const n=cur==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("aicte-theme",n);}catch(e){}}
+
+/* ================= COMPETENCIES ================= */
+const COMP=[
+ ["Knowledge","How AI, machine learning, and LLMs work, and their limits",[2,1,1,1,1,0,0,0]],
+ ["Knowledge","The landscape of AI tools and the AI used in their occupational field",[2,2,2,0,0,1,0,0]],
+ ["Knowledge","Privacy, FERPA, intellectual property, and institutional policy",[0,2,1,0,0,0,1,2]],
+ ["Knowledge","Assessment validity and academic integrity in an AI-present world",[0,0,0,0,1,0,2,2]],
+ ["Knowledge","Ethical issues: bias, equity, transparency, accountability",[1,0,1,0,1,1,1,2]],
+ ["Skill","Select, configure, and vet AI tools for teaching",[0,2,2,0,0,1,0,1]],
+ ["Skill","Write structured, reusable prompts and teach prompting",[0,1,0,2,0,1,0,0]],
+ ["Skill","Verify AI output and validate data with a human-in-the-loop process",[1,0,1,1,2,1,1,0]],
+ ["Skill","Create aligned, accessible instructional materials with AI",[0,1,1,1,1,2,0,0]],
+ ["Skill","Design authentic student AI projects",[0,0,1,0,0,2,1,1]],
+ ["Skill","Design and communicate assessments using the AIAS",[0,0,0,0,0,1,2,1]],
+ ["Skill","Write a course AI policy and teach ethical AI use",[0,0,0,0,1,0,1,2]]];
+const SCHED=[
+ ["AI scan of your field","Context statement for your course"],
+ ["Three-model comparison","Course project or workspace set up"],
+ ["Tool vetting and pilot","Vetted tool list"],
+ ["Prompt library (5 templates)","Prompts for module materials"],
+ ["Verification audit","Verification plan"],
+ ["Three AI-assisted materials","Student AI project design"],
+ ["Assessment redesign","AIAS-labeled assessments"],
+ ["Course AI policy","Final capstone submission"]];
+const CAP_MS=SCHED.map((s,i)=>`Week ${i+1}: ${s[1]}`);
+const RUBRIC=[
+ ["Alignment","Outcomes, materials, activities, and assessments clearly connect","Mostly aligned; minor gaps","Several items don’t connect to outcomes"],
+ ["Accuracy & verification","All AI-assisted content verified; log documents checks and corrections","Most content verified; log incomplete","Little evidence of verification"],
+ ["Assessment design","Every assessment has a justified AIAS level, student statement, and process evidence","Levels assigned; some justification or evidence missing","Levels missing or inconsistent"],
+ ["Student AI project","Authentic occupational task with clear deliverables and assessment","Relevant project; deliverables or assessment unclear","Generic or missing"],
+ ["Accessibility","Meets accessibility basics: reading level, alt text, captions, structure","Minor accessibility gaps","Significant barriers"],
+ ["Ethics & policy","Clear course AI policy with disclosure, privacy, and equity","Policy present; some elements missing","Policy missing or unclear"]];
+
+/* ================= RENDER HELPERS ================= */
+const app=()=>document.getElementById("app");
+function navHTML(active){
+  return `<nav class="topnav" aria-label="Main"><div class="wrap"><a class="brand" href="#home"><span class="seal">AI<br>CTE</span><span class="brand-t">${COURSE}</span></a>
+  <div class="nav-r"><ul class="navlinks"><li><a href="#modules" class="${active==="home"?"on":""}">Modules</a></li><li><a href="#competencies">Competencies</a></li><li><a href="#schedule">Schedule</a></li><li><a href="#capstone" class="${active==="capstone"?"on":""}">Capstone</a></li></ul>
+  <span class="prog-pill">${nDone()}/8 complete</span><button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle light or dark mode">🌓 Mode</button></div></div></nav>`;
+}
+const footer=()=>`<footer>${COURSE} · An eight-week online course for two-year college career and technical education faculty<br>Progress and notes are saved only in this browser.</footer>`;
+
+function renderHome(scrollTo){
+  const path=[1,2,3,4,5,6,7,8].map(n=>`<a href="#m${n}" class="${S.done[n]?"done":""}" aria-label="Week ${n}: ${M[n].title}${S.done[n]?" (complete)":""}"><span class="dot">${S.done[n]?"✓":n}</span><span class="lbl">${M[n].short}</span></a>`).join("");
+  const next=[1,2,3,4,5,6,7,8].find(n=>!S.done[n])||1;
+  app().innerHTML=navHTML("home")+`
+  <header class="hero"><p class="eyebrow">Eight weeks · online · for CTE faculty</p>
+  <h1>Teach with AI. Teach students to use it well.</h1>
+  <p class="sub">A hands-on course for two-year college career and technical faculty: build AI-integrated courses, design assessments that still measure learning, and prepare students to use AI ethically on the job.</p>
+  <a class="cta" href="#m${next}">${nDone()?"Continue with Week "+next:"Start Week 1"}</a><a class="cta ghost" href="#capstone">See the capstone</a>
+  <div class="path" aria-label="Your progress through the course">${path}</div></header>
+  <div class="stats"><div class="stat"><b>8</b><span>Weeks</span></div><div class="stat"><b>${LABCOUNT}</b><span>Interactive<br>labs</span></div><div class="stat"><b>40</b><span>Knowledge<br>checks</span></div><div class="stat"><b>3–5</b><span>Hours<br>per week</span></div><div class="stat"><b>1</b><span>Capstone<br>module</span></div></div>
+
+  <section class="section"><div class="wrap narrow"><p class="s-eyebrow">About the course</p><h2 class="s-title">Built for the shop, the lab, and the clinic</h2><div class="rule"></div>
+  <p>AI is already inside the diagnostic tools, inspection systems, health records, and office software your graduates will use. This course gives CTE faculty the knowledge and skills to use AI in their own teaching, redesign courses around it, and teach students to use it accurately, safely, and ethically.</p>
+  <p>Each week follows the same rhythm, so you always know what to do next:</p>
+  <div class="cols"><div class="box n"><h4>📖 Learn</h4><p>Short readings in tabs, with key terms on flip cards.</p></div><div class="box n"><h4>🧪 Interact</h4><p>Hands-on labs you can reuse with students.</p></div><div class="box n"><h4>✅ Check</h4><p>Five scenario questions with explanations.</p></div><div class="box n"><h4>🛠 Apply</h4><p>An assignment, a discussion, and a capstone step.</p></div><div class="box n"><h4>📝 Reflect</h4><p>A private journal saved in your browser.</p></div></div>
+  <div class="callout"><b class="ct">By the end of eight weeks</b>You will have redesigned one module of a course you teach: AI-assisted and verified materials, a student AI project, assessments labeled with the AI Assessment Scale, and a course AI policy.</div></div></section>
+
+  <section class="section alt" id="competencies"><div class="wrap"><p class="s-eyebrow">Competency map</p><h2 class="s-title">What CTE faculty need to know and do</h2><div class="rule"></div>
+  <p class="s-desc">These knowledge and skill areas drive the course design. A filled dot means the module develops the competency in depth; an open dot means it is introduced or reinforced.</p>
+  <div class="tbl-wrap"><table><tr><th>Type</th><th>Competency</th>${[1,2,3,4,5,6,7,8].map(n=>`<th class="c" title="${M[n].title}">M${n}</th>`).join("")}</tr>
+  ${COMP.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td>${c[2].map((v,i)=>`<td class="c">${v===2?`<span class="dotm" aria-label="In depth in module ${i+1}"></span>`:v===1?`<span class="dotm p" aria-label="Introduced in module ${i+1}"></span>`:""}</td>`).join("")}</tr>`).join("")}</table></div></div></section>
+
+  <section class="section" id="modules"><div class="wrap"><p class="s-eyebrow">Modules</p><h2 class="s-title">Eight weeks, eight modules</h2><div class="rule"></div>
+  <p class="s-desc">Work through the modules in order; each builds on the last and adds a piece of your capstone.</p>
+  <div class="grid">${[1,2,3,4,5,6,7,8].map(n=>`<article class="mcard"><div class="mc-head"><span class="badge">WEEK ${n}</span><span class="mc-ico" aria-hidden="true">${M[n].icon}</span></div>
+  <span class="tag ${S.done[n]?"ok":""}">${S.done[n]?"Complete":LABS[n].length+" labs · "+M[n].stats[0].replace("⏱ ","")}</span>
+  <h3 class="mc-title">${M[n].title}</h3><p class="mc-desc">${M[n].card}</p>
+  <div class="mc-foot"><a class="launch" href="#m${n}">${S.done[n]?"Review":"Open"} module</a><span class="mini">${S.quiz[n]!=null?"Check: "+S.quiz[n]+"/5":""}</span></div></article>`).join("")}</div></div></section>
+
+  <section class="section alt" id="schedule"><div class="wrap"><p class="s-eyebrow">Schedule</p><h2 class="s-title">Week by week</h2><div class="rule"></div>
+  <div class="tbl-wrap"><table><tr><th>Week</th><th>Module</th><th>Assignment</th><th>Capstone milestone</th></tr>
+  ${SCHED.map((s,i)=>`<tr><td>${i+1}</td><td><a href="#m${i+1}">${M[i+1].title}</a></td><td>${s[0]}</td><td>${s[1]}</td></tr>`).join("")}</table></div>
+  <p class="mini">Suggested pacing: modules open on Monday; discussion posts by Thursday, replies and assignments by Sunday. An optional one-hour live session each week is recommended for demos and Q&A.</p></div></section>`+footer();
+  if(scrollTo){const el=document.getElementById(scrollTo);if(el)requestAnimationFrame(()=>el.scrollIntoView());}else window.scrollTo(0,0);
+}
+
+function renderModule(n){
+  const m=M[n];
+  const prev=n>1?`<a href="#m${n-1}">← Week ${n-1}: ${M[n-1].short}</a>`:`<a class="dis" href="#home" aria-disabled="true">← Previous</a>`;
+  const next=n<8?`<a href="#m${n+1}">Week ${n+1}: ${M[n+1].short} →</a>`:`<a href="#capstone">Capstone →</a>`;
+  app().innerHTML=navHTML("mod")+`
+  <div class="crumb"><div class="wrap"><a href="#home">Home</a><span class="sep">›</span><a href="#modules">Modules</a><span class="sep">›</span><b>Week ${n}: ${m.title}</b></div></div>
+  <header class="hero mhero"><span class="wk">Week ${n} of 8</span><h1>${m.title}</h1><p class="sub">${m.sub}</p><div class="sbadges">${m.stats.map(s=>`<span class="sbadge">${s}</span>`).join("")}</div></header>
+  <nav class="subnav" aria-label="Module sections"><div class="wrap"><a href="#m${n}" data-jump="objectives">🎯 Objectives</a><a href="#m${n}" data-jump="terms">🗂 Key terms</a><a href="#m${n}" data-jump="learn">📖 Learn</a><a href="#m${n}" data-jump="interact">🧪 Interact</a><a href="#m${n}" data-jump="check">✅ Check</a><a href="#m${n}" data-jump="apply">🛠 Apply</a></div></nav>
+  <main class="wrap">
+  <section class="msec" id="objectives"><h2 class="h2">Learning objectives</h2><div class="obj"><p class="lead">By the end of this week, you will be able to:</p><ul>${m.obj.map(o=>`<li>${o}</li>`).join("")}</ul></div></section>
+  <section class="msec" id="terms"><h2 class="h2">Key terms</h2><div class="acc" id="accTerms"><button aria-expanded="false" aria-controls="termsP">Key terms and concepts (${m.terms.length})<span class="pm" aria-hidden="true">+</span></button>
+   <div class="panel" id="termsP"><p class="mini">Select any card to reveal its definition.</p><div class="flipgrid">${m.terms.map(t=>`<button class="flip" aria-label="${esc(t[0])}: show definition"><div class="flip-in"><div class="ff"><span class="t">${t[0]}</span><span class="h">🔄 Select to reveal</span></div><div class="fb"><b>Definition</b>${t[1]}</div></div></button>`).join("")}</div></div></div></section>
+  <section class="msec" id="learn"><h2 class="h2">Learn</h2><div class="tabs"><div class="tabbar" role="tablist">${m.tabs.map((t,i)=>`<button role="tab" id="tab${i}" aria-controls="pane${i}" aria-selected="${i===0}">${t[0]}</button>`).join("")}</div>
+   ${m.tabs.map((t,i)=>`<div class="tabpane ${i===0?"on":""}" role="tabpanel" id="pane${i}" aria-labelledby="tab${i}">${t[1]}</div>`).join("")}</div></section>
+  <section class="msec" id="interact"><h2 class="h2">Interact</h2>${LABS[n].map((l,i)=>`<div class="lab" id="lab${i}"><div class="lab-h"><span class="i" aria-hidden="true">${l.icon}</span><div><h3>${l.title}</h3><p>${l.desc}</p></div></div><div class="lab-b">${l.html()}</div></div>`).join("")}</section>
+  <section class="msec" id="check"><h2 class="h2">Knowledge check</h2><div id="quiz">${m.quiz.map((q,i)=>`<div class="q" data-q="${i}"><div class="stem">${i+1}. ${q[0]}</div><div class="opts">${q[1].map((o,j)=>`<button data-o="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join("")}</div><div class="fb-msg"></div></div>`).join("")}<div class="score" id="qScore" aria-live="polite"></div><div style="text-align:center"><button class="btn" id="qReset">Retake the check</button></div></div></section>
+  <section class="msec" id="apply"><h2 class="h2">Apply</h2><div class="apply">
+   <div class="box g"><h4>🛠 Assignment</h4><p>${m.apply.assign}</p></div>
+   <div class="box n"><h4>💬 Discussion</h4><p>${m.apply.discuss}</p></div>
+   <div class="box w"><h4>🎓 Capstone step</h4><p>${m.apply.capstone}</p><p style="margin:0"><a href="#capstone">Open the capstone tracker</a></p></div></div>
+   <div class="box" style="margin-top:1.1rem"><h4>📝 Reflection journal</h4><label class="f" for="jr">${m.apply.journal}</label><textarea id="jr" placeholder="Your reflection is saved automatically in this browser."></textarea><p class="mini" id="jrS" style="margin-top:.3rem"></p></div>
+   <div class="complete-row"><button class="cta" id="doneBtn">${S.done[n]?"✓ Week "+n+" complete — mark incomplete":"Mark week "+n+" complete"}</button></div></section>
+  <div class="bnav">${prev}<a href="#home">⌂ Course home</a>${next}</div></main>`+footer();
+  window.scrollTo(0,0);
+  const root=app();
+  $$(root,"[data-jump]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.getElementById(a.dataset.jump).scrollIntoView();}));
+  const acc=$(root,"#accTerms");$(acc,"button").addEventListener("click",e=>{const o=acc.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",o);});
+  $$(root,".flip").forEach(f=>f.addEventListener("click",()=>f.classList.toggle("on")));
+  const tabs=$$(root,"[role=tab]");tabs.forEach((t,i)=>{t.addEventListener("click",()=>{tabs.forEach((x,j)=>{x.setAttribute("aria-selected",j===i);$(root,"#pane"+j).classList.toggle("on",j===i);});});
+    t.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="ArrowLeft"){const k=(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length;tabs[k].click();tabs[k].focus();}});});
+  LABS[n].forEach((l,i)=>l.init($(root,"#lab"+i)));
+  // quiz
+  const qs=$$(root,"[data-q]");let ans={};
+  const scoreMsg=()=>{const k=Object.keys(ans).length;if(k===m.quiz.length){const r=Object.values(ans).filter(Boolean).length;S.quiz[n]=r;save();$(root,"#qScore").textContent=`Score: ${r} of ${m.quiz.length}. ${r===m.quiz.length?"Excellent work.":r>=3?"Solid — review the explanations for any you missed.":"Revisit the Learn tabs, then retake the check."}`;}};
+  qs.forEach(qe=>{const q=m.quiz[+qe.dataset.q];$$(qe,"[data-o]").forEach(b=>b.addEventListener("click",()=>{const j=+b.dataset.o,ok=j===q[2];
+    $$(qe,"[data-o]").forEach(x=>x.disabled=true);b.classList.add(ok?"right":"wrong");if(!ok)$$(qe,"[data-o]")[q[2]].classList.add("right");
+    const fm=$(qe,".fb-msg");fm.className="fb-msg show "+(ok?"ok":"no");fm.innerHTML=`<strong>${ok?"Correct.":"Not quite."}</strong> ${q[3]}`;ans[qe.dataset.q]=ok;scoreMsg();}));});
+  $(root,"#qReset").addEventListener("click",()=>{ans={};$(root,"#qScore").textContent="";qs.forEach(qe=>{$$(qe,"[data-o]").forEach(x=>{x.disabled=false;x.className="";});$(qe,".fb-msg").className="fb-msg";});});
+  // journal
+  const jr=$(root,"#jr");jr.value=S.journal[n]||"";let jt;jr.addEventListener("input",()=>{clearTimeout(jt);jt=setTimeout(()=>{S.journal[n]=jr.value;save();$(root,"#jrS").textContent="Saved in this browser.";},500);});
+  $(root,"#doneBtn").addEventListener("click",()=>{S.done[n]=!S.done[n];save();if(S.done[n])toast(`Week ${n} complete`);renderModule(n);document.getElementById("apply").scrollIntoView();});
+}
+
+function renderCapstone(){
+  app().innerHTML=navHTML("capstone")+`
+  <div class="crumb"><div class="wrap"><a href="#home">Home</a><span class="sep">›</span><b>Capstone</b></div></div>
+  <header class="hero mhero"><span class="wk">Built across all 8 weeks</span><h1>Capstone: your AI-integrated module</h1><p class="sub">Redesign one module of a course you teach, and leave with something you can use next term</p></header>
+  <main class="wrap narrow">
+  <section class="msec"><h2 class="h2">What you’ll submit</h2><div class="cols">
+   <div class="box n"><h4>Module plan</h4><p>Outcomes, sequence, and how AI is used by you and by students.</p></div>
+   <div class="box n"><h4>Three or more materials</h4><p>AI-assisted, verified, accessible, and localized.</p></div>
+   <div class="box n"><h4>Verification log</h4><p>What you checked, against what source, and what you changed.</p></div>
+   <div class="box n"><h4>Student AI project</h4><p>An authentic task at the Use, Evaluate, or Create level.</p></div>
+   <div class="box n"><h4>AIAS-labeled assessments</h4><p>Each with a student-facing AI statement and process evidence.</p></div>
+   <div class="box n"><h4>Course AI policy</h4><p>Ready to paste into your syllabus.</p></div></div></section>
+  <section class="msec"><h2 class="h2">Milestone tracker</h2><div class="box">${CAP_MS.map((t,i)=>`<label class="chk"><input type="checkbox" data-c="${i}" ${S.cap[i]?"checked":""}> <span><a href="#m${i+1}">${t}</a></span></label>`).join("")}
+   <div class="meter" style="margin-top:1rem"><div id="capM"></div></div><p class="mini" id="capT"></p></div></section>
+  <section class="msec"><h2 class="h2">Scoring rubric</h2><div class="tbl-wrap"><table><tr><th>Criterion</th><th>Exemplary</th><th>Developing</th><th>Beginning</th></tr>${RUBRIC.map(r=>`<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("")}</table></div>
+  <div class="callout"><b class="ct">Peer review</b>In Week 8, swap modules with a colleague from a different program. Fresh eyes catch assumptions and accessibility gaps that subject experts miss.</div></section>
+  <div class="bnav"><a href="#m8">← Week 8: Ethics</a><a href="#home">⌂ Course home</a></div></main>`+footer();
+  window.scrollTo(0,0);
+  const root=app();const draw=()=>{const k=CAP_MS.filter((x,i)=>S.cap[i]).length;$(root,"#capM").style.cssText=`width:${k/8*100}%;background:var(--green)`;$(root,"#capT").textContent=`${k} of 8 milestones complete.`;};
+  $$(root,"[data-c]").forEach(c=>c.addEventListener("change",()=>{S.cap[c.dataset.c]=c.checked;save();draw();}));draw();
+}
+
+/* ================= ROUTER ================= */
+function route(){
+  const h=(location.hash||"").replace("#","");
+  const mm=h.match(/^m([1-8])$/);
+  if(mm)renderModule(+mm[1]);
+  else if(h==="capstone")renderCapstone();
+  else if(["modules","competencies","schedule"].includes(h))renderHome(h);
+  else renderHome();
+}
+window.addEventListener("hashchange",route);
+route();
+
+</script>
+</body>
+</html>
